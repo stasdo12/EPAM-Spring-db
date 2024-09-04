@@ -1,6 +1,7 @@
 package com.epam.springcore.task.utils.impl;
 
 import com.epam.springcore.task.utils.PasswordGenerator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,7 +19,9 @@ public class PasswordGenerationImpl implements PasswordGenerator {
     private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String DIGITS = "0123456789";
     private static final String ALL_CHARACTERS = UPPER_CASE+LOWER_CASE+DIGITS;
-    private static final int PASS_LENGTH = 10;
+
+    @Value("${password.length}")
+    private int passLength;
     private static final Random random = new Random();
 
 
@@ -32,7 +35,7 @@ public class PasswordGenerationImpl implements PasswordGenerator {
         passChars.add(DIGITS.charAt(random.nextInt(DIGITS.length())));
 
 
-        IntStream.range(passChars.size(), PASS_LENGTH)
+        IntStream.range(passChars.size(), passLength)
                 .mapToObj(i -> ALL_CHARACTERS.charAt(random.nextInt(ALL_CHARACTERS.length())))
                 .forEach(passChars::add);
 
