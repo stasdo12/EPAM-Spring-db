@@ -1,14 +1,16 @@
 package com.epam.springcore.task;
 
 import com.epam.springcore.task.config.GymAppConfig;
-import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.User;
+import com.epam.springcore.task.model.*;
 import com.epam.springcore.task.service.TraineeService;
+import com.epam.springcore.task.service.TrainerService;
+import com.epam.springcore.task.service.TrainingService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 public class Application {
@@ -17,41 +19,33 @@ public class Application {
 
 		ApplicationContext context = new AnnotationConfigApplicationContext(GymAppConfig.class);
 
+		TrainingService trainingService = context.getBean(TrainingService.class);
+		TrainerService trainerService = context.getBean(TrainerService.class);
 
-		TraineeService traineeService = context.getBean(TraineeService.class);
+		User user = new User();
+		user.setUserId(23L); // Установите ID
+		user.setFirstName("John");
+		user.setLastName("Doe");
+		user.setUserName("john.doe");
+		user.setPassword("password");
+		user.setActive(true);
 
-
-		User newUser = new User();
-		newUser.setFirstName("John");
-		newUser.setLastName("Doe");
-		newUser.setActive(true);
-
-		Trainee newTrainee = new Trainee();
-		newTrainee.setUser(newUser);
-
-
-		traineeService.create(newTrainee);
-
-
-		List<Trainee> allTrainees = traineeService.getTrainees();
-		System.out.println("Список всех трейни:");
-		allTrainees.forEach(System.out::println);
+		Trainer trainer = new Trainer();
+		trainer.setTrainerId(1L); // Установите ID
+		trainer.setUser(user);
 
 
-		newTrainee.getUser().setLastName("Smith");
-		traineeService.update(newTrainee);
+		Trainer updatedTrainer = new Trainer();
+		updatedTrainer.setTrainerId(1L); // Убедитесь, что ID совпадает
+		updatedTrainer.setUser(user);
 
 
-		List<Trainee> updatedTrainees = traineeService.getTrainees();
-		System.out.println("Обновленный список всех трейни:");
-		updatedTrainees.forEach(System.out::println);
+		Optional<Trainer> oldTrainer = trainerService.update(updatedTrainer);
 
-
-		traineeService.delete(newTrainee.getTraineeId());
-
-
-		List<Trainee> traineesAfterDeletion = traineeService.getTrainees();
-		System.out.println("Список всех трейни после удаления:");
-		traineesAfterDeletion.forEach(System.out::println);
+		if (oldTrainer.isPresent()) {
+			System.out.println("Trainer updated successfully. Old Trainer: " + oldTrainer.get());
+		} else {
+			System.out.println("Trainer not found, update failed.");
+		}
 	}
 }

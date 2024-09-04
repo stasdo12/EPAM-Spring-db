@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,16 +42,23 @@ public class StorageInitializer {
         try (InputStream inputStream = resource.getInputStream()) {
             JsonDataContainer dataContainer = objectMapper.readValue(inputStream, JsonDataContainer.class);
 
-            storage.setTrainees(dataContainer.getTrainees().stream()
-                    .collect(Collectors.toMap(Trainee::getTraineeId, Function.identity())));
+            Map<Long, Trainee> traineeMap = dataContainer.getTrainees().stream()
+                    .collect(Collectors.toMap(Trainee::getTraineeId, Function.identity()));
 
-            storage.setTrainers(dataContainer.getTrainers().stream()
-                    .collect(Collectors.toMap(Trainer::getTrainerId, Function.identity())));
+            Map<Long, Trainer> trainerMap = dataContainer.getTrainers().stream()
+                    .collect(Collectors.toMap(Trainer::getTrainerId, Function.identity()));
 
-            storage.setTrainings(dataContainer.getTrainings().stream()
-                    .collect(Collectors.toMap(Training::getTrainingId, Function.identity())));
+            Map<Long, Training> trainingMap = dataContainer.getTrainings().stream()
+                    .collect(Collectors.toMap(Training::getTrainingId, Function.identity()));
+
+            storage.setTrainees(traineeMap);
+            storage.setTrainers(trainerMap);
+            storage.setTrainings(trainingMap);
+
+            System.out.println("Storage has been initialized with data from file.");
 
         } catch (IOException e) {
+            System.err.println("Error initializing storage from file: " + e.getMessage());
             e.printStackTrace();
         }
     }
