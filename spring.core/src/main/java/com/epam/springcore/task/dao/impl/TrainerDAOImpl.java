@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Repository
 public class TrainerDAOImpl implements TrainerDAO {
 
-    private Map<Long, Trainer> trainersStorage;
+    private final Map<Long, Trainer> trainersStorage;
 
     @Autowired
     public TrainerDAOImpl(Map<Long, Trainer> trainersStorage) {

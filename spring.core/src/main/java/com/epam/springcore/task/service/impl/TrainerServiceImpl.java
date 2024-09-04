@@ -16,10 +16,10 @@ import java.util.Optional;
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
-    private TrainerDAO trainerDAO;
-    private TraineeDAO traineeDAO;
-    private PasswordGenerator passwordGenerator;
-    private NameGenerator nameGenerator;
+    private final TrainerDAO trainerDAO;
+    private final TraineeDAO traineeDAO;
+    private final PasswordGenerator passwordGenerator;
+    private final NameGenerator nameGenerator;
 
 
     @Autowired

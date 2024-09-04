@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class TrainingServiceImpl implements TrainingService {
 
-    private TrainingDAO trainingDAO;
+    private final TrainingDAO trainingDAO;
 
 
     @Autowired

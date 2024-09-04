@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class TrainingDAOImpl implements TrainingDAO {
 
-    private Map<Long, Training> trainingsStorage;
+    private final Map<Long, Training> trainingsStorage;
 
 
     @Autowired
