@@ -14,6 +14,7 @@ import lombok.ToString;
 public class Trainer {
 
     private long trainerId;
+    private User user;
     private TrainingType specialization;
 
 }
