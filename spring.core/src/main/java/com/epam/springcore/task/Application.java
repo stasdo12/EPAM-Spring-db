@@ -5,6 +5,7 @@ import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.TraineeService;
+import com.epam.springcore.task.service.impl.TraineeServiceImpl;
 import com.epam.springcore.task.storage.Storage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,24 +19,44 @@ import java.util.Map;
 public class Application {
 
 	public static void main(String[] args) {
+
 		ApplicationContext context = new AnnotationConfigApplicationContext(GymAppConfig.class);
 
-		Storage storage = context.getBean(Storage.class);
 
-		// Получаем и выводим трейни
-		Map<Long, Trainee> trainees = storage.getTrainees();
-		System.out.println("Трейни:");
-		trainees.forEach((id, trainee) -> {
-			System.out.println("ID: " + id + ", " + trainee);
-			System.out.println("Username: " + trainee.getUser().getUserName());
-			System.out.println("Password: " + trainee.getUser().getPassword());
-		});
+		TraineeService traineeService = context.getBean(TraineeService.class);
 
-		// Получаем и выводим тренеров
-		Map<Long, Trainer> trainers = storage.getTrainers();
-		System.out.println("Тренеры:");
-		trainers.forEach((id, trainer) -> {
-			System.out.println("ID: " + id + ", " + trainer);
-		});
+
+		User newUser = new User();
+		newUser.setFirstName("John");
+		newUser.setLastName("Doe");
+		newUser.setActive(true);
+
+		Trainee newTrainee = new Trainee();
+		newTrainee.setUser(newUser);
+
+
+		traineeService.create(newTrainee);
+
+
+		List<Trainee> allTrainees = traineeService.getTrainees();
+		System.out.println("Список всех трейни:");
+		allTrainees.forEach(System.out::println);
+
+
+		newTrainee.getUser().setLastName("Smith");
+		traineeService.update(newTrainee);
+
+
+		List<Trainee> updatedTrainees = traineeService.getTrainees();
+		System.out.println("Обновленный список всех трейни:");
+		updatedTrainees.forEach(System.out::println);
+
+
+		traineeService.delete(newTrainee.getTraineeId());
+
+
+		List<Trainee> traineesAfterDeletion = traineeService.getTrainees();
+		System.out.println("Список всех трейни после удаления:");
+		traineesAfterDeletion.forEach(System.out::println);
 	}
 }
