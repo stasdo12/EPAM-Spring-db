@@ -1,5 +1,6 @@
 package com.epam.springcore.task.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Data
@@ -14,6 +15,8 @@ public class User {
     private String lastName;
     private String userName;
     private String password;
+
+    @JsonProperty("isActive")
     private boolean isActive;
 
 }

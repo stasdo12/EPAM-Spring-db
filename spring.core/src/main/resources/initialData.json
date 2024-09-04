@@ -1,16 +1,74 @@
 {
   "trainees": [
-    { "traineeId": 1, "firstName": "Alice", "lastName": "Johnson" },
-    { "traineeId": 2, "firstName": "Bob", "lastName": "Brown" },
-    { "traineeId": 3, "firstName": "Charlie", "lastName": "Davis" }
+    {
+      "traineeId": 1,
+      "user": {
+        "userId": 1,
+        "firstName": "Alice",
+        "lastName": "Johnson",
+        "userName": "alice.johnson",
+        "password": "password",
+        "isActive": true
+      },
+      "birthday": "2000-01-01",
+      "address": "123 Main St"
+    },
+    {
+      "traineeId": 2,
+      "user": {
+        "userId": 2,
+        "firstName": "Bob",
+        "lastName": "Smith",
+        "userName": "bob.smith",
+        "password": "password",
+        "isActive": true
+      },
+      "birthday": "1995-07-15",
+      "address": "456 Elm St"
+    }
   ],
   "trainers": [
-    { "trainerId": 1, "firstName": "Emily", "lastName": "Williams" },
-    { "trainerId": 2, "firstName": "Daniel", "lastName": "Taylor" }
+    {
+      "trainerId": 1,
+      "user": {
+        "userId": 3,
+        "firstName": "Charlie",
+        "lastName": "Brown",
+        "userName": "charlie.brown",
+        "password": "password",
+        "isActive": true
+      },
+      "specialization": "CARDIO"
+    },
+    {
+      "trainerId": 2,
+      "user": {
+        "userId": 4,
+        "firstName": "Diana",
+        "lastName": "Prince",
+        "userName": "diana.prince",
+        "password": "password",
+        "isActive": true
+      },
+      "specialization": "PILATES"
+    }
   ],
   "trainings": [
-    { "trainingId": 1, "trainingName": "Pilates" },
-    { "trainingId": 2, "trainingName": "Spinning" },
-    { "trainingId": 3, "trainingName": "Zumba" }
+    {
+      "trainingId": 1,
+      "traineeId": 1,
+      "trainerId": 1,
+      "trainingType": "CARDIO",
+      "date": "2024-09-01",
+      "durationMinutes": 60
+    },
+    {
+      "trainingId": 2,
+      "traineeId": 2,
+      "trainerId": 2,
+      "trainingType": "PILATES",
+      "date": "2024-09-02",
+      "durationMinutes": 45
+    }
   ]
 }

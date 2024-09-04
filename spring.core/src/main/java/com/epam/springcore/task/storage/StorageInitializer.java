@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,6 @@ public class StorageInitializer {
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
         try (InputStream inputStream = resource.getInputStream()) {
-
             JsonDataContainer dataContainer = objectMapper.readValue(inputStream, JsonDataContainer.class);
 
             storage.setTrainees(dataContainer.getTrainees().stream()
