@@ -17,7 +17,6 @@ public class TrainingDAOImpl implements TrainingDAO {
     private final Map<Long, Training> trainingsStorage;
 
 
-    @Autowired
     public TrainingDAOImpl(Map<Long, Training> trainingsStorage) {
         this.trainingsStorage = trainingsStorage;
     }

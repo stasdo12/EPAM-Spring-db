@@ -7,8 +7,8 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(callSuper = true)
+@ToString
+@EqualsAndHashCode
 public class Training {
     private long trainingId;
     private long traineeId;

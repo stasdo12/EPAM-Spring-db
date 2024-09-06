@@ -3,13 +3,10 @@ package com.epam.springcore.task.dao.impl;
 
 import com.epam.springcore.task.dao.TraineeDAO;
 import com.epam.springcore.task.model.Trainee;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.springcore.task.model.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -19,7 +16,6 @@ public class TraineeDAOImpl implements TraineeDAO {
     private final Map<Long, Trainee> traineesStorage;
 
 
-    @Autowired
     public TraineeDAOImpl(Map<Long, Trainee> traineesStorage) {
         this.traineesStorage = traineesStorage;
     }
@@ -47,9 +43,16 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> findByUsername(String username) {
+
+        if (username == null) {
+            return Optional.empty();
+        }
         return traineesStorage.values()
                 .stream()
-                .filter(trainee -> trainee.getUser().getUserName().equals(username))
+                .filter(trainee -> {
+                    User user = trainee.getUser();
+                    return user != null && username.equals(user.getUserName());
+                })
                 .findAny();
     }
 
@@ -60,9 +63,15 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public List<Trainee> findAllByUsername(String username) {
+        if (username == null) {
+            return Collections.emptyList();
+        }
         return traineesStorage.values()
                 .stream()
-                .filter(trainee -> trainee.getUser().getUserName().matches(username + "\\d+"))
+                .filter(trainee -> {
+                    User user = trainee.getUser();
+                    return user != null && user.getUserName() != null && user.getUserName().matches(username + ".*");
+                })
                 .collect(Collectors.toList());
     }
 

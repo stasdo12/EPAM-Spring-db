@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(callSuper = true)
+@ToString
+@EqualsAndHashCode
 public class Trainee {
 
     private long traineeId;

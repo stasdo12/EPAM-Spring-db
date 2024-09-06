@@ -2,7 +2,7 @@ package com.epam.springcore.task.dao.impl;
 
 import com.epam.springcore.task.dao.TrainerDAO;
 import com.epam.springcore.task.model.Trainer;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.springcore.task.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,7 +16,6 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     private final Map<Long, Trainer> trainersStorage;
 
-    @Autowired
     public TrainerDAOImpl(Map<Long, Trainer> trainersStorage) {
         this.trainersStorage = trainersStorage;
     }
@@ -42,7 +41,10 @@ public class TrainerDAOImpl implements TrainerDAO {
     public Optional<Trainer> getByUsername(String username) {
         return trainersStorage.values()
                 .stream()
-                .filter(trainer -> trainer.getUser().getUserName().equals(username))
+                .filter(trainer -> {
+                    User user = trainer.getUser();
+                    return user != null && username.equals(user.getUserName());
+                })
                 .findAny();
     }
 
@@ -55,7 +57,11 @@ public class TrainerDAOImpl implements TrainerDAO {
     public List<Trainer> getAllTrainersByUsername(String username) {
         return trainersStorage.values()
                 .stream()
-                .filter(trainer -> trainer.getUser().getUserName().matches(username + "\\d+"))
+                .filter(trainer -> {
+                    User user = trainer.getUser();
+                    return user != null && user.getUserName() != null && user.getUserName()
+                            .matches(username + ".*");
+                })
                 .collect(Collectors.toList());
     }
 

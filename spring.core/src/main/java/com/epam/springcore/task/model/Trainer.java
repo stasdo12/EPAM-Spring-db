@@ -9,8 +9,8 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(callSuper = true)
+@ToString
+@EqualsAndHashCode
 public class Trainer {
 
     private long trainerId;

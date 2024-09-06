@@ -6,8 +6,8 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(callSuper = true)
+@ToString
+@EqualsAndHashCode
 public class User {
 
     private long userId;

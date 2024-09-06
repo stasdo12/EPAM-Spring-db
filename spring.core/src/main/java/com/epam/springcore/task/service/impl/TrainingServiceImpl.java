@@ -3,7 +3,6 @@ package com.epam.springcore.task.service.impl;
 import com.epam.springcore.task.dao.TrainingDAO;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.service.TrainingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class TrainingServiceImpl implements TrainingService {
     private final TrainingDAO trainingDAO;
 
 
-    @Autowired
     public TrainingServiceImpl(TrainingDAO trainingDAO) {
         this.trainingDAO = trainingDAO;
     }
