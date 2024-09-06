@@ -18,13 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TraineeDAOImplTest {
 
     private TraineeDAOImpl traineeDAO;
-    private MyMemoryStorage storage;
 
 
     @BeforeEach
     public void setUp() {
 
-        storage = new MyMemoryStorage();
+        MyMemoryStorage storage = new MyMemoryStorage();
         traineeDAO = new TraineeDAOImpl(storage.getTrainees());
 
         User user1 = new User();
