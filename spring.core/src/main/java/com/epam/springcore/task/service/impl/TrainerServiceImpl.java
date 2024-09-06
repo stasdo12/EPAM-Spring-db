@@ -7,6 +7,8 @@ import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.TrainerService;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ import java.util.Optional;
 
 @Service
 public class TrainerServiceImpl implements TrainerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainerServiceImpl.class);
+
 
     private final TrainerDAO trainerDAO;
     private final TraineeDAO traineeDAO;
@@ -34,6 +39,7 @@ public class TrainerServiceImpl implements TrainerService {
     public Optional<Trainer> create(Trainer trainer) {
         long maxId = trainerDAO.getMaxId();
         trainer.setTrainerId(maxId);
+        logger.info("Creating trainee with ID: {}", maxId);
 
         User user = trainer.getUser();
 
@@ -42,6 +48,7 @@ public class TrainerServiceImpl implements TrainerService {
                     trainerDAO.getAllTrainers()));
             user.setPassword(passwordGenerator.generatePassword());
         }else {
+            logger.error("User must not be null in Trainer");
             throw new IllegalArgumentException("User must not be null in Trainer");
         }
         return trainerDAO.create(maxId, trainer);
@@ -49,6 +56,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Optional<Trainer> update(Trainer trainer) {
+        logger.info("Updating trainer with ID: {}", trainer.getTrainerId());
         return trainerDAO.update(trainer);
     }
 

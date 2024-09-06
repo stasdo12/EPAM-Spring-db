@@ -24,6 +24,8 @@
 		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 		<jackson.dataformat.version>2.17.2</jackson.dataformat.version>
 		<junit.jupiter.version>5.9.3</junit.jupiter.version>
+		<logback.version>1.5.7</logback.version>
+		<slf4j.version>2.0.0</slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -56,12 +58,6 @@
 			<version>${jakarta.annotation.version}</version>
 		</dependency>
 
-		<!-- Jackson Dataformat YAML -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-yaml</artifactId>
-			<version>${jackson.dataformat.version}</version>
-		</dependency>
 
 		<!-- Jackson Datatype for JSR310 -->
 		<dependency>
@@ -85,6 +81,20 @@
 			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Logback Classic -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
