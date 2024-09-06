@@ -2,6 +2,7 @@ package com.epam.springcore.task;
 
 import com.epam.springcore.task.config.GymAppConfig;
 import com.epam.springcore.task.model.Trainee;
+
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.TraineeService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
