@@ -5,7 +5,11 @@ import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;

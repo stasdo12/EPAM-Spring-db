@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Repository
 public class TraineeDAOImpl implements TraineeDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrainerServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TraineeDAOImpl.class);
 
     private final Map<Long, Trainee> traineesStorage;
 

@@ -2,7 +2,6 @@ package com.epam.springcore.task.dao.impl;
 
 import com.epam.springcore.task.dao.TrainingDAO;
 import com.epam.springcore.task.model.Training;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
