@@ -24,9 +24,8 @@ public class PasswordGenerationImpl implements PasswordGenerator {
     private static final String ALL_CHARACTERS = UPPER_CASE+LOWER_CASE+DIGITS;
 
     @Value("${password.length}")
-    private int passLength;
+    private int passLength=10;
     private static final Random random = new Random();
-
 
     @Override
     public String generatePassword() {
@@ -36,7 +35,7 @@ public class PasswordGenerationImpl implements PasswordGenerator {
         passChars.add(LOWER_CASE.charAt(random.nextInt(LOWER_CASE.length())));
         passChars.add(DIGITS.charAt(random.nextInt(DIGITS.length())));
 
-        IntStream.range(passChars.size(), passLength)
+        IntStream.range(0, passLength - passChars.size())
                 .mapToObj(i -> ALL_CHARACTERS.charAt(random.nextInt(ALL_CHARACTERS.length())))
                 .forEach(passChars::add);
 
