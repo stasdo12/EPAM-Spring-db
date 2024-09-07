@@ -17,7 +17,6 @@ class TrainerDAOImplTest {
 
     private TrainerDAOImpl trainerDAO;
 
-
     @BeforeEach
     public void setUp(){
         MyMemoryStorage storage = new MyMemoryStorage();
@@ -36,7 +35,6 @@ class TrainerDAOImplTest {
         trainer2.setUser(user2);
         trainerDAO.create(2L, trainer2);
     }
-
 
     @Test
     void create_shouldCreateTrainer() {
@@ -91,7 +89,6 @@ class TrainerDAOImplTest {
 
         assertThat(result).isPresent();
         assertThat(result.get().getUser().getUserName()).isEqualTo("testTrainer");
-
     }
 
     @Test

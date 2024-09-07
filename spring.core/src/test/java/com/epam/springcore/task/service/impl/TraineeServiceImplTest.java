@@ -91,7 +91,6 @@ class TraineeServiceImplTest {
 
     }
 
-
     @Test
     void update_ShouldUpdateTrainee() {
 
@@ -130,7 +129,6 @@ class TraineeServiceImplTest {
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
         verify(traineeDAO).findByUsername(username);
-
     }
 
     @Test
@@ -146,4 +144,5 @@ class TraineeServiceImplTest {
         assertEquals(trainee, result.get(0));
         verify(traineeDAO).getAllTrainees();
     }
+
 }

@@ -17,6 +17,8 @@ import java.util.Map;
 public class MyMemoryStorage implements Storage {
 
     private Map<Long, Trainee> trainees = new HashMap<>();
+
     private Map<Long, Trainer> trainers = new HashMap<>();
+
     private Map<Long, Training> trainings = new HashMap<>();
 }

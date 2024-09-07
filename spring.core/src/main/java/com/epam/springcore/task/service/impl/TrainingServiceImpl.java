@@ -14,11 +14,9 @@ public class TrainingServiceImpl implements TrainingService {
 
     private final TrainingDAO trainingDAO;
 
-
     public TrainingServiceImpl(TrainingDAO trainingDAO) {
         this.trainingDAO = trainingDAO;
     }
-
 
     @Override
     public Optional<Training> create(Training training) {
@@ -36,4 +34,5 @@ public class TrainingServiceImpl implements TrainingService {
     public List<Training> getAllTrainings() {
         return trainingDAO.getAllTrainings();
     }
+
 }

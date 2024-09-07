@@ -19,7 +19,6 @@ class TraineeDAOImplTest {
 
     private TraineeDAOImpl traineeDAO;
 
-
     @BeforeEach
     public void setUp() {
 
@@ -39,7 +38,6 @@ class TraineeDAOImplTest {
         trainee2.setTraineeId(2L);
         trainee2.setUser(new User());
         traineeDAO.create(2L, trainee2);
-
     }
 
     @Test
@@ -53,7 +51,6 @@ class TraineeDAOImplTest {
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
-
     }
 
     @Test
@@ -67,7 +64,6 @@ class TraineeDAOImplTest {
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
-
     }
 
     @Test
@@ -77,7 +73,6 @@ class TraineeDAOImplTest {
 
         assertTrue(deleted);
         assertThat(traineeDAO.findById(2L)).isNotPresent();
-
     }
 
     @Test
@@ -87,7 +82,6 @@ class TraineeDAOImplTest {
 
         assertTrue(result.isPresent());
         assertThat(result.get().getTraineeId()).isEqualTo(1L);
-
     }
 
     @Test
@@ -112,7 +106,6 @@ class TraineeDAOImplTest {
         List<Trainee> result = traineeDAO.getAllTrainees();
 
         assertThat(result).hasSize(2);
-
     }
 
     @Test
@@ -137,7 +130,6 @@ class TraineeDAOImplTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getUser().getUserName()).isEqualTo("user1");
         assertThat(result.get(1).getUser().getUserName()).isEqualTo("user1_1");
-
     }
 
     @Test
@@ -145,6 +137,5 @@ class TraineeDAOImplTest {
 
         long maxId = traineeDAO.getMaxId();
         assertThat(maxId).isEqualTo(3L);
-
     }
 }

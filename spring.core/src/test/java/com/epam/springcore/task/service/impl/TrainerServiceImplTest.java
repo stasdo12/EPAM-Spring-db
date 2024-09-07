@@ -62,6 +62,7 @@ class TrainerServiceImplTest {
         assertEquals("password", user.getPassword());
 
     }
+
     @Test
     void create_ShouldThrowExceptionWhenUserIsNull() {
 
@@ -83,7 +84,6 @@ class TrainerServiceImplTest {
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
         verify(trainerDAO).update(trainer);
-
     }
 
     @Test
@@ -98,7 +98,6 @@ class TrainerServiceImplTest {
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
         verify(trainerDAO).getById(trainerId);
-
     }
 
     @Test
@@ -113,7 +112,6 @@ class TrainerServiceImplTest {
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
         verify(trainerDAO).getByUsername(username);
-
     }
 
     @Test
@@ -127,6 +125,6 @@ class TrainerServiceImplTest {
         assertFalse(result.isEmpty());
         assertEquals(trainer, result.get(0));
         verify(trainerDAO).getAllTrainers();
-
     }
+
 }

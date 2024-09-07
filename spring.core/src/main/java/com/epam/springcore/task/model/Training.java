@@ -17,8 +17,11 @@ import java.time.LocalDate;
 @ToString
 @EqualsAndHashCode
 public class Training {
+
     private long trainingId;
+
     private long traineeId;
+
     private long trainerId;
 
     @NotNull(message = "Training type cannot be null")

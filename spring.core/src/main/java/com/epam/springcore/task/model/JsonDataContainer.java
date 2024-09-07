@@ -13,8 +13,10 @@ public class JsonDataContainer {
 
     @JsonProperty("trainees")
     private List<Trainee> trainees;
+
     @JsonProperty("trainers")
     private List<Trainer> trainers;
+
     @JsonProperty("trainings")
     private List<Training> trainings;
 

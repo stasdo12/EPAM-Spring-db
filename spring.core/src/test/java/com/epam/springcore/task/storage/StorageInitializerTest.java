@@ -40,4 +40,5 @@ class StorageInitializerTest {
         assertThat(training).isNotNull();
         assertThat(training.getTrainingType()).isEqualTo(TrainingType.CARDIO);
     }
+
 }

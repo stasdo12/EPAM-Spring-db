@@ -17,12 +17,11 @@ import java.util.stream.Stream;
 public class NameGenerationImpl implements NameGenerator {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+)$");
+
     @Override
     public String generateUsername(User user) {
         return user.getFirstName() + "." + user.getLastName();
     }
-
-
 
     @Override
     public String generateUsername(User user, List<Trainee> trainees, List<Trainer> trainers) {
@@ -46,4 +45,5 @@ public class NameGenerationImpl implements NameGenerator {
 
         return baseUsername + nextIndex;
     }
+
 }

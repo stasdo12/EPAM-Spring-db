@@ -12,11 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class GymFacadeTest {
@@ -39,95 +38,114 @@ class GymFacadeTest {
     }
 
     @Test
-    void getTraineeById_ShouldDelegateToTraineeService() {
+    void testCreateTrainee() {
         Trainee trainee = new Trainee();
-        trainee.setTraineeId(1L);
+        when(traineeService.create(trainee)).thenReturn(Optional.of(trainee));
 
-        when(traineeService.getById(1L)).thenReturn(Optional.of(trainee));
+        Optional<Trainee> result = gymFacade.createTrainee(trainee);
 
-        Optional<Trainee> result = gymFacade.traineeService().getById(1L);
+        assertEquals(Optional.of(trainee), result);
 
-        verify(traineeService).getById(1L);
-        assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
     }
 
 
     @Test
-    void getTrainerById_ShouldDelegateToTrainerService() {
-        Trainer trainer = new Trainer();
-        trainer.setTrainerId(1L);
-
-        when(trainerService.getById(1L)).thenReturn(Optional.of(trainer));
-
-        Optional<Trainer> result = gymFacade.trainerService().getById(1L);
-
-        verify(trainerService).getById(1L);
-        assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
-    }
-
-    @Test
-    void getTrainingById_ShouldDelegateToTrainingService() {
-        Training training = new Training();
-        training.setTrainingId(1L);
-
-        when(trainingService.findById(1L)).thenReturn(Optional.of(training));
-
-        Optional<Training> result = gymFacade.trainingService().findById(1L);
-
-        verify(trainingService).findById(1L);
-        assertTrue(result.isPresent());
-        assertEquals(training, result.get());
-    }
-    @Test
-    void createTrainee_ShouldDelegateToTraineeService() {
+    void testUpdateTrainee() {
         Trainee trainee = new Trainee();
-        trainee.setTraineeId(1L);
+        when(traineeService.update(trainee)).thenReturn(Optional.of(trainee));
 
-        when(traineeService.create(any(Trainee.class))).thenReturn(Optional.of(trainee));
+        Optional<Trainee> result = gymFacade.updateTrainee(trainee);
 
+        assertEquals(Optional.of(trainee), result);
 
-        Optional<Trainee> result = gymFacade.traineeService().create(trainee);
+    }
 
+    @Test
+    void testGetAllTrainees() {
+        List<Trainee> trainees = List.of(new Trainee(), new Trainee());
+        when(traineeService.getTrainees()).thenReturn(trainees);
 
-        verify(traineeService).create(trainee);
-        assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
+        List<Trainee> result = gymFacade.getAllTrainees();
+
+        assertEquals(trainees, result);
+
+    }
+
+    @Test
+    void testGetTraineeById() {
+        Trainee trainee = new Trainee();
+        long traineeId = 1L;
+        when(traineeService.getById(traineeId)).thenReturn(Optional.of(trainee));
+
+        Optional<Trainee> result = gymFacade.getTraineeById(traineeId);
+
+        assertEquals(Optional.of(trainee), result);
+
     }
 
 
     @Test
-    void createTrainer_ShouldDelegateToTrainerService(){
+    void testCreateTrainer() {
         Trainer trainer = new Trainer();
-        trainer.setTrainerId(1L);
+        when(trainerService.create(trainer)).thenReturn(Optional.of(trainer));
 
-        when(trainerService.create(any(Trainer.class))).thenReturn(Optional.of(trainer));
+        Optional<Trainer> result = gymFacade.createTrainer(trainer);
 
-        Optional<Trainer> result = gymFacade.trainerService().create(trainer);
-
-        verify(trainerService).create(trainer);
-        assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
+        assertEquals(Optional.of(trainer), result);
 
     }
 
     @Test
-    void createTraining_ShouldDelegateToTrainingService(){
+    void testGetAllTrainers() {
+        List<Trainer> trainers = List.of(new Trainer(), new Trainer());
+        when(trainerService.getAllTrainers()).thenReturn(trainers);
+
+        List<Trainer> result = gymFacade.getAllTrainers();
+
+        assertEquals(trainers, result);
+
+    }
+
+    @Test
+    void testGetTrainerById() {
+        Trainer trainer = new Trainer();
+        long trainerId = 1L;
+        when(trainerService.getById(trainerId)).thenReturn(Optional.of(trainer));
+
+        Optional<Trainer> result = gymFacade.getTrainerById(trainerId);
+
+        assertEquals(Optional.of(trainer), result);
+    }
+
+    @Test
+    void testCreateTraining() {
         Training training = new Training();
-        training.setTrainerId(1L);
+        when(trainingService.create(training)).thenReturn(Optional.of(training));
 
-        when(trainingService.create(any(Training.class))).thenReturn(Optional.of(training));
+        Optional<Training> result = gymFacade.createTraining(training);
 
-        Optional<Training> result = gymFacade.trainingService().create(training);
+        assertEquals(Optional.of(training), result);
+    }
 
-        verify(trainingService).create(training);
-        assertTrue(result.isPresent());
-        assertEquals(training, result.get());
+    @Test
+    void testGetAllTrainings() {
+        List<Training> trainings = List.of(new Training(), new Training());
+        when(trainingService.getAllTrainings()).thenReturn(trainings);
 
+        List<Training> result = gymFacade.getAllTrainings();
 
+        assertEquals(trainings, result);
+    }
 
+    @Test
+    void testGetTrainingById() {
+        Training training = new Training();
+        long trainingId = 1L;
+        when(trainingService.findById(trainingId)).thenReturn(Optional.of(training));
 
+        Optional<Training> result = gymFacade.getTrainingById(trainingId);
+
+        assertEquals(Optional.of(training), result);
     }
 
 }

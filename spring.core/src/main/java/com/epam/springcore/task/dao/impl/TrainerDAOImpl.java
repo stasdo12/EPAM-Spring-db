@@ -20,13 +20,11 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(TrainerDAOImpl.class);
 
-
     private final Map<Long, Trainer> trainersStorage;
 
     public TrainerDAOImpl(Map<Long, Trainer> trainersStorage) {
         this.trainersStorage = trainersStorage;
     }
-
 
     @Override
     public Optional<Trainer> create(long trainerId, Trainer trainer) {

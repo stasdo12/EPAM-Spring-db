@@ -4,7 +4,6 @@ package com.epam.springcore.task.dao.impl;
 import com.epam.springcore.task.dao.TraineeDAO;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.User;
-import com.epam.springcore.task.service.impl.TrainerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -22,7 +21,6 @@ public class TraineeDAOImpl implements TraineeDAO {
     private static final Logger logger = LoggerFactory.getLogger(TraineeDAOImpl.class);
 
     private final Map<Long, Trainee> traineesStorage;
-
 
     public TraineeDAOImpl(Map<Long, Trainee> traineesStorage) {
         this.traineesStorage = traineesStorage;

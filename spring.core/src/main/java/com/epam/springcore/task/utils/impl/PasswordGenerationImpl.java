@@ -16,8 +16,11 @@ import java.util.stream.IntStream;
 public class PasswordGenerationImpl implements PasswordGenerator {
 
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
+
     private static final String DIGITS = "0123456789";
+
     private static final String ALL_CHARACTERS = UPPER_CASE+LOWER_CASE+DIGITS;
 
     @Value("${password.length}")
@@ -29,11 +32,9 @@ public class PasswordGenerationImpl implements PasswordGenerator {
     public String generatePassword() {
         List<Character> passChars = new ArrayList<>();
 
-
         passChars.add(UPPER_CASE.charAt(random.nextInt(UPPER_CASE.length())));
         passChars.add(LOWER_CASE.charAt(random.nextInt(LOWER_CASE.length())));
         passChars.add(DIGITS.charAt(random.nextInt(DIGITS.length())));
-
 
         IntStream.range(passChars.size(), passLength)
                 .mapToObj(i -> ALL_CHARACTERS.charAt(random.nextInt(ALL_CHARACTERS.length())))
@@ -45,4 +46,5 @@ public class PasswordGenerationImpl implements PasswordGenerator {
                 .map(String::valueOf)
                 .collect(Collectors.joining());
     }
+
 }

@@ -21,13 +21,17 @@ public class TraineeServiceImpl implements TraineeService {
     private static final Logger logger = LoggerFactory.getLogger(TraineeServiceImpl.class);
 
     private final TraineeDAO traineeDAO;
+
     private final TrainerDAO trainerDAO;
+
     private final PasswordGenerator passwordGenerator;
+
     private final NameGenerator nameGenerator;
 
 
     @Autowired
-    public TraineeServiceImpl(TraineeDAO traineeDAO, TrainerDAO trainerDAO, PasswordGenerator passwordGenerator, NameGenerator nameGenerator) {
+    public TraineeServiceImpl(TraineeDAO traineeDAO, TrainerDAO trainerDAO,
+                              PasswordGenerator passwordGenerator, NameGenerator nameGenerator) {
         this.traineeDAO = traineeDAO;
         this.trainerDAO = trainerDAO;
         this.passwordGenerator = passwordGenerator;
@@ -78,4 +82,5 @@ public class TraineeServiceImpl implements TraineeService {
     public List<Trainee> getTrainees() {
         return traineeDAO.getAllTrainees();
     }
+
 }

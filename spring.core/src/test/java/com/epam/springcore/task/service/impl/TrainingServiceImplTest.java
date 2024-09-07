@@ -18,15 +18,11 @@ import static org.mockito.Mockito.when;
 
 class TrainingServiceImplTest {
 
-
     @Mock
     private TrainingDAO trainingDAO;
 
-
     @InjectMocks
     private TrainingServiceImpl trainingService;
-
-
 
     @BeforeEach
     void setUp() {
@@ -59,9 +55,6 @@ class TrainingServiceImplTest {
         verify(trainingDAO).getById(trainingId);
     }
 
-
-
-
     @Test
     void getAllTrainings() {
         Training training = new Training();
@@ -69,11 +62,10 @@ class TrainingServiceImplTest {
 
         List<Training> result = trainingService.getAllTrainings();
 
-
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         assertEquals(training, result.get(0));
         verify(trainingDAO).getAllTrainings();
-
     }
+
 }

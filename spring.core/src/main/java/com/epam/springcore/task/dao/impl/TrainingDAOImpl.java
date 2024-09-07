@@ -15,11 +15,9 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     private final Map<Long, Training> trainingsStorage;
 
-
     public TrainingDAOImpl(Map<Long, Training> trainingsStorage) {
         this.trainingsStorage = trainingsStorage;
     }
-
 
     @Override
     public Optional<Training> create(long trainingId, Training training) {

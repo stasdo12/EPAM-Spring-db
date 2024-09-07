@@ -73,8 +73,6 @@ class TrainingDAOImplTest {
     void getAllTrainings_ShouldReturnListOfTrainings(){
         List<Training> result = trainingDAO.getAllTrainings();
         assertThat(result).hasSize(2);
-
-
     }
 
     @Test
