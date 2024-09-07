@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface TraineeDAO {
 
-    Optional<Trainee> create (long traineeId, Trainee trainee);
+    Optional<Trainee> create(long traineeId, Trainee trainee);
 
-    Optional<Trainee> update (Trainee trainee);
+    Optional<Trainee> update(Trainee trainee);
 
     boolean deleteById(long traineeId);
 

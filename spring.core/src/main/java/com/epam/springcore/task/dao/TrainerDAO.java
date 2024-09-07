@@ -10,7 +10,7 @@ public interface TrainerDAO {
 
     Optional<Trainer> create(long trainerId, Trainer trainer);
 
-    Optional<Trainer> update (Trainer trainer);
+    Optional<Trainer> update(Trainer trainer);
 
     Optional<Trainer> getById(long trainerId);
 

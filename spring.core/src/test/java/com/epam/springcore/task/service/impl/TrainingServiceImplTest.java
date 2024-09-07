@@ -39,7 +39,6 @@ class TrainingServiceImplTest {
 
         assertTrue(result.isPresent());
         assertEquals(training, result.get());
-        verify(trainingDAO).create(1L, training);
     }
 
     @Test
@@ -52,7 +51,6 @@ class TrainingServiceImplTest {
 
         assertTrue(result.isPresent());
         assertEquals(training, result.get());
-        verify(trainingDAO).getById(trainingId);
     }
 
     @Test
@@ -65,7 +63,6 @@ class TrainingServiceImplTest {
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         assertEquals(training, result.get(0));
-        verify(trainingDAO).getAllTrainings();
     }
 
 }

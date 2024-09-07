@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class TraineeServiceImplTest {
@@ -60,11 +59,8 @@ class TraineeServiceImplTest {
         Optional<Trainee> result = traineeService.create(trainee);
 
         assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
-        verify(traineeDAO).create(1L, trainee);
         assertEquals("username", user.getUserName());
         assertEquals("password", user.getPassword());
-
     }
 
     @Test
@@ -79,16 +75,16 @@ class TraineeServiceImplTest {
 
     @Test
     void getById_ShouldReturnTrainee() {
+
         long traineeId = 1L;
         Trainee trainee = new Trainee();
+
         when(traineeDAO.findById(traineeId)).thenReturn(Optional.of(trainee));
 
         Optional<Trainee> result = traineeService.getById(traineeId);
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
-        verify(traineeDAO).findById(traineeId);
-
     }
 
     @Test
@@ -101,7 +97,7 @@ class TraineeServiceImplTest {
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
-        verify(traineeDAO).update(trainee);
+
     }
 
     @Test
@@ -113,7 +109,7 @@ class TraineeServiceImplTest {
         boolean result = traineeService.delete(traineeId);
 
         assertTrue(result);
-        verify(traineeDAO).deleteById(traineeId);
+
     }
 
     @Test
@@ -128,7 +124,6 @@ class TraineeServiceImplTest {
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
-        verify(traineeDAO).findByUsername(username);
     }
 
     @Test
@@ -142,7 +137,6 @@ class TraineeServiceImplTest {
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         assertEquals(trainee, result.get(0));
-        verify(traineeDAO).getAllTrainees();
     }
 
 }

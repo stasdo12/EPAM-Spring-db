@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface TrainerService {
 
-    Optional<Trainer> create (Trainer trainer);
+    Optional<Trainer> create(Trainer trainer);
 
-    Optional<Trainer> update (Trainer trainer);
+    Optional<Trainer> update(Trainer trainer);
 
-    Optional<Trainer> getById (long trainerId);
+    Optional<Trainer> getById(long trainerId);
 
     Optional<Trainer> getByUsername(String username);
 
