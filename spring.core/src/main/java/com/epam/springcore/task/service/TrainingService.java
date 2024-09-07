@@ -8,7 +8,9 @@ import java.util.Optional;
 public interface TrainingService {
 
     Optional<Training> create (Training training);
+
     Optional<Training> findById(long trainingId);
+
     List<Training> getAllTrainings();
 
 }

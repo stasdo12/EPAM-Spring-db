@@ -8,7 +8,10 @@ import java.util.Optional;
 public interface TrainingDAO {
 
     Optional<Training> create(long trainingId, Training training);
+
     Optional<Training> getById(long trainingId);
+
     List<Training> getAllTrainings();
+
     long getMaxId();
 }
