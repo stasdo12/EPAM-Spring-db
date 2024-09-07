@@ -26,14 +26,14 @@ class TrainerDAOImplTest {
         Trainer trainer1 = new Trainer();
         trainer1.setTrainerId(1L);
         trainer1.setUser(user1);
-        trainerDAO.create(1L, trainer1);
+        trainerDAO.create(trainer1);
 
         User user2 = new User();
         user2.setUserName("trainer2");
         Trainer trainer2 = new Trainer();
         trainer2.setTrainerId(2L);
         trainer2.setUser(user2);
-        trainerDAO.create(2L, trainer2);
+        trainerDAO.create(trainer2);
     }
 
     @Test
@@ -42,7 +42,7 @@ class TrainerDAOImplTest {
         trainer.setTrainerId(3L);
         trainer.setUser(new User());
 
-        Optional<Trainer> result = trainerDAO.create(3L, trainer);
+        Optional<Trainer> result = trainerDAO.create(trainer);
 
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
@@ -55,7 +55,7 @@ class TrainerDAOImplTest {
         User existingUser = new User();
         existingUser.setUserName("trainer1");
         existingTrainer.setUser(existingUser);
-        trainerDAO.create(1L, existingTrainer);
+        trainerDAO.create(existingTrainer);
 
         Trainer updatedTrainer = new Trainer();
         updatedTrainer.setTrainerId(1L);
@@ -83,7 +83,7 @@ class TrainerDAOImplTest {
         User user = new User();
         user.setUserName("testTrainer");
         trainer.setUser(user);
-        trainerDAO.create(3L, trainer);
+        trainerDAO.create(trainer);
 
         Optional<Trainer> result = trainerDAO.getByUsername("testTrainer");
 
@@ -105,11 +105,5 @@ class TrainerDAOImplTest {
         assertThat(result).hasSize(1);
         assertThat(result).extracting(trainer -> trainer.getUser().getUserName())
                 .containsExactly("trainer1");
-    }
-
-    @Test
-    void getMaxId() {
-        long maxId = trainerDAO.getMaxId();
-        assertThat(maxId).isEqualTo(3L);
     }
 }

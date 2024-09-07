@@ -50,8 +50,8 @@ class TraineeServiceImplTest {
         User user = new User();
         trainee.setUser(user);
 
-        when(traineeDAO.getMaxId()).thenReturn(1L);
-        when(traineeDAO.create(1L, trainee)).thenReturn(Optional.of(trainee));
+
+        when(traineeDAO.create(trainee)).thenReturn(Optional.of(trainee));
         when(nameGenerator.generateUsername(user, Collections.emptyList(),
                 Collections.emptyList())).thenReturn("username");
         when(passwordGenerator.generatePassword()).thenReturn("password");

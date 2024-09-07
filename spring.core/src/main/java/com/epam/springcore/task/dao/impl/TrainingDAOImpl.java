@@ -20,7 +20,9 @@ public class TrainingDAOImpl implements TrainingDAO {
     }
 
     @Override
-    public Optional<Training> create(long trainingId, Training training) {
+    public Optional<Training> create(Training training) {
+        long trainingId = getMaxId();
+        training.setTrainingId(trainingId);
         trainingsStorage.put(trainingId, training);
         return getById(trainingId);
     }
@@ -35,8 +37,8 @@ public class TrainingDAOImpl implements TrainingDAO {
         return new ArrayList<>(trainingsStorage.values());
     }
 
-    @Override
-    public long getMaxId() {
+
+    private long getMaxId() {
         return trainingsStorage.keySet().stream().max(Long::compareTo).orElse(0L) +1;
     }
 }

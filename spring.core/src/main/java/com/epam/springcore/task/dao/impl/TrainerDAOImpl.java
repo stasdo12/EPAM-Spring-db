@@ -27,7 +27,9 @@ public class TrainerDAOImpl implements TrainerDAO {
     }
 
     @Override
-    public Optional<Trainer> create(long trainerId, Trainer trainer) {
+    public Optional<Trainer> create(Trainer trainer) {
+        long trainerId = getMaxId();
+        trainer.setTrainerId(trainerId);
         trainersStorage.put(trainerId, trainer);
         Optional<Trainer> createdTrainer = getById(trainerId);
         if (createdTrainer.isPresent()) {
@@ -103,8 +105,8 @@ public class TrainerDAOImpl implements TrainerDAO {
         return trainers;
     }
 
-    @Override
-    public long getMaxId() {
+
+    private long getMaxId() {
         return trainersStorage.keySet().stream().max(Long::compareTo).orElse(0L) + 1;
     }
 }

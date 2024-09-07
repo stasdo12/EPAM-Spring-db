@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface TraineeDAO {
 
-    Optional<Trainee> create(long traineeId, Trainee trainee);
+    Optional<Trainee> create(Trainee trainee);
 
     Optional<Trainee> update(Trainee trainee);
 
@@ -22,6 +22,5 @@ public interface TraineeDAO {
 
     List<Trainee> findAllByUsername(String username);
 
-    long getMaxId();
 
 }

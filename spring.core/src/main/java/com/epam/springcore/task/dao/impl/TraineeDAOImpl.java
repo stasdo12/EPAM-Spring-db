@@ -1,6 +1,5 @@
 package com.epam.springcore.task.dao.impl;
 
-
 import com.epam.springcore.task.dao.TraineeDAO;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.User;
@@ -27,15 +26,17 @@ public class TraineeDAOImpl implements TraineeDAO {
     }
 
     @Override
-    public Optional<Trainee> create(long traineeId, Trainee trainee) {
+    public Optional<Trainee> create(Trainee trainee) {
+       long traineeId = getMaxId();
+        trainee.setTraineeId(traineeId);
         traineesStorage.put(traineeId, trainee);
-        Optional<Trainee> oldTrainee = Optional.ofNullable(traineesStorage.replace(trainee.getTraineeId(), trainee));
-        if (oldTrainee.isPresent()) {
-            logger.debug("Successfully updated trainee: {}", trainee);
+        Optional<Trainee> createdTrainee = findById(traineeId);
+        if (createdTrainee.isPresent()) {
+            logger.debug("Successfully created trainee: {}", trainee);
         } else {
-            logger.warn("Failed to update trainee with ID: {}", trainee.getTraineeId());
+            logger.warn("Failed to create trainee with ID: {}", trainee.getTraineeId());
         }
-        return oldTrainee;
+        return createdTrainee;
     }
 
     @Override
@@ -73,7 +74,6 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> findByUsername(String username) {
-
         if (username == null) {
             logger.warn("Username is null");
             return Optional.empty();
@@ -113,8 +113,8 @@ public class TraineeDAOImpl implements TraineeDAO {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public long getMaxId() {
+
+    private long getMaxId() {
         return traineesStorage.keySet().stream().max(Long::compareTo).orElse(0L) + 1;
     }
 }

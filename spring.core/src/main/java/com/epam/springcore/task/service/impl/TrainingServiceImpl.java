@@ -20,9 +20,7 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public Optional<Training> create(Training training) {
-        long maxId = trainingDAO.getMaxId();
-        training.setTrainingId(maxId);
-        return trainingDAO.create(maxId, training);
+        return trainingDAO.create(training);
     }
 
     @Override

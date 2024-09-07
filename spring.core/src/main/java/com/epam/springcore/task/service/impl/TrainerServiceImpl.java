@@ -18,8 +18,6 @@ import java.util.Optional;
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrainerServiceImpl.class);
-
     private final TrainerDAO trainerDAO;
 
     private final TraineeDAO traineeDAO;
@@ -40,8 +38,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Optional<Trainer> create(Trainer trainer) {
-        long maxId = trainerDAO.getMaxId();
-        trainer.setTrainerId(maxId);
 
         User user = trainer.getUser();
 
@@ -52,7 +48,7 @@ public class TrainerServiceImpl implements TrainerService {
         }else {
             throw new IllegalArgumentException("User must not be null in Trainer");
         }
-        return trainerDAO.create(maxId, trainer);
+        return trainerDAO.create(trainer);
     }
 
     @Override

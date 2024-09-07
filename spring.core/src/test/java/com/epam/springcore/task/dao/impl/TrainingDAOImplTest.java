@@ -32,7 +32,7 @@ class TrainingDAOImplTest {
         training1.setTrainingType(TrainingType.BODYBUILDING);
         training1.setDate(LocalDate.of(2024, 9, 1));
         training1.setDurationMinutes(60);
-        trainingDAO.create(1L, training1);
+        trainingDAO.create(training1);
 
         Training training2 = new Training();
         training2.setTrainingId(2L);
@@ -41,7 +41,7 @@ class TrainingDAOImplTest {
         training2.setTrainingType(TrainingType.PILATES);
         training2.setDate(LocalDate.of(2024, 9, 2));
         training2.setDurationMinutes(45);
-        trainingDAO.create(2L, training2);
+        trainingDAO.create(training2);
     }
 
     @Test
@@ -55,7 +55,7 @@ class TrainingDAOImplTest {
         newTraining.setDate(LocalDate.of(2024, 9, 3));
         newTraining.setDurationMinutes(30);
 
-        Optional<Training> result = trainingDAO.create(3L, newTraining);
+        Optional<Training> result = trainingDAO.create(newTraining);
 
         assertTrue(result.isPresent());
         assertEquals(newTraining, result.get());
@@ -75,9 +75,4 @@ class TrainingDAOImplTest {
         assertThat(result).hasSize(2);
     }
 
-    @Test
-    void getMaxId() {
-        long maxId = trainingDAO.getMaxId();
-        assertThat(maxId).isEqualTo(3L);
-    }
 }

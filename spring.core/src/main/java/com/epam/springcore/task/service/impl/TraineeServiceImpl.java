@@ -7,8 +7,6 @@ import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.TraineeService;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,6 @@ import java.util.Optional;
 
 @Service
 public class TraineeServiceImpl implements TraineeService {
-
-    private static final Logger logger = LoggerFactory.getLogger(TraineeServiceImpl.class);
 
     private final TraineeDAO traineeDAO;
 
@@ -40,8 +36,6 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Optional<Trainee> create(Trainee trainee) {
-        long maxId = traineeDAO.getMaxId();
-        trainee.setTraineeId(maxId);
 
         User user = trainee.getUser();
 
@@ -51,7 +45,7 @@ public class TraineeServiceImpl implements TraineeService {
        }else {
            throw new IllegalArgumentException("User must not be null in Trainee");
        }
-       return traineeDAO.create(maxId, trainee);
+       return traineeDAO.create(trainee);
     }
 
     @Override

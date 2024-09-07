@@ -32,8 +32,7 @@ class TrainingServiceImplTest {
     @Test
     void create_ShouldCreateTraining() {
         Training training = new Training();
-        when(trainingDAO.getMaxId()).thenReturn(1L);
-        when(trainingDAO.create(1L, training)).thenReturn(Optional.of(training));
+        when(trainingDAO.create(training)).thenReturn(Optional.of(training));
 
         Optional<Training> result = trainingService.create(training);
 

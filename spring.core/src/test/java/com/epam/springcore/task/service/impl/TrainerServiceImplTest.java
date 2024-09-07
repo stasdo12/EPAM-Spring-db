@@ -50,8 +50,8 @@ class TrainerServiceImplTest {
         User user = new User();
         trainer.setUser(user);
 
-        when(trainerDAO.getMaxId()).thenReturn(1L);
-        when(trainerDAO.create(1L, trainer)).thenReturn(Optional.of(trainer));
+
+        when(trainerDAO.create(trainer)).thenReturn(Optional.of(trainer));
         when(nameGenerator.generateUsername(user, Collections.emptyList(), Collections.emptyList())).thenReturn("username");
         when(passwordGenerator.generatePassword()).thenReturn("password");
 

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface TrainerDAO {
 
-    Optional<Trainer> create(long trainerId, Trainer trainer);
+    Optional<Trainer> create(Trainer trainer);
 
     Optional<Trainer> update(Trainer trainer);
 
@@ -20,6 +20,6 @@ public interface TrainerDAO {
 
     List<Trainer> getAllTrainersByUsername(String username);
 
-    long getMaxId();
+
 
 }

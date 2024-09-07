@@ -30,14 +30,14 @@ class TraineeDAOImplTest {
         Trainee trainee1 = new Trainee();
         trainee1.setTraineeId(1L);
         trainee1.setUser(new User());
-        traineeDAO.create(1L, trainee1);
+        traineeDAO.create(trainee1);
 
         User user2 = new User();
         user2.setUserName("user2");
         Trainee trainee2 = new Trainee();
         trainee2.setTraineeId(2L);
         trainee2.setUser(new User());
-        traineeDAO.create(2L, trainee2);
+        traineeDAO.create(trainee2);
     }
 
     @Test
@@ -47,7 +47,7 @@ class TraineeDAOImplTest {
         trainee.setTraineeId(3L);
         trainee.setUser(new User());
 
-        Optional<Trainee> result = traineeDAO.create(3L, trainee);
+        Optional<Trainee> result = traineeDAO.create( trainee);
 
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
@@ -92,7 +92,7 @@ class TraineeDAOImplTest {
         User user = new User();
         user.setUserName("testUser");
         trainee.setUser(user);
-        traineeDAO.create(3L, trainee);
+        traineeDAO.create( trainee);
 
         Optional<Trainee> result = traineeDAO.findByUsername("testUser");
 
@@ -116,14 +116,14 @@ class TraineeDAOImplTest {
         User user1 = new User();
         user1.setUserName("user1");
         trainee1.setUser(user1);
-        traineeDAO.create(4L, trainee1);
+        traineeDAO.create( trainee1);
 
         Trainee trainee2 = new Trainee();
         trainee2.setTraineeId(5L);
         User user2 = new User();
         user2.setUserName("user1_1");
         trainee2.setUser(user2);
-        traineeDAO.create(5L, trainee2);
+        traineeDAO.create( trainee2);
 
         List<Trainee> result = traineeDAO.findAllByUsername("user1");
 
@@ -132,10 +132,4 @@ class TraineeDAOImplTest {
         assertThat(result.get(1).getUser().getUserName()).isEqualTo("user1_1");
     }
 
-    @Test
-    void getMaxId() {
-
-        long maxId = traineeDAO.getMaxId();
-        assertThat(maxId).isEqualTo(3L);
-    }
 }
