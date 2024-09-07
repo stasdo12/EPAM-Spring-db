@@ -7,6 +7,8 @@ import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -28,6 +30,9 @@ public class StorageInitializer implements ApplicationListener<ApplicationReadyE
     private Resource resource;
 
     private final Storage storage;
+
+    private static final Logger logger = LoggerFactory.getLogger(StorageInitializer.class);
+
 
     @Autowired
     public StorageInitializer(Storage storage) {
@@ -56,11 +61,10 @@ public class StorageInitializer implements ApplicationListener<ApplicationReadyE
             storage.setTrainers(trainerMap);
             storage.setTrainings(trainingMap);
 
-            System.out.println("Storage has been initialized with data from file.");
+            logger.info("Storage has been initialized with data from file.");
 
         } catch (IOException e) {
-            System.err.println("Error initializing storage from file: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error initializing storage from file: {}", e.getMessage(), e);
         }
     }
 

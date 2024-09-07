@@ -42,7 +42,6 @@ public class TraineeServiceImpl implements TraineeService {
     public Optional<Trainee> create(Trainee trainee) {
         long maxId = traineeDAO.getMaxId();
         trainee.setTraineeId(maxId);
-        logger.info("Creating trainee with ID: {}", maxId);
 
         User user = trainee.getUser();
 
@@ -50,7 +49,6 @@ public class TraineeServiceImpl implements TraineeService {
            user.setUserName(nameGenerator.generateUsername(user, traineeDAO.getAllTrainees(), trainerDAO.getAllTrainers()));
            user.setPassword(passwordGenerator.generatePassword());
        }else {
-           logger.error("User must not be null in Trainee");
            throw new IllegalArgumentException("User must not be null in Trainee");
        }
        return traineeDAO.create(maxId, trainee);
@@ -58,13 +56,11 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Optional<Trainee> update(Trainee trainee) {
-        logger.info("Updating trainee with ID: {}", trainee.getTraineeId());
         return traineeDAO.update(trainee);
     }
 
     @Override
     public boolean delete(long traineeId) {
-        logger.info("Deleting trainee with ID: {}", traineeId);
         return traineeDAO.deleteById(traineeId);
     }
 

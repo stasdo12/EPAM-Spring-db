@@ -42,7 +42,6 @@ public class TrainerServiceImpl implements TrainerService {
     public Optional<Trainer> create(Trainer trainer) {
         long maxId = trainerDAO.getMaxId();
         trainer.setTrainerId(maxId);
-        logger.info("Creating trainee with ID: {}", maxId);
 
         User user = trainer.getUser();
 
@@ -51,7 +50,6 @@ public class TrainerServiceImpl implements TrainerService {
                     trainerDAO.getAllTrainers()));
             user.setPassword(passwordGenerator.generatePassword());
         }else {
-            logger.error("User must not be null in Trainer");
             throw new IllegalArgumentException("User must not be null in Trainer");
         }
         return trainerDAO.create(maxId, trainer);
@@ -59,7 +57,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Optional<Trainer> update(Trainer trainer) {
-        logger.info("Updating trainer with ID: {}", trainer.getTrainerId());
         return trainerDAO.update(trainer);
     }
 

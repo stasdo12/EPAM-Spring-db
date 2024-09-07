@@ -28,11 +28,10 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> create(long trainerId, Trainer trainer) {
-        logger.debug("Creating trainer with ID: {}", trainerId);
         trainersStorage.put(trainerId, trainer);
         Optional<Trainer> createdTrainer = getById(trainerId);
         if (createdTrainer.isPresent()) {
-            logger.info("Successfully created trainer: {}", createdTrainer.get());
+            logger.debug("Successfully created trainer: {}", createdTrainer.get());
         } else {
             logger.warn("Failed to create trainer with ID: {}", trainerId);
         }
@@ -41,10 +40,9 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> update(Trainer trainer) {
-        logger.debug("Updating trainer with ID: {}", trainer.getTrainerId());
         Optional<Trainer> oldTrainer = Optional.ofNullable(trainersStorage.replace(trainer.getTrainerId(), trainer));
         if (oldTrainer.isPresent()) {
-            logger.info("Successfully updated trainer: {}", trainer);
+            logger.debug("Successfully updated trainer: {}", trainer);
         } else {
             logger.warn("Failed to update trainer with ID: {}", trainer.getTrainerId());
         }
@@ -53,10 +51,9 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> getById(long trainerId) {
-        logger.debug("Finding trainer by ID: {}", trainerId);
         Optional<Trainer> trainer = Optional.ofNullable(trainersStorage.get(trainerId));
         if (trainer.isPresent()) {
-            logger.info("Found trainer: {}", trainer.get());
+            logger.debug("Found trainer: {}", trainer.get());
         } else {
             logger.warn("No trainer found with ID: {}", trainerId);
         }
@@ -65,7 +62,6 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> getByUsername(String username) {
-        logger.debug("Finding trainer by username: {}", username);
         if (username == null) {
             logger.warn("Username is null");
             return Optional.empty();
@@ -78,7 +74,7 @@ public class TrainerDAOImpl implements TrainerDAO {
                 })
                 .findAny();
         if (trainer.isPresent()) {
-            logger.info("Found trainer: {}", trainer.get());
+            logger.debug("Found trainer: {}", trainer.get());
         } else {
             logger.warn("No trainer found with username: {}", username);
         }
@@ -92,7 +88,6 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public List<Trainer> getAllTrainersByUsername(String username) {
-        logger.debug("Finding all trainers by username pattern: {}", username);
         if (username == null) {
             logger.warn("Username pattern is null");
             return Collections.emptyList();
@@ -104,7 +99,7 @@ public class TrainerDAOImpl implements TrainerDAO {
                     return user != null && user.getUserName() != null && user.getUserName().matches(username + ".*");
                 })
                 .collect(Collectors.toList());
-        logger.info("Found {} trainers with username pattern: {}", trainers.size(), username);
+        logger.debug("Found {} trainers with username pattern: {}", trainers.size(), username);
         return trainers;
     }
 

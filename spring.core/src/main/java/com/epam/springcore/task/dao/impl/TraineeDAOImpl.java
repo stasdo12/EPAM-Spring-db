@@ -28,11 +28,10 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> create(long traineeId, Trainee trainee) {
-        logger.debug("Creating trainee with ID: {}", traineeId);
         traineesStorage.put(traineeId, trainee);
         Optional<Trainee> oldTrainee = Optional.ofNullable(traineesStorage.replace(trainee.getTraineeId(), trainee));
         if (oldTrainee.isPresent()) {
-            logger.info("Successfully updated trainee: {}", trainee);
+            logger.debug("Successfully updated trainee: {}", trainee);
         } else {
             logger.warn("Failed to update trainee with ID: {}", trainee.getTraineeId());
         }
@@ -41,10 +40,9 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> update(Trainee trainee) {
-        logger.debug("Updating trainee with ID: {}", trainee.getTraineeId());
         Optional<Trainee> oldTrainee = Optional.ofNullable(traineesStorage.replace(trainee.getTraineeId(), trainee));
         if (oldTrainee.isPresent()) {
-            logger.info("Successfully updated trainee: {}", trainee);
+            logger.debug("Successfully updated trainee: {}", trainee);
         } else {
             logger.warn("Failed to update trainee with ID: {}", trainee.getTraineeId());
         }
@@ -53,10 +51,9 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public boolean deleteById(long traineeId) {
-        logger.debug("Deleting trainee with ID: {}", traineeId);
         boolean isDeleted = traineesStorage.remove(traineeId) != null;
         if (isDeleted) {
-            logger.info("Successfully deleted trainee with ID: {}", traineeId);
+            logger.debug("Successfully deleted trainee with ID: {}", traineeId);
         } else {
             logger.warn("Failed to delete trainee with ID: {}", traineeId);
         }
@@ -65,10 +62,9 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> findById(long traineeId) {
-        logger.debug("Finding trainee by ID: {}", traineeId);
         Optional<Trainee> trainee = Optional.ofNullable(traineesStorage.get(traineeId));
         if (trainee.isPresent()) {
-            logger.info("Found trainee: {}", trainee.get());
+            logger.debug("Found trainee: {}", trainee.get());
         } else {
             logger.warn("No trainee found with ID: {}", traineeId);
         }
@@ -90,7 +86,7 @@ public class TraineeDAOImpl implements TraineeDAO {
                 })
                 .findAny();
         if (trainee.isPresent()) {
-            logger.info("Found trainee: {}", trainee.get());
+            logger.debug("Found trainee: {}", trainee.get());
         } else {
             logger.warn("No trainee found with username: {}", username);
         }
