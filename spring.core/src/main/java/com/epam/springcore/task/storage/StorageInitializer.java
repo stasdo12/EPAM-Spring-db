@@ -7,9 +7,10 @@ import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class StorageInitializer {
+public class StorageInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
     @Value("${file.path.initialData}")
     private Resource resource;
@@ -33,8 +34,8 @@ public class StorageInitializer {
         this.storage = storage;
     }
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -62,4 +63,5 @@ public class StorageInitializer {
             e.printStackTrace();
         }
     }
+
 }
