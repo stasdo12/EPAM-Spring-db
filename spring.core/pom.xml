@@ -21,9 +21,7 @@
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.18.34</lombok.version>
-		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 		<jackson.dataformat.version>2.17.2</jackson.dataformat.version>
-		<junit.jupiter.version>5.9.3</junit.jupiter.version>
 		<logback.version>1.5.7</logback.version>
 		<slf4j.version>2.0.0</slf4j.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
@@ -53,34 +51,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Jakarta Annotations -->
-		<dependency>
-			<groupId>jakarta.annotation</groupId>
-			<artifactId>jakarta.annotation-api</artifactId>
-			<version>${jakarta.annotation.version}</version>
-		</dependency>
-
 		<!-- Jackson Datatype for JSR310 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>${jackson.dataformat.version}</version>
-		</dependency>
-
-		<!-- JUnit Jupiter API -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- JUnit Jupiter Engine -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- Logback Classic -->
