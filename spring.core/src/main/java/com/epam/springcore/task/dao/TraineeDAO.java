@@ -22,5 +22,4 @@ public interface TraineeDAO {
 
     List<Trainee> findAllByUsername(String username);
 
-
 }

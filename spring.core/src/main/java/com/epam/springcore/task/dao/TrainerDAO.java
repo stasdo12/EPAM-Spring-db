@@ -20,6 +20,4 @@ public interface TrainerDAO {
 
     List<Trainer> getAllTrainersByUsername(String username);
 
-
-
 }

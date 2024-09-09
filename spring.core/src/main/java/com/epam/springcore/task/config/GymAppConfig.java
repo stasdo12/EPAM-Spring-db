@@ -9,8 +9,6 @@ import org.springframework.context.annotation.*;
 import java.util.Map;
 
 @Configuration
-@ComponentScan(basePackages = "com.epam.springcore.task")
-@PropertySource("classpath:application.properties")
 public class GymAppConfig {
 
     private final Storage storage;
