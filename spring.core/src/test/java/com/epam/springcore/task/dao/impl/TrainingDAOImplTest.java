@@ -5,6 +5,7 @@ import com.epam.springcore.task.model.TrainingType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +21,19 @@ class TrainingDAOImplTest {
 
     private TrainingDAOImpl trainingDAO;
 
+
     @BeforeEach
     public void setUp() {
         Map<Long, Training> trainingsStorage = new HashMap<>();
         trainingDAO = new TrainingDAOImpl(trainingsStorage);
+        TrainingType bodybuilding = new TrainingType(1L, "BODYBUILDING");
+        TrainingType pilates = new TrainingType(2L,"PILATES");
 
         Training training1 = new Training();
         training1.setTrainingId(1L);
         training1.setTraineeId(101L);
         training1.setTrainerId(201L);
-        training1.setTrainingType(TrainingType.BODYBUILDING);
+        training1.setTrainingType(bodybuilding);
         training1.setDate(LocalDate.of(2024, 9, 1));
         training1.setDurationMinutes(60);
         trainingDAO.create(training1);
@@ -38,7 +42,7 @@ class TrainingDAOImplTest {
         training2.setTrainingId(2L);
         training2.setTraineeId(102L);
         training2.setTrainerId(202L);
-        training2.setTrainingType(TrainingType.PILATES);
+        training2.setTrainingType(pilates);
         training2.setDate(LocalDate.of(2024, 9, 2));
         training2.setDurationMinutes(45);
         trainingDAO.create(training2);
@@ -46,12 +50,12 @@ class TrainingDAOImplTest {
 
     @Test
     void create_shouldCreateTrainer() {
-
+        TrainingType pilates = new TrainingType(2L,"PILATES");
         Training newTraining = new Training();
         newTraining.setTrainingId(3L);
         newTraining.setTraineeId(103L);
         newTraining.setTrainerId(203L);
-        newTraining.setTrainingType(TrainingType.CARDIO);
+        newTraining.setTrainingType(pilates);
         newTraining.setDate(LocalDate.of(2024, 9, 3));
         newTraining.setDurationMinutes(30);
 
