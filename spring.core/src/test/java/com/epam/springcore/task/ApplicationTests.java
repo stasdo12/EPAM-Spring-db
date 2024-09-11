@@ -1,7 +1,8 @@
-package com.emap.springcore.task;
+package com.epam.springcore.task;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
 
 @SpringBootTest
 class ApplicationTests {
