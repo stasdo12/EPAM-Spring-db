@@ -32,7 +32,7 @@ public class NameGenerationImpl implements NameGenerator {
                 trainers.stream().map(Trainer::getUser)
         );
 
-        OptionalInt maxIndex =  users.map(User::getUserName)
+        OptionalInt maxIndex =  users.map(User::getUsername)
                 .map(userName -> {
                     Matcher matcher = NUMBER_PATTERN.matcher(userName);
                     return matcher.find() ? matcher.group(1) : "";

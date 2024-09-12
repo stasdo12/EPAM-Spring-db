@@ -1,15 +1,6 @@
 package com.epam.springcore.task.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -21,6 +12,7 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -41,16 +33,22 @@ public class Trainee {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotNull(message = "Birthday cannot be null")
     @Past(message = "Birthday must be a date in the past")
     @Column(name = "date_of_birth")
     private LocalDate birthday;
 
-    @NotBlank(message = "Address cannot be blank")
     @Column(name = "address")
     private String address;
 
     @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
     private List<Training> trainings;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "trainee_has_trainer",
+            joinColumns = @JoinColumn(name = "trainee_id"),
+            inverseJoinColumns = @JoinColumn(name = "trainer_id")
+    )
+    private Set<Trainer> trainers;
 
 }

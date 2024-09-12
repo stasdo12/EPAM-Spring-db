@@ -37,10 +37,10 @@ class NameGenerationImplTest {
         user.setLastName("Doe");
 
         User existingUser1 = new User();
-        existingUser1.setUserName("John.Doe1");
+        existingUser1.setUsername("John.Doe1");
 
         User existingUser2 = new User();
-        existingUser2.setUserName("John.Doe2");
+        existingUser2.setUsername("John.Doe2");
 
         Trainee trainee1 = Mockito.mock(Trainee.class);
         Mockito.when(trainee1.getUser()).thenReturn(existingUser1);

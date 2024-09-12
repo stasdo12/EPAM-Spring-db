@@ -1,13 +1,6 @@
 package com.epam.springcore.task.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,9 +23,11 @@ public class TrainingType {
     @Column(name = "training_type_name")
     private String name;
 
+    @Transient
     @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL)
     private List<Trainer> trainers;
 
+    @Transient
     @OneToMany(mappedBy = "trainingType", cascade = CascadeType.ALL)
     private List<Training> trainings;
 }

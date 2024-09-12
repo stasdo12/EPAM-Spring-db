@@ -44,7 +44,7 @@ public class User {
     @NotBlank(message = "Username cannot be blank")
     @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
     @Column(name = "username", unique = true, nullable = false)
-    private String userName;
+    private String username;
 
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 10, message = "Password must be at least 10 characters long")

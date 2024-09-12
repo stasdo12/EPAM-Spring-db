@@ -1,4 +1,4 @@
-package com.epam.springcore.task.repo;
+package com.epam.springcore.task.dao;
 
 import com.epam.springcore.task.model.TrainingType;
 import org.springframework.data.jpa.repository.JpaRepository;
