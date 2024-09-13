@@ -1,5 +1,6 @@
 package com.epam.springcore.task.utils.impl;
 
+import com.epam.springcore.task.dao.UserRepository;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.User;
@@ -46,4 +47,14 @@ public class NameGenerationImpl implements NameGenerator {
         return baseUsername + nextIndex;
     }
 
+    public String generateUniqueUsername(User user, UserRepository userRepository,
+                                         List<Trainee> trainees, List<Trainer> trainers) {
+        String baseUsername = generateUsername(user);
+
+        if (!userRepository.existsByUsername(baseUsername)) {
+            return baseUsername;
+        }
+
+        return generateUsername(user, trainees, trainers);
+    }
 }

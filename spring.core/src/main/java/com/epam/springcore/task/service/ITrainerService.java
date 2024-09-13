@@ -12,6 +12,14 @@ public interface ITrainerService {
 
     Optional<Trainer> findByUserId(Long userId);
 
-    void deleteTrainer(Long trainerId);
+    void changeTraineePassword(String username, String password);
+
+    Trainer updateTrainerProfile(String username, Trainer updatedTrainer);
+
+   void activateDeactivateTrainer(String username, boolean isActive);
+
+    public boolean matchTrainerCredentials(String username, String password);
+
+    Optional<Trainer> findByUsername(String username);
 
 }
