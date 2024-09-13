@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -17,17 +18,23 @@ public class TrainingType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank(message = "Training type name cannot be blank")
     @Column(name = "training_type_name")
     private String name;
 
-    @Transient
-    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Trainer> trainers;
 
-    @Transient
-    @OneToMany(mappedBy = "trainingType", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "trainingType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Training> trainings;
+
+    @Override
+    public String toString() {
+        return "TrainingType{id=" + id + ", name='" + name + "'}";
+    }
 }

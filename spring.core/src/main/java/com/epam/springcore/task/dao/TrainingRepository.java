@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface TrainingRepository extends JpaRepository<Training, Long> {
 
-    List<Training> findByTrainee_User_UsernameAndDateBetween(String username, LocalDate fromDate, LocalDate toDate);
+    List<Training> findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
+            String traineeUsername, LocalDate fromDate, LocalDate toDate, String trainerUsername, String trainingName);
 
-    List<Training> findByTrainer_User_UsernameAndDateBetween(String username, LocalDate fromDate, LocalDate toDate);
-
+    List<Training> findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
+            String trainerUsername, LocalDate fromDate, LocalDate toDate, String traineeUsername, String trainingName);
 }

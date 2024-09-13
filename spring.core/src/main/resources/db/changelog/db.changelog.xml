@@ -8,7 +8,7 @@
     <!-- ChangeSet for training-type table -->
     <changeSet id="1" author="StanDI">
         <createTable tableName="training_type">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="training_type_name" type="VARCHAR(255)">
@@ -20,7 +20,7 @@
     <!-- ChangeSet for users table -->
     <changeSet id="2" author="StanDi">
         <createTable tableName="users">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(255)">
@@ -44,7 +44,7 @@
     <!-- ChangeSet for trainee table -->
     <changeSet id="3" author="StanDi">
         <createTable tableName="trainee">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="date_of_birth" type="DATE"/>
@@ -62,7 +62,7 @@
     <!-- ChangeSet for trainer table -->
     <changeSet id="4" author="StanDi">
         <createTable tableName="trainer">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_id" type="BIGINT"/>
@@ -86,7 +86,7 @@
     <!-- ChangeSet for trainee_has_trainer table -->
     <changeSet id="5" author="StanDi">
         <createTable tableName="trainee_has_trainer">
-            <column name="trainee_id" type="BIGINT">
+            <column name="trainee_id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false"/>
             </column>
             <column name="trainer_id" type="BIGINT">
@@ -121,7 +121,7 @@
     <!-- ChangeSet for training table -->
     <changeSet id="6" author="StanDi">
         <createTable tableName="training">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="trainee_id" type="BIGINT"/>

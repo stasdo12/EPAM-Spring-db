@@ -1,14 +1,12 @@
 package com.epam.springcore.task.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
 @Entity
 @Table(name = "trainee")
@@ -50,5 +47,14 @@ public class Trainee {
             inverseJoinColumns = @JoinColumn(name = "trainer_id")
     )
     private Set<Trainer> trainers;
+
+
+    @Override
+    public String toString() {
+        return "Trainee{" +
+                "id=" + traineeId +
+                ", user=" + (user != null ? user.getUsername() : "null") +
+                '}';
+    }
 
 }

@@ -3,8 +3,11 @@ package com.epam.springcore.task.service.impl;
 
 import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
+import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
+import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITrainerService;
 import com.epam.springcore.task.utils.NameGenerator;
@@ -17,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +34,8 @@ public class TrainerService  implements ITrainerService {
 
     private final TraineeRepository traineeRepository;
 
+    private final TrainingRepository trainingRepository;
+
     private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
 
 
@@ -36,12 +43,13 @@ public class TrainerService  implements ITrainerService {
 
 
     @Autowired
-    public TrainerService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator, UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository) {
+    public TrainerService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator, UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
+        this.trainingRepository = trainingRepository;
     }
 
 
@@ -83,6 +91,7 @@ public class TrainerService  implements ITrainerService {
         }
         return trainerOptional;
     }
+
 
     @Override
     public void changeTraineePassword(String username, String newPassword) {
@@ -132,6 +141,24 @@ public class TrainerService  implements ITrainerService {
         trainerRepository.save(trainer);
     }
 
+    @Override
+    public List<Training> getTrainerTrainingsByCriteria(String trainerUsername, LocalDate fromDate,
+                                                        LocalDate toDate, String traineeUsername, String trainingName) {
+        return trainingRepository.findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName
+                (trainerUsername, fromDate, toDate, traineeUsername, trainingName);
+    }
+
+    @Override
+    public List<Trainer> getTrainersNotAssignedToTrainee(String traineeUsername) {
+        if (traineeUsername == null){
+            throw new IllegalArgumentException("Trainee username must not be null");
+        }
+        Optional<Trainee> trainee = traineeRepository.findTraineeByUserUsername(traineeUsername);
+        if (trainee.isEmpty()){
+            throw new IllegalArgumentException("Trainee with username " + traineeUsername + "not found");
+        }
+        return trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
+    }
 
 
     @Override

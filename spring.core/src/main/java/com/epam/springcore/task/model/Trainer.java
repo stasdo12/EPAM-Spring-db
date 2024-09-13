@@ -15,10 +15,11 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+
 @EqualsAndHashCode
 @Entity
 @Table(name = "trainer")
+
 public class Trainer {
 
     @Id
@@ -41,4 +42,10 @@ public class Trainer {
 
     @ManyToMany(mappedBy = "trainers", fetch = FetchType.EAGER)
     private Set<Trainee> trainees;
+
+    @Override
+    public String toString() {
+        return "Trainer{id=" + trainerId + ", user=" + user.getUsername() + ", " +
+                "specialization=" + specialization.getName() + "}";
+    }
 }

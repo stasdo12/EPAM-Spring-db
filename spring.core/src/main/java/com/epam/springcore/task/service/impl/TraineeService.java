@@ -2,9 +2,10 @@ package com.epam.springcore.task.service.impl;
 
 import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
+import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
 import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.Trainer;
+import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITraineeService;
 import com.epam.springcore.task.utils.NameGenerator;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +31,8 @@ public class TraineeService implements ITraineeService {
 
     private final TraineeRepository traineeRepository;
 
+    private final TrainingRepository trainingRepository;
+
     private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
 
 
@@ -35,13 +40,14 @@ public class TraineeService implements ITraineeService {
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
-                          UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository) {
+                          UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
 
+        this.trainingRepository = trainingRepository;
     }
 
 
@@ -70,6 +76,7 @@ public class TraineeService implements ITraineeService {
     public boolean matchTrainerCredentials(String username, String password) {
         return AuthenticationUtils.matchCredentials(username, password, userRepository);
     }
+
 
     @Override
     public Optional<Trainee> findByUsername(String username) {
@@ -144,14 +151,23 @@ public class TraineeService implements ITraineeService {
     }
 
 
+    @Transactional
+    @Override
+    public List<Training> getTraineeTrainingsByCriteria(String traineeUsername, LocalDate fromDate, LocalDate toDate,
+                                                        String trainerUsername, String trainingName) {
+        return trainingRepository.findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
+                traineeUsername, fromDate, toDate, trainerUsername, trainingName);
+    }
+
+
     @Override
     public Optional<Trainee> findById(long traineeId) {
-        return Optional.empty();
+        return traineeRepository.findById(traineeId);
     }
 
     @Override
     public Optional<Trainee> findByUserId(Long userId) {
-        return Optional.empty();
+        return traineeRepository.findTraineeByUserUserId(userId);
     }
 
 
