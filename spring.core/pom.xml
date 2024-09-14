@@ -26,9 +26,24 @@
 		<slf4j.version>2.0.0</slf4j.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+		<org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
+		<org.mapstruct.processor.version>1.5.2.Final</org.mapstruct.processor.version>
 	</properties>
 
 	<dependencies>
+
+		<!-- org.mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${org.mapstruct.processor.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- org.liquibase -->
 		<dependency>
