@@ -15,7 +15,7 @@ public interface ITrainerService {
 
     Optional<Trainer> findByUserId(Long userId);
 
-    void changeTraineePassword(String username, String password);
+    void changeTrainerPassword(String username, String password);
 
     Trainer updateTrainerProfile(String username, Trainer updatedTrainer);
 

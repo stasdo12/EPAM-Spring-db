@@ -94,7 +94,7 @@ public class TrainerService  implements ITrainerService {
 
 
     @Override
-    public void changeTraineePassword(String username, String newPassword) {
+    public void changeTrainerPassword(String username, String newPassword) {
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
         if (trainerOptional.isEmpty()){
             throw new IllegalArgumentException("Trainer with username" + username +  "not found");
