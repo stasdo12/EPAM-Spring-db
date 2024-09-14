@@ -5,6 +5,7 @@ import com.epam.springcore.task.dao.TrainerRepository;
 import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
 import com.epam.springcore.task.model.Trainee;
+import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITraineeService;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TraineeService implements ITraineeService {
@@ -92,6 +94,9 @@ public class TraineeService implements ITraineeService {
         return traineeOptional;
     }
 
+
+    @Override
+    @Transactional
     public void changeTraineePassword(String username, String newPassword) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
         if (traineeOptional.isEmpty()) {
@@ -109,6 +114,7 @@ public class TraineeService implements ITraineeService {
     }
 
     @Override
+    @Transactional
     public Trainee updateTraineeProfile(String username, Trainee updatedTrainee) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
 
@@ -126,6 +132,7 @@ public class TraineeService implements ITraineeService {
     }
 
     @Override
+    @Transactional
     public void activateDeactivateTrainee(String username, boolean isActive) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
         if (traineeOptional.isEmpty()) {
@@ -141,7 +148,8 @@ public class TraineeService implements ITraineeService {
         traineeRepository.save(trainee);
     }
     @Override
-    public void deleteTrainer(String username) {
+    @Transactional
+    public void deleteTrainee(String username) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
         if (traineeOptional.isEmpty()) {
             throw new IllegalArgumentException("Trainee with username " + username + " not found");
@@ -157,6 +165,19 @@ public class TraineeService implements ITraineeService {
                                                         String trainerUsername, String trainingName) {
         return trainingRepository.findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingName);
+    }
+
+    @Override
+    @Transactional
+    public Trainee updateTraineeTrainers(String traineeUsername, Set<Trainer> newTrainers) {
+        Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(traineeUsername);
+        if (traineeOptional.isEmpty()) {
+            throw new IllegalArgumentException("Trainee with username " + traineeUsername + " not found");
+        }
+        Trainee trainee = traineeOptional.get();
+        trainee.setTrainers(newTrainers);
+
+        return traineeRepository.save(trainee);
     }
 
 

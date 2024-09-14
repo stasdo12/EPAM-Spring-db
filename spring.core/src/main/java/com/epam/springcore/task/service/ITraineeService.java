@@ -8,6 +8,7 @@ import com.epam.springcore.task.model.Training;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ITraineeService {
 
@@ -27,7 +28,7 @@ public interface ITraineeService {
 
 
 
-    void deleteTrainer(String username);
+    void deleteTrainee(String username);
 
     public boolean matchTrainerCredentials(String username, String password);
 
@@ -35,5 +36,6 @@ public interface ITraineeService {
             String traineeUsername, LocalDate fromDate, LocalDate toDate, String trainerUsername, String trainingName);
 
 
+    Trainee updateTraineeTrainers(String traineeUsername, Set<Trainer> newTrainers);
 
 }
