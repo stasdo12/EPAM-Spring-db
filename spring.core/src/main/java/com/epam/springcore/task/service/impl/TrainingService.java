@@ -11,12 +11,10 @@ public class TrainingService implements ITrainingService {
 
     public final TrainingRepository trainingRepository;
 
-
     @Autowired
     public TrainingService(TrainingRepository trainingRepository) {
         this.trainingRepository = trainingRepository;
     }
-
 
     @Override
     public Training addTraining(Training training) {

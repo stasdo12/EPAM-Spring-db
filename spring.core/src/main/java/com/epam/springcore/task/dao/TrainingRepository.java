@@ -15,4 +15,5 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
 
     List<Training> findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
             String trainerUsername, LocalDate fromDate, LocalDate toDate, String traineeUsername, String trainingName);
+
 }

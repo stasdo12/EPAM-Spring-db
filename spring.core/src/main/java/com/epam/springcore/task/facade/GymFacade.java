@@ -1,6 +1,5 @@
 package com.epam.springcore.task.facade;
 
-
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
@@ -19,8 +18,11 @@ import java.util.Set;
 public class GymFacade{
 
     private final TraineeService traineeService;
+
     private final TrainerService trainerService;
+
     private final TrainingService trainingService;
+
 
     @Autowired
     public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
@@ -104,5 +106,4 @@ public class GymFacade{
     public Training addTraining(Training training){
        return trainingService.addTraining(training);
     }
-
 }

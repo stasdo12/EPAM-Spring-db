@@ -1,6 +1,5 @@
 package com.epam.springcore.task.service.impl;
 
-
 import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
 import com.epam.springcore.task.dao.TrainingRepository;
@@ -28,19 +27,19 @@ import java.util.Optional;
 public class TrainerService  implements ITrainerService {
 
     private final NameGenerator nameGeneration;
+
     private final PasswordGenerator passwordGenerator;
+
     private final UserRepository userRepository;
+
     private final TrainerRepository trainerRepository;
+
 
     private final TraineeRepository traineeRepository;
 
     private final TrainingRepository trainingRepository;
 
     private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
-
-
-
-
 
     @Autowired
     public TrainerService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator, UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
@@ -51,7 +50,6 @@ public class TrainerService  implements ITrainerService {
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
     }
-
 
     @Override
     @Transactional
@@ -92,7 +90,6 @@ public class TrainerService  implements ITrainerService {
         return trainerOptional;
     }
 
-
     @Override
     public void changeTrainerPassword(String username, String newPassword) {
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
@@ -106,7 +103,6 @@ public class TrainerService  implements ITrainerService {
         }
         user.setPassword(newPassword);
         trainerRepository.save(trainer);
-
     }
 
     @Override
@@ -159,7 +155,6 @@ public class TrainerService  implements ITrainerService {
         }
         return trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
     }
-
 
     @Override
     public Optional<Trainer> findById(Long trainerId) {

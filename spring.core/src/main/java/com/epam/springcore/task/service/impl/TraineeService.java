@@ -27,8 +27,11 @@ import java.util.Set;
 public class TraineeService implements ITraineeService {
 
     private final NameGenerator nameGeneration;
+
     private final PasswordGenerator passwordGenerator;
+
     private final UserRepository userRepository;
+
     private final TrainerRepository trainerRepository;
 
     private final TraineeRepository traineeRepository;
@@ -36,9 +39,6 @@ public class TraineeService implements ITraineeService {
     private final TrainingRepository trainingRepository;
 
     private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
-
-
-
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
@@ -51,7 +51,6 @@ public class TraineeService implements ITraineeService {
 
         this.trainingRepository = trainingRepository;
     }
-
 
     @Override
     @Transactional
@@ -79,7 +78,6 @@ public class TraineeService implements ITraineeService {
         return AuthenticationUtils.matchCredentials(username, password, userRepository);
     }
 
-
     @Override
     public Optional<Trainee> findByUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
@@ -93,7 +91,6 @@ public class TraineeService implements ITraineeService {
         }
         return traineeOptional;
     }
-
 
     @Override
     @Transactional
@@ -146,6 +143,7 @@ public class TraineeService implements ITraineeService {
         }
         user.setActive(isActive);
         traineeRepository.save(trainee);
+
     }
     @Override
     @Transactional
@@ -157,7 +155,6 @@ public class TraineeService implements ITraineeService {
         Trainee trainee = traineeOptional.get();
         traineeRepository.delete(trainee);
     }
-
 
     @Transactional
     @Override
@@ -179,7 +176,6 @@ public class TraineeService implements ITraineeService {
 
         return traineeRepository.save(trainee);
     }
-
 
     @Override
     public Optional<Trainee> findById(long traineeId) {

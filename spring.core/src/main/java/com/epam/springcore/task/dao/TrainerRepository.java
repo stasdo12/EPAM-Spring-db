@@ -14,7 +14,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
     Optional<Trainer> findTrainerByUserUsername(String username);
 
-
     @Query("SELECT t FROM Trainer t WHERE t.trainerId NOT IN " +
             "(SELECT tr.trainer.trainerId FROM Training tr WHERE tr.trainee.traineeId = " +
             "(SELECT t2.traineeId FROM Trainee t2 WHERE t2.user.username = :traineeUsername))")

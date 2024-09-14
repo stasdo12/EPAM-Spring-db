@@ -26,8 +26,6 @@ public interface ITraineeService {
 
     void activateDeactivateTrainee(String username, boolean isActive);
 
-
-
     void deleteTrainee(String username);
 
     public boolean matchTrainerCredentials(String username, String password);
@@ -35,7 +33,5 @@ public interface ITraineeService {
     List<Training> getTraineeTrainingsByCriteria(
             String traineeUsername, LocalDate fromDate, LocalDate toDate, String trainerUsername, String trainingName);
 
-
     Trainee updateTraineeTrainers(String traineeUsername, Set<Trainer> newTrainers);
-
 }

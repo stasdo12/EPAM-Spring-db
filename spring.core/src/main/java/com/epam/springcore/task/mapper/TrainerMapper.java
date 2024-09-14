@@ -1,6 +1,5 @@
 package com.epam.springcore.task.mapper;
 
-
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.model.Trainer;
 import org.mapstruct.Mapper;

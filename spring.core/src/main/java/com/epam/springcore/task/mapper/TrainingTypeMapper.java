@@ -11,10 +11,8 @@ public interface TrainingTypeMapper {
 
     TrainingTypeMapper INSTANCE = Mappers.getMapper(TrainingTypeMapper.class);
 
-
     @Mapping(source = "name", target = "name")
     TrainingTypeDTO trainingTypeToDTO(TrainingType trainingType);
-
 
     @Mapping(source = "name", target = "name")
     TrainingType trainingTypeToEntity(TrainingTypeDTO trainingTypeDTO);

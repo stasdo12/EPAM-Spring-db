@@ -1,6 +1,5 @@
 package com.epam.springcore.task.dto;
 
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.Data;
