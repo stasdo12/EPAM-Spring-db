@@ -19,4 +19,6 @@ public class TraineeDTO {
     private List<TrainingDTO> trainings;
 
     private List<TrainerDTO> trainers;
+
+    private String address;
 }

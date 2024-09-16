@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(uses = {TraineeMapper.class, TrainerMapper.class, TrainingTypeMapper.class})
 public interface TrainingMapper {
 
@@ -26,4 +28,8 @@ public interface TrainingMapper {
     @Mapping(source = "date", target = "date")
     @Mapping(source = "durationMinutes", target = "durationMinutes")
     Training trainingToEntity(TrainingDTO trainingDTO);
+
+    List<Training> dtoListToEntityList(List<TrainingDTO> trainingDTOs);
+
+    List<TrainingDTO> entityListToDTOList(List<Training> trainings);
 }

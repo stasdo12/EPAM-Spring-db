@@ -1,5 +1,8 @@
 package com.epam.springcore.task.service;
 
+import com.epam.springcore.task.dto.TraineeDTO;
+import com.epam.springcore.task.dto.TrainerDTO;
+import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
@@ -12,17 +15,17 @@ import java.util.Set;
 
 public interface ITraineeService {
 
-    Trainee saveTrainee(Trainee trainee);
+    TraineeDTO saveTrainee(TraineeDTO traineeDTO);
 
-    Optional<Trainee> findById(long traineeId);
+    Optional<TraineeDTO> findById(long traineeId);
 
-    Optional<Trainee> findByUserId(Long userId);
+    Optional<TraineeDTO> findByUserId(Long userId);
 
-    Optional<Trainee> findByUsername(String username);
+    Optional<TraineeDTO> findByUsername(String username);
 
     void changeTraineePassword(String username, String password);
 
-    Trainee updateTraineeProfile(String username, Trainee updatedTrainee);
+    TraineeDTO updateTraineeProfile(String username, TraineeDTO updatedTrainee);
 
     void activateDeactivateTrainee(String username, boolean isActive);
 
@@ -30,8 +33,8 @@ public interface ITraineeService {
 
     public boolean matchTrainerCredentials(String username, String password);
 
-    List<Training> getTraineeTrainingsByCriteria(
+    List<TrainingDTO> getTraineeTrainingsByCriteria(
             String traineeUsername, LocalDate fromDate, LocalDate toDate, String trainerUsername, String trainingName);
 
-    Trainee updateTraineeTrainers(String traineeUsername, Set<Trainer> newTrainers);
+    Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainerDTOs);
 }

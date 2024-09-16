@@ -4,6 +4,12 @@ import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
 import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.dto.TraineeDTO;
+import com.epam.springcore.task.dto.TrainerDTO;
+import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.mapper.TraineeMapper;
+import com.epam.springcore.task.mapper.TrainerMapper;
+import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
@@ -19,9 +25,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 
 @Service
 public class TraineeService implements ITraineeService {
@@ -54,10 +63,12 @@ public class TraineeService implements ITraineeService {
 
     @Override
     @Transactional
-    public Trainee saveTrainee(Trainee trainee) {
-        if (trainee == null || trainee.getUser() == null){
-            throw new IllegalArgumentException("Trainee and associated User must not be null");
+    public TraineeDTO saveTrainee(TraineeDTO traineeDTO) {
+        if (traineeDTO == null || traineeDTO.getUser() == null) {
+            throw new IllegalArgumentException("TraineeDTO and associated UserDTO must not be null");
         }
+
+        Trainee trainee = TraineeMapper.INSTANCE.traineeToEntity(traineeDTO);
 
         User user = trainee.getUser();
 
@@ -69,8 +80,9 @@ public class TraineeService implements ITraineeService {
         user.setActive(true);
 
         trainee.setUser(user);
-        return traineeRepository.save(trainee);
-    //TODO DTO
+
+        Trainee savedTrainee = traineeRepository.save(trainee);
+        return TraineeMapper.INSTANCE.traineeToDTO(savedTrainee);
     }
 
     @Override
@@ -79,17 +91,20 @@ public class TraineeService implements ITraineeService {
     }
 
     @Override
-    public Optional<Trainee> findByUsername(String username) {
+    public Optional<TraineeDTO> findByUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username must not be null or empty");
         }
+
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
 
         if (traineeOptional.isEmpty()){
             log.debug("Trainer not found for username: {}", username);
-
+            return Optional.empty();
         }
-        return traineeOptional;
+
+        TraineeDTO traineeDTO = TraineeMapper.INSTANCE.traineeToDTO(traineeOptional.get());
+        return Optional.of(traineeDTO);
     }
 
     @Override
@@ -112,20 +127,22 @@ public class TraineeService implements ITraineeService {
 
     @Override
     @Transactional
-    public Trainee updateTraineeProfile(String username, Trainee updatedTrainee) {
+    public TraineeDTO updateTraineeProfile(String username, TraineeDTO updatedTraineeDTO) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
 
-        if (traineeOptional.isEmpty()){
+        if (traineeOptional.isEmpty()) {
             throw new IllegalArgumentException("Trainee with username " + username + " not found");
         }
 
         Trainee trainee = traineeOptional.get();
-        trainee.setBirthday(updatedTrainee.getBirthday());
-        trainee.setAddress(updatedTrainee.getAddress());
-        trainee.setTrainings(updatedTrainee.getTrainings());
-        trainee.setTrainers(updatedTrainee.getTrainers());
+        trainee.setBirthday(updatedTraineeDTO.getBirthday());
+        trainee.setAddress(updatedTraineeDTO.getAddress());
+        trainee.setTrainings(TrainingMapper.INSTANCE.dtoListToEntityList(updatedTraineeDTO.getTrainings()));
+        trainee.setTrainers(TrainerMapper.INSTANCE.dtoListToEntitySet(updatedTraineeDTO.getTrainers()));
 
-        return traineeRepository.save(trainee);
+        Trainee updatedTrainee = traineeRepository.save(trainee);
+
+        return TraineeMapper.INSTANCE.traineeToDTO(updatedTrainee);
     }
 
     @Override
@@ -158,33 +175,39 @@ public class TraineeService implements ITraineeService {
 
     @Transactional
     @Override
-    public List<Training> getTraineeTrainingsByCriteria(String traineeUsername, LocalDate fromDate, LocalDate toDate,
-                                                        String trainerUsername, String trainingName) {
-        return trainingRepository.findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
+    public List<TrainingDTO> getTraineeTrainingsByCriteria(String traineeUsername, LocalDate fromDate, LocalDate toDate,
+                                                           String trainerUsername, String trainingName) {
+        List<Training> trainings = trainingRepository.
+                findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingName);
+        return TrainingMapper.INSTANCE.entityListToDTOList(trainings);
     }
 
     @Override
     @Transactional
-    public Trainee updateTraineeTrainers(String traineeUsername, Set<Trainer> newTrainers) {
+    public Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainerDTOs) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(traineeUsername);
         if (traineeOptional.isEmpty()) {
             throw new IllegalArgumentException("Trainee with username " + traineeUsername + " not found");
         }
         Trainee trainee = traineeOptional.get();
+        Set<Trainer> newTrainers =
+                new HashSet<>(TrainerMapper.INSTANCE.dtoListToEntityList(new ArrayList<>(newTrainerDTOs)));
         trainee.setTrainers(newTrainers);
 
         return traineeRepository.save(trainee);
     }
 
     @Override
-    public Optional<Trainee> findById(long traineeId) {
-        return traineeRepository.findById(traineeId);
+    public Optional<TraineeDTO> findById(long traineeId) {
+        Optional<Trainee> traineeOptional = traineeRepository.findById(traineeId);
+        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
     }
 
     @Override
-    public Optional<Trainee> findByUserId(Long userId) {
-        return traineeRepository.findTraineeByUserUserId(userId);
+    public Optional<TraineeDTO> findByUserId(Long userId) {
+        Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUserId(userId);
+        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
     }
 
 
