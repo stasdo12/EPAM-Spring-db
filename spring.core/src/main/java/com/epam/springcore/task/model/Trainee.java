@@ -13,8 +13,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,12 +35,12 @@ public class Trainee {
     @Column(name = "id")
     private long traineeId;
 
-    @NotNull(message = "User cannot be null")
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Past(message = "Birthday must be a date in the past")
+
     @Column(name = "date_of_birth")
     private LocalDate birthday;
 

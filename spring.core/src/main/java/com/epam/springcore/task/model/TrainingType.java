@@ -28,7 +28,6 @@ public class TrainingType {
     @Column(name = "id")
     private Long id;
 
-    @NotBlank(message = "Training type name cannot be blank")
     @Column(name = "training_type_name")
     private String name;
 

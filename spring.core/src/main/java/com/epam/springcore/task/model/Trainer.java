@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,14 +35,12 @@ public class Trainer {
     @Column(name = "id")
     private long trainerId;
 
-    @NotNull(message = "User cannot be null")
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "training_type_id", nullable = false)
-    @NotNull(message = "Specialization cannot be null")
     private TrainingType specialization;
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
