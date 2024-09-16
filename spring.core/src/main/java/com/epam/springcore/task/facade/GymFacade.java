@@ -4,8 +4,6 @@ import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.Trainer;
-import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.service.impl.TraineeService;
 import com.epam.springcore.task.service.impl.TrainerService;
 import com.epam.springcore.task.service.impl.TrainingService;
@@ -71,43 +69,43 @@ public class GymFacade {
     public Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainers) {
         return traineeService.updateTraineeTrainers(traineeUsername, newTrainers);
     }
-}
 
-//    public Trainer saveTrainer(Trainer trainer){
-//       return trainerService.saveTrainer(trainer);
-//    }
-//
-//    public boolean matchTrainerCredentialsTrainer(String username, String password){
-//        return trainerService.matchTrainerCredentials(username, password);
-//    }
-//
-//    public Optional<Trainer> findTrainerByUsername(String username){
-//        return trainerService.findByUsername(username);
-//    }
-//
-//    public void changeTrainerPassword(String username, String newPassword){
-//        trainerService.changeTrainerPassword(username, newPassword);
-//    }
-//
-//    public Trainer updateTrainerProfile(String username, Trainer updatedTrainer){
-//        return trainerService.updateTrainerProfile(username, updatedTrainer);
-//    }
-//
-//    public void activateDeactivateTrainer(String username, boolean isActive){
-//        trainerService.activateDeactivateTrainer(username, isActive);
-//    }
-//
-//    public List<Training> getTrainerTrainingsByCriteria(String trainerUsername, LocalDate fromDate,
-//                                                        LocalDate toDate, String traineeUsername, String trainingName){
-//        return trainerService.getTrainerTrainingsByCriteria(trainerUsername, fromDate, toDate,
-//                traineeUsername, trainingName);
-//    }
-//
-//    public List<Trainer> getTrainersNotAssignedToTrainee(String traineeUsername){
-//        return trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
-//    }
-//
-//    public Training addTraining(Training training){
-//       return trainingService.addTraining(training);
-//    }
-//}
+
+    public TrainerDTO saveTrainer(TrainerDTO trainerDTO){
+       return trainerService.saveTrainer(trainerDTO);
+    }
+
+    public boolean matchTrainerCredentialsTrainer(String username, String password){
+        return trainerService.matchTrainerCredentials(username, password);
+    }
+
+    public Optional<TrainerDTO> findTrainerByUsername(String username){
+        return trainerService.findByUsername(username);
+    }
+
+    public void changeTrainerPassword(String username, String newPassword){
+        trainerService.changeTrainerPassword(username, newPassword);
+    }
+
+    public TrainerDTO updateTrainerProfile(String username, TrainerDTO updatedTrainerDTO){
+        return trainerService.updateTrainerProfile(username, updatedTrainerDTO);
+    }
+
+    public void activateDeactivateTrainer(String username, boolean isActive){
+        trainerService.activateDeactivateTrainer(username, isActive);
+    }
+
+    public List<TrainingDTO> getTrainerTrainingsByCriteria(String trainerUsername, LocalDate fromDate,
+                                                        LocalDate toDate, String traineeUsername, String trainingName){
+        return trainerService.getTrainerTrainingsByCriteria(trainerUsername, fromDate, toDate,
+                traineeUsername, trainingName);
+    }
+
+    public List<TrainerDTO> getTrainersNotAssignedToTrainee(String traineeUsername){
+        return trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
+    }
+
+    public TrainingDTO addTraining(TrainingDTO trainingDTO){
+       return trainingService.addTraining(trainingDTO);
+    }
+}
