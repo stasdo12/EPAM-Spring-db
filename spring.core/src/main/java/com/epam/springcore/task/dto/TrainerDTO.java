@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class TrainerDTO {
@@ -16,5 +17,5 @@ public class TrainerDTO {
 
     private List<TrainingDTO> trainings;
 
-    private List<TraineeDTO> trainees;
+    private Set<TraineeDTO> trainees;
 }
