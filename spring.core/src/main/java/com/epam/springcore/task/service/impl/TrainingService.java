@@ -1,6 +1,8 @@
 package com.epam.springcore.task.service.impl;
 
 import com.epam.springcore.task.dao.TrainingRepository;
+import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.service.ITrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,13 @@ public class TrainingService implements ITrainingService {
     }
 
     @Override
-    public Training addTraining(Training training) {
-        if(training == null || training.getTrainee() == null || training.getTrainer() == null){
+    public TrainingDTO addTraining(TrainingDTO trainingDTO) {
+        if(trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null){
             throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
         }
-        return trainingRepository.save(training);
+
+        Training training = TrainingMapper.INSTANCE.trainingToEntity(trainingDTO);
+        Training savedTraining = trainingRepository.save(training);
+        return TrainingMapper.INSTANCE.trainingToDTO(savedTraining);
     }
 }

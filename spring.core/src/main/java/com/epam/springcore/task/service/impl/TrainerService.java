@@ -4,6 +4,11 @@ import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
 import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.dto.TrainerDTO;
+import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.mapper.TrainerMapper;
+import com.epam.springcore.task.mapper.TrainingMapper;
+import com.epam.springcore.task.mapper.TrainingTypeMapper;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
@@ -53,11 +58,13 @@ public class TrainerService  implements ITrainerService {
 
     @Override
     @Transactional
-    public Trainer saveTrainer(Trainer trainer) {
+    public TrainerDTO saveTrainer(TrainerDTO trainerDTO) {
 
-        if (trainer == null || trainer.getUser() == null) {
+        if (trainerDTO == null || trainerDTO.getUser() == null) {
             throw new IllegalArgumentException("Trainer and associated User must not be null");
         }
+
+        Trainer trainer  = TrainerMapper.INSTANCE.trainerToEntity(trainerDTO);
 
         User user = trainer.getUser();
 
@@ -69,8 +76,9 @@ public class TrainerService  implements ITrainerService {
         user.setActive(true);
 
         trainer.setUser(user);
-        return trainerRepository.save(trainer);
-        //TODO DTO
+
+        Trainer savedTrainer = trainerRepository.save(trainer);
+        return TrainerMapper.INSTANCE.trainerToDTO(savedTrainer);
     }
 
     @Override
@@ -79,15 +87,17 @@ public class TrainerService  implements ITrainerService {
     }
 
     @Override
-    public Optional<Trainer> findByUsername(String username) {
+    public Optional<TrainerDTO> findByUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username must not be null or empty");
         }
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
         if (trainerOptional.isEmpty()) {
             log.debug("Trainer not found for username: {}", username);
+            return Optional.empty();
         }
-        return trainerOptional;
+        TrainerDTO trainerDTO = TrainerMapper.INSTANCE.trainerToDTO(trainerOptional.get());
+        return Optional.of(trainerDTO);
     }
 
     @Override
@@ -106,7 +116,7 @@ public class TrainerService  implements ITrainerService {
     }
 
     @Override
-    public Trainer updateTrainerProfile(String username, Trainer updatedTrainer) {
+    public TrainerDTO updateTrainerProfile(String username, TrainerDTO updatedTrainerDTO) {
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
 
         if (trainerOptional.isEmpty()) {
@@ -114,11 +124,11 @@ public class TrainerService  implements ITrainerService {
         }
         Trainer trainer = trainerOptional.get();
 
-            trainer.setSpecialization(updatedTrainer.getSpecialization());
-            trainer.setTrainings(updatedTrainer.getTrainings());
+        trainer.setSpecialization(TrainingTypeMapper.INSTANCE.trainingTypeToEntity(updatedTrainerDTO.getSpecialization()));
+        trainer.setTrainings(TrainingMapper.INSTANCE.dtoListToEntityList(updatedTrainerDTO.getTrainings()));
 
-        return trainerRepository.save(trainer);
-
+        Trainer updatedTrainer = trainerRepository.save(trainer);
+        return TrainerMapper.INSTANCE.trainerToDTO(updatedTrainer);
     }
 
     @Override
@@ -138,14 +148,19 @@ public class TrainerService  implements ITrainerService {
     }
 
     @Override
-    public List<Training> getTrainerTrainingsByCriteria(String trainerUsername, LocalDate fromDate,
-                                                        LocalDate toDate, String traineeUsername, String trainingName) {
-        return trainingRepository.findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName
-                (trainerUsername, fromDate, toDate, traineeUsername, trainingName);
+    public List<TrainingDTO> getTrainerTrainingsByCriteria(String trainerUsername,
+                                                           LocalDate fromDate,
+                                                           LocalDate toDate,
+                                                           String traineeUsername,
+                                                           String trainingName) {
+        List<Training> trainings =
+                trainingRepository.findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
+                trainerUsername, fromDate, toDate, traineeUsername, trainingName);
+        return TrainingMapper.INSTANCE.entityListToDTOList(trainings);
     }
 
     @Override
-    public List<Trainer> getTrainersNotAssignedToTrainee(String traineeUsername) {
+    public List<TrainerDTO> getTrainersNotAssignedToTrainee(String traineeUsername) {
         if (traineeUsername == null){
             throw new IllegalArgumentException("Trainee username must not be null");
         }
@@ -153,22 +168,13 @@ public class TrainerService  implements ITrainerService {
         if (trainee.isEmpty()){
             throw new IllegalArgumentException("Trainee with username " + traineeUsername + "not found");
         }
-        return trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
+        List<Trainer> trainers = trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
+        return TrainerMapper.INSTANCE.entityListToDTOList(trainers);
     }
 
     @Override
-    public Optional<Trainer> findById(Long trainerId) {
-        return Optional.empty();
+    public Optional<TrainerDTO> findById(Long trainerId) {
+        Optional<Trainer> trainerOptional = trainerRepository.findById(trainerId);
+        return trainerOptional.map(TrainerMapper.INSTANCE::trainerToDTO);
     }
-
-    @Override
-    public Optional<Trainer> findByUserId(Long userId) {
-        return Optional.empty();
-    }
-
-
-
-
-
-
 }
