@@ -4,6 +4,7 @@ import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
 import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -18,8 +19,6 @@ import com.epam.springcore.task.service.ITraineeService;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
 import com.epam.springcore.task.utils.impl.AuthenticationUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,58 +35,61 @@ import java.util.Set;
 public class TraineeService implements ITraineeService {
 
     private final NameGenerator nameGeneration;
-
     private final PasswordGenerator passwordGenerator;
-
     private final UserRepository userRepository;
-
     private final TrainerRepository trainerRepository;
-
     private final TraineeRepository traineeRepository;
-
     private final TrainingRepository trainingRepository;
+    private final TraineeMapper traineeMapper;
 
-    private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
-                          UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
+                          UserRepository userRepository, TrainerRepository trainerRepository,
+                          TraineeRepository traineeRepository,
+                          TrainingRepository trainingRepository, TraineeMapper traineeMapper
+                         ) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
-
         this.trainingRepository = trainingRepository;
+        this.traineeMapper = traineeMapper;
+
     }
 
     @Override
     @Transactional
-    public TraineeDTO saveTrainee(TraineeDTO traineeDTO) {
+    public PassUsernameDTO saveTrainee(TraineeDTO traineeDTO) {
+
         if (traineeDTO == null || traineeDTO.getUser() == null) {
             throw new IllegalArgumentException("TraineeDTO and associated UserDTO must not be null");
         }
 
-        Trainee trainee = TraineeMapper.INSTANCE.traineeToEntity(traineeDTO);
+        Trainee trainee = traineeMapper.traineeToEntity(traineeDTO);
 
         User user = trainee.getUser();
 
         String generatedUsername = nameGeneration.generateUniqueUsername(user, userRepository,
                 traineeRepository.findAll(), trainerRepository.findAll());
 
+        String generatedPassword = passwordGenerator.generatePassword();
+
         user.setUsername(generatedUsername);
-        user.setPassword(passwordGenerator.generatePassword());
+        user.setPassword(generatedPassword);
         user.setActive(true);
 
         trainee.setUser(user);
+        traineeRepository.save(trainee);
 
-        Trainee savedTrainee = traineeRepository.save(trainee);
-        return TraineeMapper.INSTANCE.traineeToDTO(savedTrainee);
+        return new PassUsernameDTO(generatedUsername, generatedPassword);
     }
 
     @Override
-    public boolean matchTrainerCredentials(String username, String password) {
-        return AuthenticationUtils.matchCredentials(username, password, userRepository);
+    public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO) {
+        return AuthenticationUtils.matchCredentials(passUsernameDTO.getUsername(),
+                passUsernameDTO.getPassword(), userRepository);
     }
 
     @Override
@@ -99,20 +101,19 @@ public class TraineeService implements ITraineeService {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
 
         if (traineeOptional.isEmpty()){
-            log.debug("Trainer not found for username: {}", username);
             return Optional.empty();
         }
 
-        TraineeDTO traineeDTO = TraineeMapper.INSTANCE.traineeToDTO(traineeOptional.get());
+        TraineeDTO traineeDTO = traineeMapper.INSTANCE.traineeToDTO(traineeOptional.get());
         return Optional.of(traineeDTO);
     }
 
     @Override
     @Transactional
-    public void changeTraineePassword(String username, String newPassword) {
-        Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(username);
+    public PassUsernameDTO changeTraineePassword(PassUsernameDTO passUsernameDTO) {
+        Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUsername(passUsernameDTO.getUsername());
         if (traineeOptional.isEmpty()) {
-            throw new IllegalArgumentException("Trainee with username " + username + " not found");
+            throw new IllegalArgumentException("Trainee with username " + passUsernameDTO.getUsername() + " not found");
         }
 
         Trainee trainee = traineeOptional.get();
@@ -121,8 +122,9 @@ public class TraineeService implements ITraineeService {
             throw new IllegalStateException("User associated with trainee is null");
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passUsernameDTO.getPassword());
         traineeRepository.save(trainee);
+        return passUsernameDTO;
     }
 
     @Override
@@ -142,7 +144,7 @@ public class TraineeService implements ITraineeService {
 
         Trainee updatedTrainee = traineeRepository.save(trainee);
 
-        return TraineeMapper.INSTANCE.traineeToDTO(updatedTrainee);
+        return traineeMapper.INSTANCE.traineeToDTO(updatedTrainee);
     }
 
     @Override
@@ -201,13 +203,13 @@ public class TraineeService implements ITraineeService {
     @Override
     public Optional<TraineeDTO> findById(long traineeId) {
         Optional<Trainee> traineeOptional = traineeRepository.findById(traineeId);
-        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
+        return traineeOptional.map(traineeMapper.INSTANCE::traineeToDTO);
     }
 
     @Override
     public Optional<TraineeDTO> findByUserId(Long userId) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUserId(userId);
-        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
+        return traineeOptional.map(traineeMapper.INSTANCE::traineeToDTO);
     }
 
 

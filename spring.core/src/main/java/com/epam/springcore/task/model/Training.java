@@ -10,17 +10,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Entity
 @Table(name = "training")
 public class Training {
@@ -31,24 +28,24 @@ public class Training {
     private long trainingId;
 
     @ManyToOne
-    @JoinColumn(name = "trainee_id", nullable = false)
+    @JoinColumn(name = "trainee_id")
     private Trainee trainee;
 
     @ManyToOne
-    @JoinColumn(name = "trainer_id", nullable = false)
+    @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
-    @Column(name = "training_name", nullable = false)
+    @Column(name = "training_name")
     private String trainingName;
 
     @ManyToOne
-    @JoinColumn(name = "training_type_id", nullable = false)
+    @JoinColumn(name = "training_type_id")
     private TrainingType trainingType;
 
-    @Column(name = "training_date", nullable = false)
+    @Column(name = "training_date")
     private LocalDate date;
 
-    @Column(name = "training_duration", nullable = false)
+    @Column(name = "training_duration")
     private int durationMinutes;
 
 }

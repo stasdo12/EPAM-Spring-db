@@ -11,17 +11,8 @@ public interface TraineeMapper {
 
     TraineeMapper INSTANCE = Mappers.getMapper(TraineeMapper.class);
 
-    @Mapping(source = "user", target = "user")
-    @Mapping(source = "birthday", target = "birthday")
-    @Mapping(source = "trainings", target = "trainings")
-    @Mapping(source = "trainers", target = "trainers")
-    @Mapping(source = "address", target = "address")
     TraineeDTO traineeToDTO(Trainee trainee);
 
-    @Mapping(source = "user", target = "user")
-    @Mapping(source = "birthday", target = "birthday")
-    @Mapping(source = "trainings", target = "trainings")
-    @Mapping(source = "trainers", target = "trainers")
-    @Mapping(source = "address", target = "address")
+    @Mapping(target = "traineeId", ignore = true)
     Trainee traineeToEntity(TraineeDTO traineeDTO);
 }

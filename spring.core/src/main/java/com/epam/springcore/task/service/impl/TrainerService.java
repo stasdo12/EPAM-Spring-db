@@ -4,6 +4,7 @@ import com.epam.springcore.task.dao.TraineeRepository;
 import com.epam.springcore.task.dao.TrainerRepository;
 import com.epam.springcore.task.dao.TrainingRepository;
 import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.mapper.TrainerMapper;
@@ -18,8 +19,6 @@ import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
 import com.epam.springcore.task.utils.impl.AuthenticationUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,47 +42,58 @@ public class TrainerService  implements ITrainerService {
     private final TraineeRepository traineeRepository;
 
     private final TrainingRepository trainingRepository;
+    private final TrainerMapper trainerMapper;
 
-    private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
+
 
     @Autowired
-    public TrainerService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator, UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository, TrainingRepository trainingRepository) {
+    public TrainerService(NameGenerator nameGeneration,
+                          PasswordGenerator passwordGenerator,
+                          UserRepository userRepository,
+                          TrainerRepository trainerRepository,
+                          TraineeRepository traineeRepository,
+                          TrainingRepository trainingRepository,
+                          TrainerMapper trainerMapper) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
+        this.trainerMapper = trainerMapper;
     }
 
     @Override
     @Transactional
-    public TrainerDTO saveTrainer(TrainerDTO trainerDTO) {
+    public PassUsernameDTO saveTrainer(TrainerDTO trainerDTO) {
 
         if (trainerDTO == null || trainerDTO.getUser() == null) {
             throw new IllegalArgumentException("Trainer and associated User must not be null");
         }
 
-        Trainer trainer  = TrainerMapper.INSTANCE.trainerToEntity(trainerDTO);
+        Trainer trainer  = trainerMapper.INSTANCE.trainerToEntity(trainerDTO);
 
         User user = trainer.getUser();
 
         String generatedUsername = nameGeneration.generateUniqueUsername(user, userRepository,
                 traineeRepository.findAll(), trainerRepository.findAll());
 
+        String generatedPassword = passwordGenerator.generatePassword();
+
         user.setUsername(generatedUsername);
-        user.setPassword(passwordGenerator.generatePassword());
+        user.setPassword(generatedPassword);
         user.setActive(true);
 
         trainer.setUser(user);
 
-        Trainer savedTrainer = trainerRepository.save(trainer);
-        return TrainerMapper.INSTANCE.trainerToDTO(savedTrainer);
+        trainerRepository.save(trainer);
+        return new PassUsernameDTO(generatedUsername, generatedPassword);
     }
 
     @Override
-    public boolean matchTrainerCredentials(String username, String password) {
-        return AuthenticationUtils.matchCredentials(username, password, userRepository);
+    public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO) {
+        return AuthenticationUtils.matchCredentials(passUsernameDTO.getUsername(),
+                passUsernameDTO.getPassword(), userRepository);
     }
 
     @Override
@@ -93,26 +103,26 @@ public class TrainerService  implements ITrainerService {
         }
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
         if (trainerOptional.isEmpty()) {
-            log.debug("Trainer not found for username: {}", username);
             return Optional.empty();
         }
-        TrainerDTO trainerDTO = TrainerMapper.INSTANCE.trainerToDTO(trainerOptional.get());
+        TrainerDTO trainerDTO = trainerMapper.INSTANCE.trainerToDTO(trainerOptional.get());
         return Optional.of(trainerDTO);
     }
 
     @Override
-    public void changeTrainerPassword(String username, String newPassword) {
-        Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
+    public PassUsernameDTO changeTrainerPassword(PassUsernameDTO passUsernameDTO) {
+        Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(passUsernameDTO.getUsername());
         if (trainerOptional.isEmpty()){
-            throw new IllegalArgumentException("Trainer with username" + username +  "not found");
+            throw new IllegalArgumentException("Trainer with username" + passUsernameDTO.getUsername() +  "not found");
         }
         Trainer trainer = trainerOptional.get();
         User user = trainer.getUser();
         if (user == null){
             throw new IllegalArgumentException("User associated with trainer is null");
         }
-        user.setPassword(newPassword);
+        user.setPassword(passUsernameDTO.getPassword());
         trainerRepository.save(trainer);
+        return passUsernameDTO;
     }
 
     @Override

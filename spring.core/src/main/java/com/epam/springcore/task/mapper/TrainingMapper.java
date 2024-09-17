@@ -13,20 +13,11 @@ public interface TrainingMapper {
 
     TrainingMapper INSTANCE = Mappers.getMapper(TrainingMapper.class);
 
-    @Mapping(source = "trainee", target = "trainee")
-    @Mapping(source = "trainer", target = "trainer")
-    @Mapping(source = "trainingName", target = "trainingName")
-    @Mapping(source = "trainingType", target = "trainingType")
-    @Mapping(source = "date", target = "date")
-    @Mapping(source = "durationMinutes", target = "durationMinutes")
+
     TrainingDTO trainingToDTO(Training training);
 
-    @Mapping(source = "trainee", target = "trainee")
-    @Mapping(source = "trainer", target = "trainer")
-    @Mapping(source = "trainingName", target = "trainingName")
-    @Mapping(source = "trainingType", target = "trainingType")
-    @Mapping(source = "date", target = "date")
-    @Mapping(source = "durationMinutes", target = "durationMinutes")
+
+    @Mapping(target = "trainingId", ignore = true)
     Training trainingToEntity(TrainingDTO trainingDTO);
 
     List<Training> dtoListToEntityList(List<TrainingDTO> trainingDTOs);

@@ -21,4 +21,5 @@ public class TraineeDTO {
     private List<TrainerDTO> trainers;
 
     private String address;
+
 }

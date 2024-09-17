@@ -1,5 +1,6 @@
 package com.epam.springcore.task.service;
 
+import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.model.Trainer;
@@ -11,17 +12,17 @@ import java.util.Optional;
 
 public interface ITrainerService {
 
-    TrainerDTO saveTrainer(TrainerDTO trainer);
+    PassUsernameDTO saveTrainer(TrainerDTO trainer);
 
     Optional<TrainerDTO> findById(Long trainerId);
 
-    void changeTrainerPassword(String username, String password);
+    PassUsernameDTO changeTrainerPassword(PassUsernameDTO passUsernameDTO);
 
     TrainerDTO updateTrainerProfile(String username, TrainerDTO updatedTrainer);
 
    void activateDeactivateTrainer(String username, boolean isActive);
 
-    public boolean matchTrainerCredentials(String username, String password);
+    public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO);
 
     Optional<TrainerDTO> findByUsername(String username);
 

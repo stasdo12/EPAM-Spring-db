@@ -15,7 +15,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -25,7 +24,6 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "trainee")
 public class Trainee {
@@ -36,8 +34,8 @@ public class Trainee {
     private long traineeId;
 
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
 
 
@@ -58,12 +56,4 @@ public class Trainee {
     )
     private Set<Trainer> trainers;
 
-
-    @Override
-    public String toString() {
-        return "Trainee{" +
-                "id=" + traineeId +
-                ", user=" + (user != null ? user.getUsername() : "null") +
-                '}';
-    }
 }

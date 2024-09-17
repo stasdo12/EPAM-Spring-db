@@ -15,16 +15,11 @@ public interface TrainerMapper {
 
     TrainerMapper INSTANCE = Mappers.getMapper(TrainerMapper.class);
 
-    @Mapping(source = "user", target = "user")
-    @Mapping(source = "specialization", target = "specialization")
-    @Mapping(source = "trainings", target = "trainings")
-    @Mapping(source = "trainees", target = "trainees")
+
     TrainerDTO trainerToDTO(Trainer trainer);
 
-    @Mapping(source = "user", target = "user")
-    @Mapping(source = "specialization", target = "specialization")
-    @Mapping(source = "trainings", target = "trainings")
-    @Mapping(source = "trainees", target = "trainees")
+
+    @Mapping(target = "trainerId", ignore = true)
     Trainer trainerToEntity(TrainerDTO trainerDTO);
 
     List<Trainer> dtoListToEntityList(List<TrainerDTO> trainerDTOs);

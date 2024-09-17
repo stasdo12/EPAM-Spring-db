@@ -1,5 +1,6 @@
 package com.epam.springcore.task.facade;
 
+import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -7,6 +8,8 @@ import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.service.impl.TraineeService;
 import com.epam.springcore.task.service.impl.TrainerService;
 import com.epam.springcore.task.service.impl.TrainingService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class GymFacade {
 
     private final TraineeService traineeService;
@@ -32,23 +36,22 @@ public class GymFacade {
         this.trainingService = trainingService;
     }
 
-    public TraineeDTO saveTrainee(TraineeDTO traineeDTO) {
-        return traineeService.saveTrainee(traineeDTO);
+
+
+    public boolean matchTrainerCredentialsTrainee(PassUsernameDTO passUsernameDTO) {
+        return traineeService.matchTrainerCredentials(passUsernameDTO);
     }
 
-    public boolean matchTrainerCredentialsTrainee(String username, String password) {
-        return traineeService.matchTrainerCredentials(username, password);
-    }
-
-    public Optional<TraineeDTO> findTraineeByUsername(String username) {
+    public Optional<TraineeDTO> findTraineeByUsername(@Valid String username) {
         return traineeService.findByUsername(username);
     }
 
-    public void changeTraineePassword(String username, String newPassword) {
-        traineeService.changeTraineePassword(username, newPassword);
+    public PassUsernameDTO changeTraineePassword(PassUsernameDTO passUsernameDTO) {
+        traineeService.changeTraineePassword(passUsernameDTO);
+        return passUsernameDTO;
     }
 
-    public Optional<TraineeDTO> updateTrainee(String username, TraineeDTO traineeDTO) {
+    public Optional<TraineeDTO> updateTrainee(@Valid String username, TraineeDTO traineeDTO) {
         return Optional.ofNullable(traineeService.updateTraineeProfile(username, traineeDTO));
     }
 
@@ -66,28 +69,12 @@ public class GymFacade {
                 trainerUsername, trainingName);
     }
 
-    public Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainers) {
+    public Trainee updateTraineeTrainers(@Valid String traineeUsername, Set<TrainerDTO> newTrainers) {
         return traineeService.updateTraineeTrainers(traineeUsername, newTrainers);
     }
 
 
-    public TrainerDTO saveTrainer(TrainerDTO trainerDTO){
-       return trainerService.saveTrainer(trainerDTO);
-    }
-
-    public boolean matchTrainerCredentialsTrainer(String username, String password){
-        return trainerService.matchTrainerCredentials(username, password);
-    }
-
-    public Optional<TrainerDTO> findTrainerByUsername(String username){
-        return trainerService.findByUsername(username);
-    }
-
-    public void changeTrainerPassword(String username, String newPassword){
-        trainerService.changeTrainerPassword(username, newPassword);
-    }
-
-    public TrainerDTO updateTrainerProfile(String username, TrainerDTO updatedTrainerDTO){
+    public TrainerDTO updateTrainerProfile(@Valid String username, TrainerDTO updatedTrainerDTO){
         return trainerService.updateTrainerProfile(username, updatedTrainerDTO);
     }
 
@@ -101,11 +88,11 @@ public class GymFacade {
                 traineeUsername, trainingName);
     }
 
-    public List<TrainerDTO> getTrainersNotAssignedToTrainee(String traineeUsername){
+    public List<TrainerDTO> getTrainersNotAssignedToTrainee(@Valid String traineeUsername){
         return trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
     }
 
-    public TrainingDTO addTraining(TrainingDTO trainingDTO){
+    public TrainingDTO addTraining(@Valid TrainingDTO trainingDTO){
        return trainingService.addTraining(trainingDTO);
     }
 }
