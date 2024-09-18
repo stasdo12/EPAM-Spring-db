@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(uses = {UserMapper.class, TrainingTypeMapper.class, TrainingMapper.class, TraineeMapper.class})
+//@Mapper(uses = {UserMapper.class, TrainingTypeMapper.class, TrainingMapper.class, TraineeMapper.class})
+@Mapper
 public interface TrainerMapper {
 
     TrainerMapper INSTANCE = Mappers.getMapper(TrainerMapper.class);

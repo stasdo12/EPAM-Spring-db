@@ -10,15 +10,6 @@ import java.util.Map;
 @Configuration
 public class GymAppConfig {
 
-    @Bean
-    public TraineeMapper traineeMapper(){
-        return TraineeMapper.INSTANCE;
-    }
-
-    @Bean
-    public TrainerMapper trainerMapper(){
-        return TrainerMapper.INSTANCE;
-    }
 
     @Bean
     public AuthenticationUtils authenticationUtils(){

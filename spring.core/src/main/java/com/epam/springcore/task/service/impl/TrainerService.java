@@ -42,7 +42,8 @@ public class TrainerService  implements ITrainerService {
     private final TraineeRepository traineeRepository;
 
     private final TrainingRepository trainingRepository;
-    private final TrainerMapper trainerMapper;
+
+
 
 
 
@@ -52,15 +53,13 @@ public class TrainerService  implements ITrainerService {
                           UserRepository userRepository,
                           TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository,
-                          TrainerMapper trainerMapper) {
+                          TrainingRepository trainingRepository) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
-        this.trainerMapper = trainerMapper;
     }
 
     @Override
@@ -71,7 +70,7 @@ public class TrainerService  implements ITrainerService {
             throw new IllegalArgumentException("Trainer and associated User must not be null");
         }
 
-        Trainer trainer  = trainerMapper.INSTANCE.trainerToEntity(trainerDTO);
+        Trainer trainer  = TrainerMapper.INSTANCE.trainerToEntity(trainerDTO);
 
         User user = trainer.getUser();
 
@@ -105,7 +104,7 @@ public class TrainerService  implements ITrainerService {
         if (trainerOptional.isEmpty()) {
             return Optional.empty();
         }
-        TrainerDTO trainerDTO = trainerMapper.INSTANCE.trainerToDTO(trainerOptional.get());
+        TrainerDTO trainerDTO = TrainerMapper.INSTANCE.trainerToDTO(trainerOptional.get());
         return Optional.of(trainerDTO);
     }
 

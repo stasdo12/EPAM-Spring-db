@@ -40,22 +40,19 @@ public class TraineeService implements ITraineeService {
     private final TrainerRepository trainerRepository;
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
-    private final TraineeMapper traineeMapper;
 
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
                           UserRepository userRepository, TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository, TraineeMapper traineeMapper
-                         ) {
+                          TrainingRepository trainingRepository) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
-        this.traineeMapper = traineeMapper;
 
     }
 
@@ -67,7 +64,7 @@ public class TraineeService implements ITraineeService {
             throw new IllegalArgumentException("TraineeDTO and associated UserDTO must not be null");
         }
 
-        Trainee trainee = traineeMapper.traineeToEntity(traineeDTO);
+        Trainee trainee = TraineeMapper.INSTANCE.traineeToEntity(traineeDTO);
 
         User user = trainee.getUser();
 
@@ -104,7 +101,7 @@ public class TraineeService implements ITraineeService {
             return Optional.empty();
         }
 
-        TraineeDTO traineeDTO = traineeMapper.INSTANCE.traineeToDTO(traineeOptional.get());
+        TraineeDTO traineeDTO = TraineeMapper.INSTANCE.traineeToDTO(traineeOptional.get());
         return Optional.of(traineeDTO);
     }
 
@@ -144,7 +141,7 @@ public class TraineeService implements ITraineeService {
 
         Trainee updatedTrainee = traineeRepository.save(trainee);
 
-        return traineeMapper.INSTANCE.traineeToDTO(updatedTrainee);
+        return TraineeMapper.INSTANCE.traineeToDTO(updatedTrainee);
     }
 
     @Override
@@ -203,13 +200,13 @@ public class TraineeService implements ITraineeService {
     @Override
     public Optional<TraineeDTO> findById(long traineeId) {
         Optional<Trainee> traineeOptional = traineeRepository.findById(traineeId);
-        return traineeOptional.map(traineeMapper.INSTANCE::traineeToDTO);
+        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
     }
 
     @Override
     public Optional<TraineeDTO> findByUserId(Long userId) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUserId(userId);
-        return traineeOptional.map(traineeMapper.INSTANCE::traineeToDTO);
+        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
     }
 
 
