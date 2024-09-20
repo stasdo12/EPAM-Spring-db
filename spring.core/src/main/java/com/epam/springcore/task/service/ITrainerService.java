@@ -3,8 +3,6 @@ package com.epam.springcore.task.service;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
-import com.epam.springcore.task.model.Trainer;
-import com.epam.springcore.task.model.Training;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +28,4 @@ public interface ITrainerService {
             String trainerUsername, LocalDate fromDate, LocalDate toDate, String traineeUsername, String trainingName);
 
     List<TrainerDTO> getTrainersNotAssignedToTrainee(String traineeUsername);
-
-
 }

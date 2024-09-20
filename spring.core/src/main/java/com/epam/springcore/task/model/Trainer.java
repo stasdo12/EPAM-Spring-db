@@ -33,5 +33,4 @@ public class Trainer {
 
     @ManyToMany(mappedBy = "trainers")
     private Set<Trainee> trainees;
-
 }

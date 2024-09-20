@@ -8,15 +8,12 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-//@Mapper(uses = {TraineeMapper.class, TrainerMapper.class, TrainingTypeMapper.class})
 @Mapper
 public interface TrainingMapper {
 
     TrainingMapper INSTANCE = Mappers.getMapper(TrainingMapper.class);
 
-
     TrainingDTO trainingToDTO(Training training);
-
 
     @Mapping(target = "trainingId", ignore = true)
     Training trainingToEntity(TrainingDTO trainingDTO);

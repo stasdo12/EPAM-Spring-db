@@ -10,15 +10,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@Mapper(uses = {UserMapper.class, TrainingTypeMapper.class, TrainingMapper.class, TraineeMapper.class})
 @Mapper
 public interface TrainerMapper {
 
     TrainerMapper INSTANCE = Mappers.getMapper(TrainerMapper.class);
 
-
     TrainerDTO trainerToDTO(Trainer trainer);
-
 
     @Mapping(target = "trainerId", ignore = true)
     Trainer trainerToEntity(TrainerDTO trainerDTO);

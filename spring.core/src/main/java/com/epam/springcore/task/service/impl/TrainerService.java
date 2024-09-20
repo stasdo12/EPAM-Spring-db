@@ -112,7 +112,7 @@ public class TrainerService  implements ITrainerService {
     public PassUsernameDTO changeTrainerPassword(PassUsernameDTO passUsernameDTO) {
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(passUsernameDTO.getUsername());
         if (trainerOptional.isEmpty()){
-            throw new IllegalArgumentException("Trainer with username" + passUsernameDTO.getUsername() +  "not found");
+            throw new IllegalArgumentException("Trainer with username " + passUsernameDTO.getUsername() +  " not found");
         }
         Trainer trainer = trainerOptional.get();
         User user = trainer.getUser();

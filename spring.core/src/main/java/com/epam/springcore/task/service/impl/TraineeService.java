@@ -75,6 +75,7 @@ public class TraineeService implements ITraineeService {
 
         user.setUsername(generatedUsername);
         user.setPassword(generatedPassword);
+        //TODO create a  hashing password
         user.setActive(true);
 
         trainee.setUser(user);
@@ -84,7 +85,7 @@ public class TraineeService implements ITraineeService {
     }
 
     @Override
-    public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO) {
+    public boolean matchTraineeCredentials(PassUsernameDTO passUsernameDTO) {
         return AuthenticationUtils.matchCredentials(passUsernameDTO.getUsername(),
                 passUsernameDTO.getPassword(), userRepository);
     }
@@ -208,11 +209,5 @@ public class TraineeService implements ITraineeService {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUserId(userId);
         return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
     }
-
-
-
-
-
-
 
 }

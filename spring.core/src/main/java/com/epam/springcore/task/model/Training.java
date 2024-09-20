@@ -47,5 +47,4 @@ public class Training {
 
     @Column(name = "training_duration")
     private int durationMinutes;
-
 }

@@ -31,7 +31,7 @@ public interface ITraineeService {
 
     void deleteTrainee(String username);
 
-    public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO);
+    public boolean matchTraineeCredentials(PassUsernameDTO passUsernameDTO);
 
     List<TrainingDTO> getTraineeTrainingsByCriteria(
             String traineeUsername, LocalDate fromDate, LocalDate toDate, String trainerUsername, String trainingName);

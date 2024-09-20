@@ -33,11 +33,9 @@ public class Trainee {
     @Column(name = "id")
     private long traineeId;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @Column(name = "date_of_birth")
     private LocalDate birthday;

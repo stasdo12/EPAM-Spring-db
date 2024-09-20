@@ -39,7 +39,7 @@ public class GymFacade {
 
 
     public boolean matchTrainerCredentialsTrainee(PassUsernameDTO passUsernameDTO) {
-        return traineeService.matchTrainerCredentials(passUsernameDTO);
+        return traineeService.matchTraineeCredentials(passUsernameDTO);
     }
 
     public Optional<TraineeDTO> findTraineeByUsername(@Valid String username) {
