@@ -37,53 +37,35 @@ public class GymFacade {
     }
 
 
-
-    public boolean matchTrainerCredentialsTrainee(PassUsernameDTO passUsernameDTO) {
-        return traineeService.matchTraineeCredentials(passUsernameDTO);
+    public PassUsernameDTO saveTrainer(TrainerDTO trainerDTO){
+        return trainerService.saveTrainer(trainerDTO);
     }
 
-    public Optional<TraineeDTO> findTraineeByUsername(@Valid String username) {
-        return traineeService.findByUsername(username);
+    public Optional<TrainerDTO> findTrainerById(Long trainerId){
+        return trainerService.findById(trainerId);
     }
 
-    public PassUsernameDTO changeTraineePassword(PassUsernameDTO passUsernameDTO) {
-        traineeService.changeTraineePassword(passUsernameDTO);
-        return passUsernameDTO;
+    public PassUsernameDTO changeTrainerPassword(PassUsernameDTO passUsernameDTO){
+        return trainerService.changeTrainerPassword(passUsernameDTO);
     }
-
-    public Optional<TraineeDTO> updateTrainee(@Valid String username, TraineeDTO traineeDTO) {
-        return Optional.ofNullable(traineeService.updateTraineeProfile(username, traineeDTO));
-    }
-
-    public void activateDeactivateTrainee(String username, boolean isActive) {
-        traineeService.activateDeactivateTrainee(username, isActive);
-    }
-
-    public void deleteTrainee(String username) {
-        traineeService.deleteTrainee(username);
-    }
-
-    public List<TrainingDTO> getTraineeTrainingsByCriteria(String traineeUsername, LocalDate fromDate, LocalDate toDate,
-                                                           String trainerUsername, String trainingName) {
-        return traineeService.getTraineeTrainingsByCriteria(traineeUsername, fromDate, toDate,
-                trainerUsername, trainingName);
-    }
-
-    public Trainee updateTraineeTrainers(@Valid String traineeUsername, Set<TrainerDTO> newTrainers) {
-        return traineeService.updateTraineeTrainers(traineeUsername, newTrainers);
-    }
-
 
     public TrainerDTO updateTrainerProfile(@Valid String username, TrainerDTO updatedTrainerDTO){
         return trainerService.updateTrainerProfile(username, updatedTrainerDTO);
     }
-
     public void activateDeactivateTrainer(String username, boolean isActive){
         trainerService.activateDeactivateTrainer(username, isActive);
     }
 
+    public boolean matchTrainerCredentialsTrainee(PassUsernameDTO passUsernameDTO) {
+        return trainerService.matchTrainerCredentials(passUsernameDTO);
+    }
+
+    public Optional<TrainerDTO> findTrainerByUsername(String username){
+        return trainerService.findByUsername(username);
+    }
+
     public List<TrainingDTO> getTrainerTrainingsByCriteria(String trainerUsername, LocalDate fromDate,
-                                                        LocalDate toDate, String traineeUsername, String trainingName){
+                                                           LocalDate toDate, String traineeUsername, String trainingName){
         return trainerService.getTrainerTrainingsByCriteria(trainerUsername, fromDate, toDate,
                 traineeUsername, trainingName);
     }
@@ -92,7 +74,64 @@ public class GymFacade {
         return trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
     }
 
-    public TrainingDTO addTraining(@Valid TrainingDTO trainingDTO){
-       return trainingService.addTraining(trainingDTO);
+    public PassUsernameDTO saveTrainee(TraineeDTO traineeDTO){
+        return traineeService.saveTrainee(traineeDTO);
     }
+
+    public Optional<TraineeDTO> findTraineeById(long traineeId){
+        return traineeService.findById(traineeId);
+    }
+
+    public Optional<TraineeDTO> findTraineeByUserId(Long userId){
+        return traineeService.findByUserId(userId);
+    }
+    public Optional<TraineeDTO> findTraineeByUsername(String username){
+        return traineeService.findByUsername(username);
+    }
+
+    public PassUsernameDTO changeTraineePassword(PassUsernameDTO passUsernameDTO){
+        return traineeService.changeTraineePassword(passUsernameDTO);
+    }
+
+    public TraineeDTO updateTraineeProfile(String username, TraineeDTO traineeDTO){
+        return traineeService.updateTraineeProfile(username, traineeDTO);
+    }
+
+    public void activateDeactivateProfile(String username, boolean isActive){
+        traineeService.activateDeactivateTrainee(username, isActive);
+    }
+
+    public void deleteTrainee(String username){
+        traineeService.deleteTrainee(username);
+    }
+
+
+    public boolean matchTraineeCredentials(PassUsernameDTO passUsernameDTO){
+        return traineeService.matchTraineeCredentials(passUsernameDTO);
+    }
+
+    public List<TrainingDTO> getTraineeTrainingsByCriteria(String traineeUsername,
+                                                           LocalDate fromDate,
+                                                           LocalDate toDate,
+                                                           String trainerUsername,
+                                                           String trainingName){
+        return traineeService.getTraineeTrainingsByCriteria(traineeUsername,
+                fromDate, toDate,
+                trainerUsername, trainingName);
+    }
+
+    public Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainerDTOs){
+        return traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
+    }
+
+    public TrainingDTO addTraining (TrainingDTO trainingDTO){
+        return trainingService.addTraining(trainingDTO);
+    }
+
+
+
+
+
+
+
 }
