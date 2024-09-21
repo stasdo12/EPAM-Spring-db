@@ -19,7 +19,6 @@ import com.epam.springcore.task.model.TrainingType;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
-import com.epam.springcore.task.utils.impl.AuthenticationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -67,6 +67,9 @@ class TraineeServiceTest {
     private UserRepository userRepository;
     @Mock
     private TrainerMapper trainerMapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private TraineeService traineeService;
@@ -116,6 +119,7 @@ class TraineeServiceTest {
         when(nameGenerator.generateUniqueUsername(any(User.class), any(UserRepository.class),
                 anyList(), anyList())).thenReturn("generatedUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedPassword");
+        when(passwordEncoder.encode("generatedPassword")).thenReturn("encodedPassword");
     }
 
     @Test
@@ -129,7 +133,7 @@ class TraineeServiceTest {
         verify(traineeRepository).save(traineeCaptor.capture());
         Trainee savedTrainee = traineeCaptor.getValue();
 
-        assertEquals("generatedPassword", savedTrainee.getUser().getPassword());
+        assertEquals("encodedPassword", savedTrainee.getUser().getPassword());
         assertEquals("generatedUsername", savedTrainee.getUser().getUsername());
 
         assertNotNull(result);
@@ -138,17 +142,21 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testMatchTraineeCredentials() {
-        PassUsernameDTO passUsernameDTO = new PassUsernameDTO("testUsername", "testPassword");
+    void testMatchTraineeCredentials_Success() {
+        String username = "generatedTrainerUsername";
+        String password = "generatedTrainerPassword";
 
-        try (MockedStatic<AuthenticationUtils> mockedUtils = mockStatic(AuthenticationUtils.class)) {
-            mockedUtils.when(() -> AuthenticationUtils.matchCredentials(anyString(), anyString(), any(UserRepository.class)))
-                    .thenReturn(true);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
 
-            boolean result = traineeService.matchTraineeCredentials(passUsernameDTO);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(password, user.getPassword())).thenReturn(true);
 
-            assertTrue(result);
-        }
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO(username, password);
+        boolean result = traineeService.matchTraineeCredentials(passUsernameDTO);
+
+        assertTrue(result);
     }
 
     @Test
@@ -189,10 +197,11 @@ class TraineeServiceTest {
     @Test
     void testChangeTraineePassword_Success() {
         when(traineeRepository.findTraineeByUserUsername("testUser")).thenReturn(Optional.of(trainee));
+        when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
 
         PassUsernameDTO result = traineeService.changeTraineePassword(passUsernameDTO);
 
-        assertEquals("newPassword", trainee.getUser().getPassword());
+        assertEquals("encodedPassword", trainee.getUser().getPassword());
         assertEquals(passUsernameDTO, result);
     }
 

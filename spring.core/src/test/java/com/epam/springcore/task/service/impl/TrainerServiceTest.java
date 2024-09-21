@@ -17,14 +17,14 @@ import com.epam.springcore.task.model.TrainingType;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
-import com.epam.springcore.task.utils.impl.AuthenticationUtils;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -37,8 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +54,8 @@ class TrainerServiceTest {
     private TraineeRepository traineeRepository;
     @Mock
     private TrainingRepository trainingRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private TrainerService trainerService;
@@ -63,18 +63,20 @@ class TrainerServiceTest {
     private TrainerDTO trainerDTO;
     private Trainer trainer;
     private User user;
-    private UserDTO userDTO;
     private PassUsernameDTO passUsernameDTO;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
+
+        String rawPassword = "testPassword";
         user = new User();
         user.setUsername("testTrainer");
-        user.setPassword("testPassword");
+        user.setPassword(passwordEncoder.encode(rawPassword));
 
-        userDTO = new UserDTO();
+
+        UserDTO userDTO = new UserDTO();
         userDTO.setUsername("testTrainer");
 
         trainer = new Trainer();
@@ -88,6 +90,7 @@ class TrainerServiceTest {
         when(nameGenerator.generateUniqueUsername(any(User.class), any(UserRepository.class),
                 anyList(), anyList())).thenReturn("generatedTrainerUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedTrainerPassword");
+        when(passwordEncoder.encode("generatedTrainerPassword")).thenReturn("encodedPassword");
     }
 
     @Test
@@ -101,26 +104,30 @@ class TrainerServiceTest {
         verify(trainerRepository).save(trainerCaptor.capture());
         Trainer savedTrainer = trainerCaptor.getValue();
 
-        assertEquals("generatedTrainerPassword", savedTrainer.getUser().getPassword());
+        assertEquals("encodedPassword", savedTrainer.getUser().getPassword());
         assertEquals("generatedTrainerUsername", savedTrainer.getUser().getUsername());
-
         assertNotNull(result);
         assertEquals("generatedTrainerUsername", result.getUsername());
         assertEquals("generatedTrainerPassword", result.getPassword());
     }
 
     @Test
-    void testMatchTrainerCredentials() {
-        PassUsernameDTO passUsernameDTO = new PassUsernameDTO("testUsername", "testPassword");
+    void testMatchTrainerCredentials_Success() {
+        String username = "generatedTrainerUsername";
+        String password = "generatedTrainerPassword";
 
-        try (MockedStatic<AuthenticationUtils> mockedUtils = mockStatic(AuthenticationUtils.class)) {
-            mockedUtils.when(() -> AuthenticationUtils.matchCredentials(anyString(), anyString(), any(UserRepository.class)))
-                    .thenReturn(true);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
 
-            boolean result = trainerService.matchTrainerCredentials(passUsernameDTO);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(password, user.getPassword())).thenReturn(true);
 
-            assertTrue(result);
-        }
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO(username, password);
+
+        boolean result = trainerService.matchTrainerCredentials(passUsernameDTO);
+
+        assertTrue(result);
     }
 
     @Test
@@ -152,10 +159,12 @@ class TrainerServiceTest {
     @Test
     void testChangeTrainerPassword_Success(){
         when(trainerRepository.findTrainerByUserUsername("testUser")).thenReturn(Optional.of(trainer));
+        when(passwordEncoder.encode("newPassword")).thenReturn("hashedNewPassword");
+
 
         PassUsernameDTO result = trainerService.changeTrainerPassword(passUsernameDTO);
 
-        assertEquals("newPassword", trainer.getUser().getPassword());
+        assertEquals("hashedNewPassword", trainer.getUser().getPassword());
         assertEquals(passUsernameDTO, result);
     }
 

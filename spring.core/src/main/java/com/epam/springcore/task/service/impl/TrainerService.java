@@ -17,9 +17,9 @@ import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITrainerService;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
-import com.epam.springcore.task.utils.impl.AuthenticationUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +43,9 @@ public class TrainerService  implements ITrainerService {
 
     private final TrainingRepository trainingRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+
 
 
 
@@ -53,13 +56,15 @@ public class TrainerService  implements ITrainerService {
                           UserRepository userRepository,
                           TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository) {
+                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     @Override
@@ -78,21 +83,24 @@ public class TrainerService  implements ITrainerService {
                 traineeRepository.findAll(), trainerRepository.findAll());
 
         String generatedPassword = passwordGenerator.generatePassword();
-
         user.setUsername(generatedUsername);
-        user.setPassword(generatedPassword);
+        String hashedPassword = passwordEncoder.encode(generatedPassword);
+        user.setPassword(hashedPassword);
         user.setActive(true);
-
         trainer.setUser(user);
-
         trainerRepository.save(trainer);
+
         return new PassUsernameDTO(generatedUsername, generatedPassword);
     }
 
     @Override
     public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO) {
-        return AuthenticationUtils.matchCredentials(passUsernameDTO.getUsername(),
-                passUsernameDTO.getPassword(), userRepository);
+        Optional<User> optionalUser = userRepository.findByUsername(passUsernameDTO.getUsername());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return passwordEncoder.matches(passUsernameDTO.getPassword(), user.getPassword());
+        }
+        return false;
     }
 
     @Override
@@ -119,7 +127,9 @@ public class TrainerService  implements ITrainerService {
         if (user == null){
             throw new IllegalArgumentException("User associated with trainer is null");
         }
-        user.setPassword(passUsernameDTO.getPassword());
+
+        String hashedPassword = passwordEncoder.encode(passUsernameDTO.getPassword());
+        user.setPassword(hashedPassword);
         trainerRepository.save(trainer);
         return passUsernameDTO;
     }
@@ -127,7 +137,6 @@ public class TrainerService  implements ITrainerService {
     @Override
     public TrainerDTO updateTrainerProfile(String username, TrainerDTO updatedTrainerDTO) {
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(username);
-
         if (trainerOptional.isEmpty()) {
             throw new IllegalArgumentException("Trainer with username " + username + " not found");
         }

@@ -18,8 +18,8 @@ import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITraineeService;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
-import com.epam.springcore.task.utils.impl.AuthenticationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,20 +40,23 @@ public class TraineeService implements ITraineeService {
     private final TrainerRepository trainerRepository;
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
                           UserRepository userRepository, TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository) {
+                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder
+                         ) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -74,10 +77,9 @@ public class TraineeService implements ITraineeService {
         String generatedPassword = passwordGenerator.generatePassword();
 
         user.setUsername(generatedUsername);
-        user.setPassword(generatedPassword);
-        //TODO create a  hashing password
+        String hashedPassword = passwordEncoder.encode(generatedPassword);
+        user.setPassword(hashedPassword);
         user.setActive(true);
-
         trainee.setUser(user);
         traineeRepository.save(trainee);
 
@@ -86,8 +88,12 @@ public class TraineeService implements ITraineeService {
 
     @Override
     public boolean matchTraineeCredentials(PassUsernameDTO passUsernameDTO) {
-        return AuthenticationUtils.matchCredentials(passUsernameDTO.getUsername(),
-                passUsernameDTO.getPassword(), userRepository);
+        Optional<User> optionalUser = userRepository.findByUsername(passUsernameDTO.getUsername());
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            return passwordEncoder.matches(passUsernameDTO.getPassword(), user.getPassword());
+        }
+        return false;
     }
 
     @Override
@@ -120,7 +126,9 @@ public class TraineeService implements ITraineeService {
             throw new IllegalStateException("User associated with trainee is null");
         }
 
-        user.setPassword(passUsernameDTO.getPassword());
+        String hashedPassword = passwordEncoder.encode(passUsernameDTO.getPassword());
+
+        user.setPassword(hashedPassword);
         traineeRepository.save(trainee);
         return passUsernameDTO;
     }
