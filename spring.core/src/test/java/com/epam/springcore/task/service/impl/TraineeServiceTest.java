@@ -1,15 +1,16 @@
 package com.epam.springcore.task.service.impl;
 
-import com.epam.springcore.task.dao.TraineeRepository;
-import com.epam.springcore.task.dao.TrainerRepository;
-import com.epam.springcore.task.dao.TrainingRepository;
-import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.repo.TraineeRepository;
+import com.epam.springcore.task.repo.TrainerRepository;
+import com.epam.springcore.task.repo.TrainingRepository;
+import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.dto.UserDTO;
+import com.epam.springcore.task.mapper.TraineeMapper;
 import com.epam.springcore.task.mapper.TrainerMapper;
 import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.model.Trainee;
@@ -21,11 +22,7 @@ import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -42,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,6 +53,9 @@ class TraineeServiceTest {
     private PasswordGenerator passwordGenerator;
     @Mock
     private TrainingMapper trainingMapper;
+
+    @Spy
+    private TraineeMapper traineeMapper;
     @Mock
     private TraineeRepository traineeRepository;
     @Mock
@@ -116,8 +115,7 @@ class TraineeServiceTest {
 
         passUsernameDTO = new PassUsernameDTO("testUser", "newPassword");
 
-        when(nameGenerator.generateUniqueUsername(any(User.class), any(UserRepository.class),
-                anyList(), anyList())).thenReturn("generatedUsername");
+        when(nameGenerator.generateUniqueUsername(any(User.class))).thenReturn("generatedUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedPassword");
         when(passwordEncoder.encode("generatedPassword")).thenReturn("encodedPassword");
     }
@@ -126,7 +124,7 @@ class TraineeServiceTest {
     void testSaveTrainee() {
         PassUsernameDTO result = traineeService.saveTrainee(traineeDTO);
 
-        verify(nameGenerator).generateUniqueUsername(any(User.class), any(UserRepository.class), anyList(), anyList());
+        verify(nameGenerator).generateUniqueUsername(any(User.class));
         verify(passwordGenerator).generatePassword();
 
         ArgumentCaptor<Trainee> traineeCaptor = ArgumentCaptor.forClass(Trainee.class);

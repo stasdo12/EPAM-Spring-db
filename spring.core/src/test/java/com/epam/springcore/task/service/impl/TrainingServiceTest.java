@@ -1,6 +1,6 @@
 package com.epam.springcore.task.service.impl;
 
-import com.epam.springcore.task.dao.TrainingRepository;
+import com.epam.springcore.task.repo.TrainingRepository;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;

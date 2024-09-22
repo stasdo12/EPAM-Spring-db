@@ -1,6 +1,5 @@
 package com.epam.springcore.task.utils;
 
-import com.epam.springcore.task.dao.UserRepository;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.User;
@@ -11,8 +10,5 @@ public interface NameGenerator {
 
     String generateUsername(User user);
 
-    String generateUsername(User user, List<Trainee> trainees, List<Trainer> trainers);
-
-    String generateUniqueUsername(User user, UserRepository userRepository,
-                                  List<Trainee> trainees, List<Trainer> trainers);
+    String generateUniqueUsername(User user);
 }

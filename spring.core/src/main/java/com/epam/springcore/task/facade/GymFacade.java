@@ -22,6 +22,8 @@ import java.util.Set;
 @Slf4j
 public class GymFacade {
 
+    //TODO remove methods
+
     private final TraineeService traineeService;
 
     private final TrainerService trainerService;
@@ -127,11 +129,5 @@ public class GymFacade {
     public TrainingDTO addTraining (TrainingDTO trainingDTO){
         return trainingService.addTraining(trainingDTO);
     }
-
-
-
-
-
-
 
 }

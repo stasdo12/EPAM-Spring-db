@@ -1,27 +1,36 @@
 package com.epam.springcore.task.utils.impl;
 
-import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.User;
-import com.epam.springcore.task.utils.NameGenerator;
+import com.epam.springcore.task.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(MockitoExtension.class)
 class NameGenerationImplTest {
 
-    private NameGenerator nameGenerator;
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private NameGenerationImpl nameGenerator;
 
     @BeforeEach
     public void setUp() {
-        nameGenerator = new NameGenerationImpl();
+        nameGenerator = new NameGenerationImpl(userRepository);
     }
 
     @Test
     public void testGenerateUsernameWithoutDuplicates() {
+
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -36,22 +45,12 @@ class NameGenerationImplTest {
         user.setFirstName("John");
         user.setLastName("Doe");
 
-        User existingUser1 = new User();
-        existingUser1.setUsername("John.Doe1");
+        List<String> takenUsernames = List.of("John.Doe1", "John.Doe2");
+        Mockito.when(userRepository.findByUsernameStartingWith("John.Doe"))
+                .thenReturn(takenUsernames);
 
-        User existingUser2 = new User();
-        existingUser2.setUsername("John.Doe2");
+        String newUsername = nameGenerator.generateUniqueUsername(user);
 
-        Trainee trainee1 = Mockito.mock(Trainee.class);
-        Mockito.when(trainee1.getUser()).thenReturn(existingUser1);
-
-        Trainer trainer1 = Mockito.mock(Trainer.class);
-        Mockito.when(trainer1.getUser()).thenReturn(existingUser2);
-
-        List<Trainee> trainees = List.of(trainee1);
-        List<Trainer> trainers = List.of(trainer1);
-
-        String newUsername = nameGenerator.generateUsername(user, trainees, trainers);
         assertEquals("John.Doe3", newUsername);
     }
 }

@@ -1,9 +1,9 @@
 package com.epam.springcore.task.service.impl;
 
-import com.epam.springcore.task.dao.TraineeRepository;
-import com.epam.springcore.task.dao.TrainerRepository;
-import com.epam.springcore.task.dao.TrainingRepository;
-import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.repo.TraineeRepository;
+import com.epam.springcore.task.repo.TrainerRepository;
+import com.epam.springcore.task.repo.TrainingRepository;
+import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -37,7 +37,6 @@ public class TraineeService implements ITraineeService {
     private final NameGenerator nameGeneration;
     private final PasswordGenerator passwordGenerator;
     private final UserRepository userRepository;
-    private final TrainerRepository trainerRepository;
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,14 +45,12 @@ public class TraineeService implements ITraineeService {
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
-                          UserRepository userRepository, TrainerRepository trainerRepository,
+                          UserRepository userRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder
-                         ) {
+                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
-        this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
         this.passwordEncoder = passwordEncoder;
@@ -71,8 +68,9 @@ public class TraineeService implements ITraineeService {
 
         User user = trainee.getUser();
 
-        String generatedUsername = nameGeneration.generateUniqueUsername(user, userRepository,
-                traineeRepository.findAll(), trainerRepository.findAll());
+        String generatedUsername = nameGeneration.generateUniqueUsername(user);
+
+        //TODO rewrite without repo here public String getAvailableSlug
 
         String generatedPassword = passwordGenerator.generatePassword();
 
@@ -168,7 +166,6 @@ public class TraineeService implements ITraineeService {
         }
         user.setActive(isActive);
         traineeRepository.save(trainee);
-
     }
     @Override
     @Transactional

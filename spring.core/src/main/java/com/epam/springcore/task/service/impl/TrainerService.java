@@ -1,9 +1,9 @@
 package com.epam.springcore.task.service.impl;
 
-import com.epam.springcore.task.dao.TraineeRepository;
-import com.epam.springcore.task.dao.TrainerRepository;
-import com.epam.springcore.task.dao.TrainingRepository;
-import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.repo.TraineeRepository;
+import com.epam.springcore.task.repo.TrainerRepository;
+import com.epam.springcore.task.repo.TrainingRepository;
+import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -79,8 +79,7 @@ public class TrainerService  implements ITrainerService {
 
         User user = trainer.getUser();
 
-        String generatedUsername = nameGeneration.generateUniqueUsername(user, userRepository,
-                traineeRepository.findAll(), trainerRepository.findAll());
+        String generatedUsername = nameGeneration.generateUniqueUsername(user);
 
         String generatedPassword = passwordGenerator.generatePassword();
         user.setUsername(generatedUsername);

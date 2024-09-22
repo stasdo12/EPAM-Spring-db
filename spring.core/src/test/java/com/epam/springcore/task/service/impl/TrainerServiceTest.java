@@ -1,9 +1,9 @@
 package com.epam.springcore.task.service.impl;
 
-import com.epam.springcore.task.dao.TraineeRepository;
-import com.epam.springcore.task.dao.TrainerRepository;
-import com.epam.springcore.task.dao.TrainingRepository;
-import com.epam.springcore.task.dao.UserRepository;
+import com.epam.springcore.task.repo.TraineeRepository;
+import com.epam.springcore.task.repo.TrainerRepository;
+import com.epam.springcore.task.repo.TrainingRepository;
+import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -87,8 +87,7 @@ class TrainerServiceTest {
 
         passUsernameDTO = new PassUsernameDTO("testUser", "newPassword");
 
-        when(nameGenerator.generateUniqueUsername(any(User.class), any(UserRepository.class),
-                anyList(), anyList())).thenReturn("generatedTrainerUsername");
+        when(nameGenerator.generateUniqueUsername(any(User.class))).thenReturn("generatedTrainerUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedTrainerPassword");
         when(passwordEncoder.encode("generatedTrainerPassword")).thenReturn("encodedPassword");
     }
@@ -97,7 +96,7 @@ class TrainerServiceTest {
     void testSaveTrainer() {
         PassUsernameDTO result = trainerService.saveTrainer(trainerDTO);
 
-        verify(nameGenerator).generateUniqueUsername(any(User.class), any(UserRepository.class), anyList(), anyList());
+        verify(nameGenerator).generateUniqueUsername(any(User.class));
         verify(passwordGenerator).generatePassword();
 
         ArgumentCaptor<Trainer> trainerCaptor = ArgumentCaptor.forClass(Trainer.class);
