@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: master
+      author: StanDi
+      changes:
+        - include:
+            file: db/changelog/db.first-changelog.yml
