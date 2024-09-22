@@ -29,26 +29,13 @@ import java.util.Optional;
 
 @Service
 public class TrainerService  implements ITrainerService {
-
     private final NameGenerator nameGeneration;
-
     private final PasswordGenerator passwordGenerator;
-
     private final UserRepository userRepository;
-
     private final TrainerRepository trainerRepository;
-
-
     private final TraineeRepository traineeRepository;
-
     private final TrainingRepository trainingRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-
-
-
-
 
     @Autowired
     public TrainerService(NameGenerator nameGeneration,

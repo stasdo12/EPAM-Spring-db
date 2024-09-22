@@ -1,7 +1,6 @@
 package com.epam.springcore.task.service.impl;
 
 import com.epam.springcore.task.repo.TraineeRepository;
-import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
 import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
@@ -41,8 +40,6 @@ public class TraineeService implements ITraineeService {
     private final TrainingRepository trainingRepository;
     private final PasswordEncoder passwordEncoder;
 
-
-
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
                           UserRepository userRepository,
@@ -69,8 +66,6 @@ public class TraineeService implements ITraineeService {
         User user = trainee.getUser();
 
         String generatedUsername = nameGeneration.generateUniqueUsername(user);
-
-        //TODO rewrite without repo here public String getAvailableSlug
 
         String generatedPassword = passwordGenerator.generatePassword();
 

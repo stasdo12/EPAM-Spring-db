@@ -19,7 +19,6 @@ class NameGenerationImplTest {
 
     @Mock
     private UserRepository userRepository;
-
     @InjectMocks
     private NameGenerationImpl nameGenerator;
 

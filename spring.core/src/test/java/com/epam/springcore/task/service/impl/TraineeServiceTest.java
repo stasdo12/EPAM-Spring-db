@@ -1,7 +1,6 @@
 package com.epam.springcore.task.service.impl;
 
 import com.epam.springcore.task.repo.TraineeRepository;
-import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
 import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
@@ -10,7 +9,6 @@ import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.dto.UserDTO;
-import com.epam.springcore.task.mapper.TraineeMapper;
 import com.epam.springcore.task.mapper.TrainerMapper;
 import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.model.Trainee;
@@ -22,7 +20,10 @@ import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -33,13 +34,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,13 +52,8 @@ class TraineeServiceTest {
     private PasswordGenerator passwordGenerator;
     @Mock
     private TrainingMapper trainingMapper;
-
-    @Spy
-    private TraineeMapper traineeMapper;
     @Mock
     private TraineeRepository traineeRepository;
-    @Mock
-    private TrainerRepository trainerRepository;
     @Mock
     private TrainingRepository trainingRepository;
     @Mock
@@ -75,11 +69,8 @@ class TraineeServiceTest {
     private TraineeDTO traineeDTO;
     private Trainee trainee;
     private User user;
-    private UserDTO userDTO;
     private PassUsernameDTO passUsernameDTO;
 
-    TraineeServiceTest() {
-    }
 
     @BeforeEach
     void setUp() {
@@ -89,7 +80,7 @@ class TraineeServiceTest {
         user.setUsername("testUser");
         user.setPassword("testPassword");
 
-        userDTO = new UserDTO();
+        UserDTO userDTO = new UserDTO();
         userDTO.setUsername("testUser");
 
         trainee = new Trainee();

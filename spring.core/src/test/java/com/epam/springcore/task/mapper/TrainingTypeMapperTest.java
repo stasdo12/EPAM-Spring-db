@@ -10,7 +10,6 @@ class TrainingTypeMapperTest {
 
     private final TrainingTypeMapper mapper = TrainingTypeMapper.INSTANCE;
 
-
     @Test
     void trainingTypeToDTO() {
         TrainingType trainingType = new TrainingType();
