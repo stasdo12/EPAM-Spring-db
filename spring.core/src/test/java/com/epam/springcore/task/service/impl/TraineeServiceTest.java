@@ -407,6 +407,5 @@ class TraineeServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals(traineeDTO.getUser().getUsername(), result.get().getUser().getUsername());
-
     }
 }

@@ -309,7 +309,6 @@ class TrainerServiceTest {
         assertEquals(2, result.size());
         assertEquals("trainer1", result.get(0).getUser().getUsername());
         assertEquals("trainer2", result.get(1).getUser().getUsername());
-
     }
 
     @Test

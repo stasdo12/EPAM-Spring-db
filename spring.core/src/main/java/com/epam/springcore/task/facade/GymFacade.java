@@ -22,14 +22,9 @@ import java.util.Set;
 @Slf4j
 public class GymFacade {
 
-    //TODO remove methods
-
     private final TraineeService traineeService;
-
     private final TrainerService trainerService;
-
     private final TrainingService trainingService;
-
 
     @Autowired
     public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
@@ -37,7 +32,6 @@ public class GymFacade {
         this.trainerService = trainerService;
         this.trainingService = trainingService;
     }
-
 
     public PassUsernameDTO saveTrainer(TrainerDTO trainerDTO){
         return trainerService.saveTrainer(trainerDTO);
@@ -54,6 +48,7 @@ public class GymFacade {
     public TrainerDTO updateTrainerProfile(@Valid String username, TrainerDTO updatedTrainerDTO){
         return trainerService.updateTrainerProfile(username, updatedTrainerDTO);
     }
+
     public void activateDeactivateTrainer(String username, boolean isActive){
         trainerService.activateDeactivateTrainer(username, isActive);
     }
@@ -87,6 +82,7 @@ public class GymFacade {
     public Optional<TraineeDTO> findTraineeByUserId(Long userId){
         return traineeService.findByUserId(userId);
     }
+
     public Optional<TraineeDTO> findTraineeByUsername(String username){
         return traineeService.findByUsername(username);
     }

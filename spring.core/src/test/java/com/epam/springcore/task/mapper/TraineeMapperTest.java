@@ -69,7 +69,6 @@ class TraineeMapperTest {
 
         Trainee trainee = traineeMapper.traineeToEntity(traineeDTO);
 
-        assertThat(trainee).isNotNull();
         assertThat(trainee.getUser()).isNotNull();
         assertThat(trainee.getUser().getUsername()).isEqualTo("testuser");
         assertThat(trainee.getBirthday()).isEqualTo(LocalDate.of(2000, 1, 1));

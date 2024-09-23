@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
 @Service
 public class TraineeService implements ITraineeService {
 
