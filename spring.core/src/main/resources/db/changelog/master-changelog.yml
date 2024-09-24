@@ -4,4 +4,4 @@ databaseChangeLog:
       author: StanDi
       changes:
         - include:
-            file: db/changelog/db.first-changelog.yml
+            file: classpath:db/changelog/db.first-changelog.yml

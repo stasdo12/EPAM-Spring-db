@@ -1,5 +1,8 @@
 package com.epam.springcore.task.service.impl;
 
+import com.epam.springcore.task.mapper.TrainerMapper;
+import com.epam.springcore.task.mapper.TrainingMapper;
+import com.epam.springcore.task.mapper.TrainingTypeMapper;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
@@ -27,15 +30,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,10 +57,17 @@ class TrainerServiceTest {
     private TrainingRepository trainingRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private TrainerMapper trainerMapper;
+
+    @Mock
+    private TrainingTypeMapper trainingTypeMapper;
+
+    @Mock
+    private TrainingMapper trainingMapper;
 
     @InjectMocks
     private TrainerService trainerService;
-
     private TrainerDTO trainerDTO;
     private Trainer trainer;
     private User user;
@@ -89,6 +98,8 @@ class TrainerServiceTest {
         when(nameGenerator.generateUniqueUsername(any(User.class))).thenReturn("generatedTrainerUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedTrainerPassword");
         when(passwordEncoder.encode("generatedTrainerPassword")).thenReturn("encodedPassword");
+        when(trainerMapper.trainerToEntity(any(TrainerDTO.class))).thenReturn(trainer);
+        when(trainerMapper.trainerToDTO(any(Trainer.class))).thenReturn(trainerDTO);
     }
 
     @Test
@@ -200,6 +211,10 @@ class TrainerServiceTest {
         trainerDTO.setSpecialization(new TrainingTypeDTO("UpdatedSpec"));
         trainerDTO.setTrainings(Collections.emptyList());
 
+        when(trainingTypeMapper.trainingTypeToEntity(any(TrainingTypeDTO.class))).thenReturn(new TrainingType(1L, "UpdatedSpec"));
+        when(trainingMapper.dtoListToEntityList(anyList())).thenReturn(Collections.emptyList()); // Настройте по необходимости
+        when(trainingMapper.entityListToDTOList(anyList())).thenReturn(Collections.emptyList()); // Настройте по необходимости
+
         when(trainerRepository.findTrainerByUserUsername("testUser")).thenReturn(Optional.of(trainer));
         when(trainerRepository.save(any(Trainer.class))).thenReturn(trainer);
 
@@ -230,7 +245,6 @@ class TrainerServiceTest {
 
     @Test
     void testGetTrainerTrainingsByCriteria() {
-
         LocalDate fromDate = LocalDate.of(2024, 1, 1);
         LocalDate toDate = LocalDate.of(2024, 12, 31);
         String trainerUsername = "trainerUser";
@@ -268,8 +282,10 @@ class TrainerServiceTest {
         trainingDTO.setDate(LocalDate.of(2024, 6, 15));
         trainingDTO.setTrainingType(new TrainingTypeDTO(trainingName));
 
-        when(trainingRepository.findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
+        when(trainingRepository.findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
                 trainerUsername, fromDate, toDate, traineeUsername, trainingName)).thenReturn(Collections.singletonList(training));
+
+        when(trainingMapper.entityListToDTOList(anyList())).thenReturn(Collections.singletonList(trainingDTO));
 
         List<TrainingDTO> result = trainerService.getTrainerTrainingsByCriteria(trainerUsername, fromDate, toDate, traineeUsername, trainingName);
 
@@ -302,15 +318,27 @@ class TrainerServiceTest {
 
         when(traineeRepository.findTraineeByUserUsername(traineeUsername)).thenReturn(Optional.of(trainee));
         when(trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername)).thenReturn(trainers);
+        when(trainerMapper.entityListToDTOList(trainers)).thenReturn(List.of(
+                new TrainerDTO(
+                        new UserDTO("trainer1", null, null),
+                        new TrainingTypeDTO(),
+                        new ArrayList<>(),
+                        new HashSet<>()
+                ),
+                new TrainerDTO(
+                        new UserDTO("trainer2", null, null),
+                        new TrainingTypeDTO(),
+                        new ArrayList<>(),
+                        new HashSet<>()
+                )
+        ));
 
         List<TrainerDTO> result = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
-
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("trainer1", result.get(0).getUser().getUsername());
         assertEquals("trainer2", result.get(1).getUser().getUsername());
     }
-
     @Test
     void testFindById_TrainerFound() {
         Long trainerId = 1L;
@@ -319,11 +347,11 @@ class TrainerServiceTest {
         trainer.setTrainerId(trainerId);
 
         User trainerUser = new User();
-        trainerUser.setUsername("trainerUser");
+        trainerUser.setUsername("testTrainer");
         trainer.setUser(trainerUser);
 
         TrainerDTO trainerDTO = new TrainerDTO();
-        trainerDTO.setUser(new UserDTO("trainerUser", null, null));
+        trainerDTO.setUser(new UserDTO("testTrainer", null, null));
 
         when(trainerRepository.findById(trainerId)).thenReturn(Optional.of(trainer));
 

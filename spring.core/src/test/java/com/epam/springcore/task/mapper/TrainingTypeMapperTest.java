@@ -3,12 +3,13 @@ package com.epam.springcore.task.mapper;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.model.TrainingType;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TrainingTypeMapperTest {
 
-    private final TrainingTypeMapper mapper = TrainingTypeMapper.INSTANCE;
+    private final TrainingTypeMapper mapper = Mappers.getMapper(TrainingTypeMapper.class);
 
     @Test
     void trainingTypeToDTO() {

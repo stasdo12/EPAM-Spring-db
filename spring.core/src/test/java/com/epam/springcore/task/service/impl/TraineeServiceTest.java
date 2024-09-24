@@ -1,5 +1,6 @@
 package com.epam.springcore.task.service.impl;
 
+import com.epam.springcore.task.mapper.TraineeMapper;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
 import com.epam.springcore.task.repo.UserRepository;
@@ -64,6 +65,9 @@ class TraineeServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private TraineeMapper traineeMapper;
+
     @InjectMocks
     private TraineeService traineeService;
     private TraineeDTO traineeDTO;
@@ -109,6 +113,10 @@ class TraineeServiceTest {
         when(nameGenerator.generateUniqueUsername(any(User.class))).thenReturn("generatedUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedPassword");
         when(passwordEncoder.encode("generatedPassword")).thenReturn("encodedPassword");
+        when(traineeMapper.traineeToEntity(any(TraineeDTO.class))).thenReturn(trainee);
+        when(traineeMapper.traineeToDTO(any(Trainee.class))).thenReturn(traineeDTO);
+
+
     }
 
     @Test
@@ -298,7 +306,6 @@ class TraineeServiceTest {
 
     @Test
     void testGetTraineeTrainingsByCriteria() {
-
         LocalDate fromDate = LocalDate.of(2024, 1, 1);
         LocalDate toDate = LocalDate.of(2024, 12, 31);
         String traineeUsername = "testUser";
@@ -344,6 +351,8 @@ class TraineeServiceTest {
         when(trainingRepository.findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingName)).thenReturn(Collections.singletonList(training));
 
+        when(trainingMapper.entityListToDTOList(anyList())).thenReturn(Collections.singletonList(trainingDTO));
+
         List<TrainingDTO> result = traineeService.getTraineeTrainingsByCriteria(traineeUsername, fromDate, toDate, trainerUsername, trainingName);
 
         assertNotNull(result);
@@ -355,6 +364,7 @@ class TraineeServiceTest {
     void testUpdateTraineeTrainers() {
 
         String traineeUsername = "testUser";
+
         Trainee existingTrainee = new Trainee();
         existingTrainee.setUser(new User());
         existingTrainee.getUser().setUsername(traineeUsername);
@@ -373,7 +383,7 @@ class TraineeServiceTest {
         trainer.setUser(trainerUser);
 
         when(traineeRepository.findTraineeByUserUsername(traineeUsername)).thenReturn(Optional.of(existingTrainee));
-        when(trainerMapper.dtoListToEntitySet(anyList())).thenReturn(Collections.singleton(trainer));
+        when(trainerMapper.dtoListToEntityList(anyList())).thenReturn(Collections.singletonList(trainer));
         when(traineeRepository.save(any(Trainee.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Trainee updatedTrainee = traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
@@ -381,11 +391,9 @@ class TraineeServiceTest {
         assertNotNull(updatedTrainee.getTrainers(), "The trainers set in the updated Trainee should not be null");
         assertEquals(1, updatedTrainee.getTrainers().size(), "The number of trainers should be 1");
         assertTrue(updatedTrainee.getTrainers().contains(trainer), "The trainers set should contain the new trainer");
-
         ArgumentCaptor<Trainee> traineeCaptor = ArgumentCaptor.forClass(Trainee.class);
         verify(traineeRepository).save(traineeCaptor.capture());
         Trainee savedTrainee = traineeCaptor.getValue();
-
         assertNotNull(savedTrainee, "The saved Trainee should not be null");
         assertEquals(updatedTrainee, savedTrainee, "The saved Trainee should match the updated Trainee");
     }

@@ -36,6 +36,9 @@ public class TrainerService  implements ITrainerService {
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TrainingMapper trainingMapper;
+    private final TrainerMapper trainerMapper;
+    private final TrainingTypeMapper trainingTypeMapper;
 
     @Autowired
     public TrainerService(NameGenerator nameGeneration,
@@ -43,7 +46,7 @@ public class TrainerService  implements ITrainerService {
                           UserRepository userRepository,
                           TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder) {
+                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder, TrainingMapper trainingMapper, TrainerMapper trainerMapper, TrainingTypeMapper trainingTypeMapper) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
@@ -51,7 +54,10 @@ public class TrainerService  implements ITrainerService {
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
         this.passwordEncoder = passwordEncoder;
+        this.trainingMapper = trainingMapper;
 
+        this.trainerMapper = trainerMapper;
+        this.trainingTypeMapper = trainingTypeMapper;
     }
 
     @Override
@@ -62,7 +68,7 @@ public class TrainerService  implements ITrainerService {
             throw new IllegalArgumentException("Trainer and associated User must not be null");
         }
 
-        Trainer trainer  = TrainerMapper.INSTANCE.trainerToEntity(trainerDTO);
+        Trainer trainer  = trainerMapper.trainerToEntity(trainerDTO);
 
         User user = trainer.getUser();
 
@@ -98,7 +104,7 @@ public class TrainerService  implements ITrainerService {
         if (trainerOptional.isEmpty()) {
             return Optional.empty();
         }
-        TrainerDTO trainerDTO = TrainerMapper.INSTANCE.trainerToDTO(trainerOptional.get());
+        TrainerDTO trainerDTO = trainerMapper.trainerToDTO(trainerOptional.get());
         return Optional.of(trainerDTO);
     }
 
@@ -128,11 +134,11 @@ public class TrainerService  implements ITrainerService {
         }
         Trainer trainer = trainerOptional.get();
 
-        trainer.setSpecialization(TrainingTypeMapper.INSTANCE.trainingTypeToEntity(updatedTrainerDTO.getSpecialization()));
-        trainer.setTrainings(TrainingMapper.INSTANCE.dtoListToEntityList(updatedTrainerDTO.getTrainings()));
+        trainer.setSpecialization(trainingTypeMapper.trainingTypeToEntity(updatedTrainerDTO.getSpecialization()));
+        trainer.setTrainings(trainingMapper.dtoListToEntityList(updatedTrainerDTO.getTrainings()));
 
         Trainer updatedTrainer = trainerRepository.save(trainer);
-        return TrainerMapper.INSTANCE.trainerToDTO(updatedTrainer);
+        return trainerMapper.trainerToDTO(updatedTrainer);
     }
 
     @Override
@@ -160,7 +166,7 @@ public class TrainerService  implements ITrainerService {
         List<Training> trainings =
                 trainingRepository.findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
                 trainerUsername, fromDate, toDate, traineeUsername, trainingName);
-        return TrainingMapper.INSTANCE.entityListToDTOList(trainings);
+        return trainingMapper.entityListToDTOList(trainings);
     }
 
     @Override
@@ -173,12 +179,12 @@ public class TrainerService  implements ITrainerService {
             throw new IllegalArgumentException("Trainee with username " + traineeUsername + "not found");
         }
         List<Trainer> trainers = trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
-        return TrainerMapper.INSTANCE.entityListToDTOList(trainers);
+        return trainerMapper.entityListToDTOList(trainers);
     }
 
     @Override
     public Optional<TrainerDTO> findById(Long trainerId) {
         Optional<Trainer> trainerOptional = trainerRepository.findById(trainerId);
-        return trainerOptional.map(TrainerMapper.INSTANCE::trainerToDTO);
+        return trainerOptional.map(trainerMapper::trainerToDTO);
     }
 }

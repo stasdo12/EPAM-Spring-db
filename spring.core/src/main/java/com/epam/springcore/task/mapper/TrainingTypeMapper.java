@@ -6,10 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TrainingTypeMapper {
-
-    TrainingTypeMapper INSTANCE = Mappers.getMapper(TrainingTypeMapper.class);
 
     TrainingTypeDTO trainingTypeToDTO(TrainingType trainingType);
 

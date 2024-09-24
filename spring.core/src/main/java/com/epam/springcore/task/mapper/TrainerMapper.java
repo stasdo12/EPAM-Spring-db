@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TrainerMapper {
-
-    TrainerMapper INSTANCE = Mappers.getMapper(TrainerMapper.class);
 
     TrainerDTO trainerToDTO(Trainer trainer);
 

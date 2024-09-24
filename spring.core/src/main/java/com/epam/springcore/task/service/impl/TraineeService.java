@@ -38,18 +38,24 @@ public class TraineeService implements ITraineeService {
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TraineeMapper traineeMapper;
+    private final TrainerMapper trainerMapper;
+    private final TrainingMapper trainingMapper;
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
                           UserRepository userRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder) {
+                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder, TraineeMapper traineeMapper, TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
         this.passwordEncoder = passwordEncoder;
+        this.traineeMapper = traineeMapper;
+        this.trainerMapper = trainerMapper;
+        this.trainingMapper = trainingMapper;
     }
 
     @Override
@@ -60,7 +66,7 @@ public class TraineeService implements ITraineeService {
             throw new IllegalArgumentException("TraineeDTO and associated UserDTO must not be null");
         }
 
-        Trainee trainee = TraineeMapper.INSTANCE.traineeToEntity(traineeDTO);
+        Trainee trainee = traineeMapper.traineeToEntity(traineeDTO);
 
         User user = trainee.getUser();
 
@@ -100,7 +106,7 @@ public class TraineeService implements ITraineeService {
             return Optional.empty();
         }
 
-        TraineeDTO traineeDTO = TraineeMapper.INSTANCE.traineeToDTO(traineeOptional.get());
+        TraineeDTO traineeDTO = traineeMapper.traineeToDTO(traineeOptional.get());
         return Optional.of(traineeDTO);
     }
 
@@ -137,12 +143,12 @@ public class TraineeService implements ITraineeService {
         Trainee trainee = traineeOptional.get();
         trainee.setBirthday(updatedTraineeDTO.getBirthday());
         trainee.setAddress(updatedTraineeDTO.getAddress());
-        trainee.setTrainings(TrainingMapper.INSTANCE.dtoListToEntityList(updatedTraineeDTO.getTrainings()));
-        trainee.setTrainers(TrainerMapper.INSTANCE.dtoListToEntitySet(updatedTraineeDTO.getTrainers()));
+        trainee.setTrainings(trainingMapper.dtoListToEntityList(updatedTraineeDTO.getTrainings()));
+        trainee.setTrainers(trainerMapper.dtoListToEntitySet(updatedTraineeDTO.getTrainers()));
 
         Trainee updatedTrainee = traineeRepository.save(trainee);
 
-        return TraineeMapper.INSTANCE.traineeToDTO(updatedTrainee);
+        return traineeMapper.traineeToDTO(updatedTrainee);
     }
 
     @Override
@@ -179,7 +185,7 @@ public class TraineeService implements ITraineeService {
         List<Training> trainings = trainingRepository.
                 findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingName);
-        return TrainingMapper.INSTANCE.entityListToDTOList(trainings);
+        return trainingMapper.entityListToDTOList(trainings);
     }
 
     @Override
@@ -191,7 +197,7 @@ public class TraineeService implements ITraineeService {
         }
         Trainee trainee = traineeOptional.get();
         Set<Trainer> newTrainers =
-                new HashSet<>(TrainerMapper.INSTANCE.dtoListToEntityList(new ArrayList<>(newTrainerDTOs)));
+                new HashSet<>(trainerMapper.dtoListToEntityList(new ArrayList<>(newTrainerDTOs)));
         trainee.setTrainers(newTrainers);
 
         return traineeRepository.save(trainee);
@@ -200,13 +206,13 @@ public class TraineeService implements ITraineeService {
     @Override
     public Optional<TraineeDTO> findById(long traineeId) {
         Optional<Trainee> traineeOptional = traineeRepository.findById(traineeId);
-        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
+        return traineeOptional.map(traineeMapper::traineeToDTO);
     }
 
     @Override
     public Optional<TraineeDTO> findByUserId(Long userId) {
         Optional<Trainee> traineeOptional = traineeRepository.findTraineeByUserUserId(userId);
-        return traineeOptional.map(TraineeMapper.INSTANCE::traineeToDTO);
+        return traineeOptional.map(traineeMapper::traineeToDTO);
     }
 
 }

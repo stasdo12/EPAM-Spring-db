@@ -1,5 +1,6 @@
 package com.epam.springcore.task.service.impl;
 
+import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.repo.TrainingRepository;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -27,10 +28,10 @@ class TrainingServiceTest {
 
     @Mock
     private TrainingRepository trainingRepository;
-
+    @Mock
+    private TrainingMapper trainingMapper;
     @InjectMocks
     private TrainingService trainingService;
-
     private TrainingDTO validTrainingDTO;
     private Training training;
 
@@ -59,11 +60,13 @@ class TrainingServiceTest {
     @Test
     void addTraining_ShouldSaveTraining_WhenValidData() {
 
+        when(trainingMapper.trainingToEntity(any(TrainingDTO.class))).thenReturn(training);
+        when(trainingMapper.trainingToDTO(any(Training.class))).thenReturn(validTrainingDTO);
         when(trainingRepository.save(any(Training.class))).thenReturn(training);
 
         TrainingDTO result = trainingService.addTraining(validTrainingDTO);
-
         assertNotNull(result);
+
         assertEquals(validTrainingDTO.getTrainingName(), result.getTrainingName());
         assertEquals(validTrainingDTO.getDurationMinutes(), result.getDurationMinutes());
     }

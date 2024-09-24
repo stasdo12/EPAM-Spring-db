@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 public class TrainingService implements ITrainingService {
 
     public final TrainingRepository trainingRepository;
+    public final TrainingMapper trainingMapper;
 
     @Autowired
-    public TrainingService(TrainingRepository trainingRepository) {
+    public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper) {
         this.trainingRepository = trainingRepository;
+        this.trainingMapper = trainingMapper;
     }
 
     @Override
@@ -24,8 +26,8 @@ public class TrainingService implements ITrainingService {
             throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
         }
 
-        Training training = TrainingMapper.INSTANCE.trainingToEntity(trainingDTO);
+        Training training = trainingMapper.trainingToEntity(trainingDTO);
         Training savedTraining = trainingRepository.save(training);
-        return TrainingMapper.INSTANCE.trainingToDTO(savedTraining);
+        return trainingMapper.trainingToDTO(savedTraining);
     }
 }
