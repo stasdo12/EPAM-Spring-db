@@ -40,12 +40,18 @@ public class TraineeService implements ITraineeService {
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
+    private final UserService userService;
 
     @Autowired
     public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
                           UserRepository userRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder, TraineeMapper traineeMapper, TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
+                          TrainingRepository trainingRepository,
+                          PasswordEncoder passwordEncoder,
+                          TraineeMapper traineeMapper,
+                          TrainerMapper trainerMapper,
+                          TrainingMapper trainingMapper,
+                          UserService userService) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
@@ -55,6 +61,7 @@ public class TraineeService implements ITraineeService {
         this.traineeMapper = traineeMapper;
         this.trainerMapper = trainerMapper;
         this.trainingMapper = trainingMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -66,31 +73,17 @@ public class TraineeService implements ITraineeService {
         }
 
         Trainee trainee = traineeMapper.traineeToEntity(traineeDTO);
-
         User user = trainee.getUser();
-
-        String generatedUsername = nameGeneration.generateUniqueUsername(user);
-
-        String generatedPassword = passwordGenerator.generatePassword();
-
-        user.setUsername(generatedUsername);
-        String hashedPassword = passwordEncoder.encode(generatedPassword);
-        user.setPassword(hashedPassword);
-        user.setActive(true);
+        PassUsernameDTO passUsernameDTO = userService.generateAndSaveUser(user);
         trainee.setUser(user);
         traineeRepository.save(trainee);
 
-        return new PassUsernameDTO(generatedUsername, generatedPassword);
+        return passUsernameDTO;
     }
 
     @Override
     public boolean matchTraineeCredentials(PassUsernameDTO passUsernameDTO) {
-        Optional<User> optionalUser = userRepository.findByUsername(passUsernameDTO.getUsername());
-        if (optionalUser.isPresent()){
-            User user = optionalUser.get();
-            return passwordEncoder.matches(passUsernameDTO.getPassword(), user.getPassword());
-        }
-        return false;
+        return userService.matchUserCredentials(passUsernameDTO);
     }
 
     @Override
@@ -123,10 +116,7 @@ public class TraineeService implements ITraineeService {
             throw new IllegalStateException("User associated with trainee is null");
         }
 
-        String hashedPassword = passwordEncoder.encode(passUsernameDTO.getPassword());
-
-        user.setPassword(hashedPassword);
-        traineeRepository.save(trainee);
+        userService.changeUserPassword(user.getUsername(), passUsernameDTO.getPassword());
         return passUsernameDTO;
     }
 
@@ -165,8 +155,7 @@ public class TraineeService implements ITraineeService {
         if (user == null) {
             throw new IllegalStateException("User associated with trainee is null");
         }
-        user.setActive(isActive);
-        traineeRepository.save(trainee);
+        userService.activateDeactivateUser(user.getUsername(), isActive);
     }
     @Override
     @Transactional

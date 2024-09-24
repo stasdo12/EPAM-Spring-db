@@ -68,6 +68,9 @@ class TraineeServiceTest {
     @Mock
     private TraineeMapper traineeMapper;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private TraineeService traineeService;
     private TraineeDTO traineeDTO;
@@ -121,17 +124,25 @@ class TraineeServiceTest {
 
     @Test
     void testSaveTrainee() {
-        PassUsernameDTO result = traineeService.saveTrainee(traineeDTO);
+        TraineeDTO traineeDTO = new TraineeDTO();
+        UserDTO userDTO = new UserDTO();
+        traineeDTO.setUser(userDTO);
 
-        verify(nameGenerator).generateUniqueUsername(any(User.class));
-        verify(passwordGenerator).generatePassword();
+        User user = new User();
+        user.setPassword("encodedPassword");
+        user.setUsername("generatedUsername");
+
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO("generatedUsername", "generatedPassword");
+        when(userService.generateAndSaveUser(any(User.class))).thenReturn(passUsernameDTO);
+
+        PassUsernameDTO result = traineeService.saveTrainee(traineeDTO);
 
         ArgumentCaptor<Trainee> traineeCaptor = ArgumentCaptor.forClass(Trainee.class);
         verify(traineeRepository).save(traineeCaptor.capture());
         Trainee savedTrainee = traineeCaptor.getValue();
 
-        assertEquals("encodedPassword", savedTrainee.getUser().getPassword());
-        assertEquals("generatedUsername", savedTrainee.getUser().getUsername());
+        assertEquals("testPassword", savedTrainee.getUser().getPassword());
+        assertEquals("testUser", savedTrainee.getUser().getUsername());
 
         assertNotNull(result);
         assertEquals("generatedUsername", result.getUsername());
@@ -140,20 +151,10 @@ class TraineeServiceTest {
 
     @Test
     void testMatchTraineeCredentials_Success() {
-        String username = "generatedTrainerUsername";
-        String password = "generatedTrainerPassword";
-
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(password, user.getPassword())).thenReturn(true);
-
-        PassUsernameDTO passUsernameDTO = new PassUsernameDTO(username, password);
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO("generatedUsername", "generatedPassword");
+        when(userService.matchUserCredentials(any(PassUsernameDTO.class))).thenReturn(true);
         boolean result = traineeService.matchTraineeCredentials(passUsernameDTO);
-
-        assertTrue(result);
+        assertTrue(result, "Credentials should match");
     }
 
     @Test
@@ -192,16 +193,20 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testChangeTraineePassword_Success() {
-        when(traineeRepository.findTraineeByUserUsername("testUser")).thenReturn(Optional.of(trainee));
-        when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
+    void testChangeTraineePassword() {
+        user.setUsername("testUsername");
+        trainee.setUser(user);
+
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO("testUsername", "newPassword");
+
+        when(traineeRepository.findTraineeByUserUsername("testUsername")).thenReturn(Optional.of(trainee));
 
         PassUsernameDTO result = traineeService.changeTraineePassword(passUsernameDTO);
-
-        assertEquals("encodedPassword", trainee.getUser().getPassword());
-        assertEquals(passUsernameDTO, result);
+        verify(userService).changeUserPassword("testUsername", "newPassword");
+        assertNotNull(result);
+        assertEquals("testUsername", result.getUsername());
+        assertEquals("newPassword", result.getPassword());
     }
-
     @Test
     void testChangeTraineePassword_TraineeNotFound() {
         when(traineeRepository.findTraineeByUserUsername("nonExistingUser")).thenReturn(Optional.empty());
@@ -256,16 +261,13 @@ class TraineeServiceTest {
 
     @Test
     void testActivateDeactivateTrainee_Success() {
-
+        user.setUsername("testUsername");
         trainee.setUser(user);
-        user.setActive(false);
 
-        when(traineeRepository.findTraineeByUserUsername("testUser")).thenReturn(Optional.of(trainee));
+        when(traineeRepository.findTraineeByUserUsername("testUsername")).thenReturn(Optional.of(trainee));
 
-        traineeService.activateDeactivateTrainee("testUser", true);
-
-        assertTrue(user.isActive());
-        verify(traineeRepository).save(trainee);
+        traineeService.activateDeactivateTrainee("testUsername", true);
+        verify(userService).activateDeactivateUser("testUsername", true);
     }
 
     @Test
