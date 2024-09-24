@@ -165,7 +165,7 @@ public class TrainerService  implements ITrainerService {
                                                            String traineeUsername,
                                                            String trainingName) {
         List<Training> trainings =
-                trainingRepository.findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
+                trainingRepository.findByTrainerUserUsernameAndDateBetweenAndTraineeUserUsernameAndTrainingName(
                 trainerUsername, fromDate, toDate, traineeUsername, trainingName);
         return trainingMapper.entityListToDTOList(trainings);
     }

@@ -184,7 +184,7 @@ public class TraineeService implements ITraineeService {
     public List<TrainingDTO> getTraineeTrainingsByCriteria(String traineeUsername, LocalDate fromDate, LocalDate toDate,
                                                            String trainerUsername, String trainingName) {
         List<Training> trainings = trainingRepository.
-                findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
+                findByTraineeUserUsernameAndDateBetweenAndTrainerUserUsernameAndTrainingTypeName(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingName);
         return trainingMapper.entityListToDTOList(trainings);
     }

@@ -348,7 +348,7 @@ class TraineeServiceTest {
         trainingDTO.setTrainer(trainerDTO);
         trainingDTO.setTrainingType(new TrainingTypeDTO(trainingName));
 
-        when(trainingRepository.findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
+        when(trainingRepository.findByTraineeUserUsernameAndDateBetweenAndTrainerUserUsernameAndTrainingTypeName(
                 traineeUsername, fromDate, toDate, trainerUsername, trainingName)).thenReturn(Collections.singletonList(training));
 
         when(trainingMapper.entityListToDTOList(anyList())).thenReturn(Collections.singletonList(trainingDTO));

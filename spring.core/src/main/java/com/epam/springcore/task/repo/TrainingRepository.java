@@ -10,10 +10,10 @@ import java.util.List;
 @Repository
 public interface TrainingRepository extends JpaRepository<Training, Long> {
 
-    List<Training> findByTrainee_User_UsernameAndDateBetweenAndTrainer_User_UsernameAndTrainingType_Name(
+    List<Training> findByTraineeUserUsernameAndDateBetweenAndTrainerUserUsernameAndTrainingTypeName(
             String traineeUsername, LocalDate fromDate, LocalDate toDate, String trainerUsername, String trainingName);
 
-    List<Training> findByTrainer_User_UsernameAndDateBetweenAndTrainee_User_UsernameAndTrainingName(
+    List<Training> findByTrainerUserUsernameAndDateBetweenAndTraineeUserUsernameAndTrainingName(
             String trainerUsername, LocalDate fromDate, LocalDate toDate, String traineeUsername, String trainingName);
 
 }
