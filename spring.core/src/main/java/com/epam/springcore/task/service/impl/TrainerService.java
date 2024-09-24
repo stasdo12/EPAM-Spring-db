@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainerService  implements ITrainerService {
@@ -179,7 +180,9 @@ public class TrainerService  implements ITrainerService {
             throw new IllegalArgumentException("Trainee with username " + traineeUsername + "not found");
         }
         List<Trainer> trainers = trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
-        return trainerMapper.entityListToDTOList(trainers);
+        return trainers.stream()
+                .map(trainerMapper::trainerToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

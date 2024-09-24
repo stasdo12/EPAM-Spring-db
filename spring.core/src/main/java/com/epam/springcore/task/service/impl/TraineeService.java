@@ -23,11 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TraineeService implements ITraineeService {
@@ -144,7 +143,9 @@ public class TraineeService implements ITraineeService {
         trainee.setBirthday(updatedTraineeDTO.getBirthday());
         trainee.setAddress(updatedTraineeDTO.getAddress());
         trainee.setTrainings(trainingMapper.dtoListToEntityList(updatedTraineeDTO.getTrainings()));
-        trainee.setTrainers(trainerMapper.dtoListToEntitySet(updatedTraineeDTO.getTrainers()));
+        trainee.setTrainers(updatedTraineeDTO.getTrainers().stream()
+                .map(trainerMapper::trainerToEntity)
+                .collect(Collectors.toSet()));
 
         Trainee updatedTrainee = traineeRepository.save(trainee);
 
@@ -197,9 +198,11 @@ public class TraineeService implements ITraineeService {
         }
         Trainee trainee = traineeOptional.get();
         Set<Trainer> newTrainers =
-                new HashSet<>(trainerMapper.dtoListToEntityList(new ArrayList<>(newTrainerDTOs)));
-        trainee.setTrainers(newTrainers);
+                newTrainerDTOs.stream()
+                        .map(trainerMapper::trainerToEntity)
+                .collect(Collectors.toSet());
 
+        trainee.setTrainers(newTrainers);
         return traineeRepository.save(trainee);
     }
 

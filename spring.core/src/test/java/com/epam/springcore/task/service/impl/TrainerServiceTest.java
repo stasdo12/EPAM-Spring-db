@@ -318,22 +318,20 @@ class TrainerServiceTest {
 
         when(traineeRepository.findTraineeByUserUsername(traineeUsername)).thenReturn(Optional.of(trainee));
         when(trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername)).thenReturn(trainers);
-        when(trainerMapper.entityListToDTOList(trainers)).thenReturn(List.of(
-                new TrainerDTO(
-                        new UserDTO("trainer1", null, null),
-                        new TrainingTypeDTO(),
-                        new ArrayList<>(),
-                        new HashSet<>()
-                ),
-                new TrainerDTO(
-                        new UserDTO("trainer2", null, null),
-                        new TrainingTypeDTO(),
-                        new ArrayList<>(),
-                        new HashSet<>()
-                )
-        ));
+
+        // Настройка мока для преобразования Trainer в TrainerDTO
+        when(trainerMapper.trainerToDTO(any(Trainer.class))).thenAnswer(invocation -> {
+            Trainer trainer = invocation.getArgument(0);
+            return new TrainerDTO(
+                    new UserDTO(trainer.getUser().getUsername(), null, null),
+                    new TrainingTypeDTO(),
+                    new ArrayList<>(),
+                    new HashSet<>()
+            );
+        });
 
         List<TrainerDTO> result = trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
+
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("trainer1", result.get(0).getUser().getUsername());

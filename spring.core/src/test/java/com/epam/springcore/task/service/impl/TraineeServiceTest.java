@@ -230,7 +230,7 @@ class TraineeServiceTest {
 
     @Test
     void testUpdateTraineeProfile_Success() {
-
+        // Настройка данных для теста
         trainee.setBirthday(LocalDate.now());
         trainee.setAddress("New Address");
         trainee.setTrainings(Collections.emptyList());
@@ -242,8 +242,8 @@ class TraineeServiceTest {
         traineeDTO.setTrainers(Collections.emptyList());
 
         when(traineeRepository.findTraineeByUserUsername("testUser")).thenReturn(Optional.of(trainee));
-        when(trainingMapper.dtoListToEntityList(traineeDTO.getTrainings())).thenReturn(Collections.emptyList());
-        when(trainerMapper.dtoListToEntitySet(traineeDTO.getTrainers())).thenReturn(Collections.emptySet());
+        when(trainingMapper.trainingToEntity(any())).thenReturn(new Training());
+        when(trainerMapper.trainerToEntity(any())).thenReturn(new Trainer());
         when(traineeRepository.save(any(Trainee.class))).thenReturn(trainee);
 
         TraineeDTO result = traineeService.updateTraineeProfile("testUser", traineeDTO);
@@ -362,7 +362,6 @@ class TraineeServiceTest {
 
     @Test
     void testUpdateTraineeTrainers() {
-
         String traineeUsername = "testUser";
 
         Trainee existingTrainee = new Trainee();
@@ -383,7 +382,7 @@ class TraineeServiceTest {
         trainer.setUser(trainerUser);
 
         when(traineeRepository.findTraineeByUserUsername(traineeUsername)).thenReturn(Optional.of(existingTrainee));
-        when(trainerMapper.dtoListToEntityList(anyList())).thenReturn(Collections.singletonList(trainer));
+        when(trainerMapper.trainerToEntity(any(TrainerDTO.class))).thenReturn(trainer);
         when(traineeRepository.save(any(Trainee.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Trainee updatedTrainee = traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
@@ -391,6 +390,7 @@ class TraineeServiceTest {
         assertNotNull(updatedTrainee.getTrainers(), "The trainers set in the updated Trainee should not be null");
         assertEquals(1, updatedTrainee.getTrainers().size(), "The number of trainers should be 1");
         assertTrue(updatedTrainee.getTrainers().contains(trainer), "The trainers set should contain the new trainer");
+
         ArgumentCaptor<Trainee> traineeCaptor = ArgumentCaptor.forClass(Trainee.class);
         verify(traineeRepository).save(traineeCaptor.capture());
         Trainee savedTrainee = traineeCaptor.getValue();
