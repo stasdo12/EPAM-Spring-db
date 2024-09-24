@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Stan
+      changes:
+        - sqlFile:
+            path: db/changelog/create_db_v1.sql

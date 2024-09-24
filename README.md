@@ -1,2 +1,3 @@
 # SpringCoreTaskV2
-SpringCoreTask EPAM
+Spring ORM/Hibernate
+

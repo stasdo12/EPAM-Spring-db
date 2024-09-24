@@ -1,20 +1,26 @@
 package com.epam.springcore.task.facade;
 
-
+import com.epam.springcore.task.dto.PassUsernameDTO;
+import com.epam.springcore.task.dto.TraineeDTO;
+import com.epam.springcore.task.dto.TrainerDTO;
+import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.Trainer;
-import com.epam.springcore.task.model.Training;
-import com.epam.springcore.task.service.TraineeService;
-import com.epam.springcore.task.service.TrainerService;
-import com.epam.springcore.task.service.TrainingService;
+import com.epam.springcore.task.service.impl.TraineeService;
+import com.epam.springcore.task.service.impl.TrainerService;
+import com.epam.springcore.task.service.impl.TrainingService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
-public class GymFacade{
+@Slf4j
+public class GymFacade {
 
     private final TraineeService traineeService;
     private final TrainerService trainerService;
@@ -27,44 +33,97 @@ public class GymFacade{
         this.trainingService = trainingService;
     }
 
-    public Optional<Trainee> createTrainee(Trainee trainee) {
-        return traineeService.create(trainee);
+    public PassUsernameDTO saveTrainer(TrainerDTO trainerDTO){
+        return trainerService.saveTrainer(trainerDTO);
     }
 
-    public Optional<Trainee> updateTrainee(Trainee trainee) {
-        return traineeService.update(trainee);
+    public Optional<TrainerDTO> findTrainerById(Long trainerId){
+        return trainerService.findById(trainerId);
     }
 
-    public List<Trainee> getAllTrainees() {
-        return traineeService.getTrainees();
+    public PassUsernameDTO changeTrainerPassword(PassUsernameDTO passUsernameDTO){
+        return trainerService.changeTrainerPassword(passUsernameDTO);
     }
 
-    public Optional<Trainee> getTraineeById(long traineeId) {
-        return traineeService.getById(traineeId);
+    public TrainerDTO updateTrainerProfile(@Valid String username, TrainerDTO updatedTrainerDTO){
+        return trainerService.updateTrainerProfile(username, updatedTrainerDTO);
     }
 
-    public Optional<Trainer> createTrainer(Trainer trainer) {
-        return trainerService.create(trainer);
+    public void activateDeactivateTrainer(String username, boolean isActive){
+        trainerService.activateDeactivateTrainer(username, isActive);
     }
 
-    public List<Trainer> getAllTrainers() {
-        return trainerService.getAllTrainers();
+    public boolean matchTrainerCredentialsTrainee(PassUsernameDTO passUsernameDTO) {
+        return trainerService.matchTrainerCredentials(passUsernameDTO);
     }
 
-    public Optional<Trainer> getTrainerById(long trainerId) {
-        return trainerService.getById(trainerId);
+    public Optional<TrainerDTO> findTrainerByUsername(String username){
+        return trainerService.findByUsername(username);
     }
 
-    public Optional<Training> createTraining(Training training) {
-        return trainingService.create(training);
+    public List<TrainingDTO> getTrainerTrainingsByCriteria(String trainerUsername, LocalDate fromDate,
+                                                           LocalDate toDate, String traineeUsername, String trainingName){
+        return trainerService.getTrainerTrainingsByCriteria(trainerUsername, fromDate, toDate,
+                traineeUsername, trainingName);
     }
 
-    public List<Training> getAllTrainings() {
-        return trainingService.getAllTrainings();
+    public List<TrainerDTO> getTrainersNotAssignedToTrainee(@Valid String traineeUsername){
+        return trainerService.getTrainersNotAssignedToTrainee(traineeUsername);
     }
 
-    public Optional<Training> getTrainingById(long trainingId) {
-        return trainingService.findById(trainingId);
+    public PassUsernameDTO saveTrainee(TraineeDTO traineeDTO){
+        return traineeService.saveTrainee(traineeDTO);
+    }
+
+    public Optional<TraineeDTO> findTraineeById(long traineeId){
+        return traineeService.findById(traineeId);
+    }
+
+    public Optional<TraineeDTO> findTraineeByUserId(Long userId){
+        return traineeService.findByUserId(userId);
+    }
+
+    public Optional<TraineeDTO> findTraineeByUsername(String username){
+        return traineeService.findByUsername(username);
+    }
+
+    public PassUsernameDTO changeTraineePassword(PassUsernameDTO passUsernameDTO){
+        return traineeService.changeTraineePassword(passUsernameDTO);
+    }
+
+    public TraineeDTO updateTraineeProfile(String username, TraineeDTO traineeDTO){
+        return traineeService.updateTraineeProfile(username, traineeDTO);
+    }
+
+    public void activateDeactivateProfile(String username, boolean isActive){
+        traineeService.activateDeactivateTrainee(username, isActive);
+    }
+
+    public void deleteTrainee(String username){
+        traineeService.deleteTrainee(username);
+    }
+
+
+    public boolean matchTraineeCredentials(PassUsernameDTO passUsernameDTO){
+        return traineeService.matchTraineeCredentials(passUsernameDTO);
+    }
+
+    public List<TrainingDTO> getTraineeTrainingsByCriteria(String traineeUsername,
+                                                           LocalDate fromDate,
+                                                           LocalDate toDate,
+                                                           String trainerUsername,
+                                                           String trainingName){
+        return traineeService.getTraineeTrainingsByCriteria(traineeUsername,
+                fromDate, toDate,
+                trainerUsername, trainingName);
+    }
+
+    public Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainerDTOs){
+        return traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
+    }
+
+    public TrainingDTO addTraining (TrainingDTO trainingDTO){
+        return trainingService.addTraining(trainingDTO);
     }
 
 }
