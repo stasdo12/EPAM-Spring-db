@@ -3,11 +3,13 @@ package com.epam.springcore.task.mapper;
 import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.model.User;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserMapperTest {
 
-    private final UserMapper userMapper = UserMapper.INSTANCE;
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     @Test
     public void shouldMapUserToDTO() {
@@ -17,7 +19,7 @@ class UserMapperTest {
         user.setPassword("password123");
         user.setActive(true);
 
-        UserDTO userDTO = userMapper.userToDTO(user);
+        UserDTO userDTO = mapper.userToDTO(user);
 
         assertThat(userDTO).isNotNull();
         assertThat(userDTO.getUsername()).isEqualTo("testuser");
@@ -29,7 +31,7 @@ class UserMapperTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("testuser");
 
-        User user = userMapper.userToEntity(userDTO);
+        User user = mapper.userToEntity(userDTO);
 
         assertThat(user).isNotNull();
         assertThat(user.getUsername()).isEqualTo("testuser");

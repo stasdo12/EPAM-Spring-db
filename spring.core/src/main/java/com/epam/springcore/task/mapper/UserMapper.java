@@ -5,12 +5,9 @@ import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
-
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDTO userToDTO(User user);
 
