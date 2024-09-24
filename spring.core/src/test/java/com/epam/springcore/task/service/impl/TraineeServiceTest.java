@@ -3,7 +3,6 @@ package com.epam.springcore.task.service.impl;
 import com.epam.springcore.task.mapper.TraineeMapper;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
-import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -58,16 +57,11 @@ class TraineeServiceTest {
     @Mock
     private TrainingRepository trainingRepository;
     @Mock
-    private UserRepository userRepository;
-    @Mock
     private TrainerMapper trainerMapper;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private TraineeMapper traineeMapper;
-
     @Mock
     private UserService userService;
 

@@ -6,7 +6,6 @@ import com.epam.springcore.task.mapper.TrainingTypeMapper;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
-import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -50,8 +49,6 @@ class TrainerServiceTest {
     private PasswordGenerator passwordGenerator;
     @Mock
     private TrainerRepository trainerRepository;
-    @Mock
-    private UserRepository userRepository;
     @Mock
     private TraineeRepository traineeRepository;
     @Mock

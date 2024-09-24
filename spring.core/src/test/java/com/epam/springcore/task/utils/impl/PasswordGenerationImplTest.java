@@ -4,6 +4,8 @@ import com.epam.springcore.task.utils.PasswordGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,34 +21,34 @@ class PasswordGenerationImplTest {
     }
 
     @Test
-    void generatePassword_ShouldGeneratePasswordOfCorrectLength() {
+    void generatePasswordShouldGeneratePasswordOfCorrectLength() {
         String password = passwordGenerator.generatePassword();
         int passLength = 10;
         assertThat(password).hasSize(passLength);
     }
 
     @Test
-    void generatePassword_ShouldContainUpperCaseLetters() {
-        String password = passwordGenerator.generatePassword();
-        assertThat(password).matches(".*[A-Z].*");
-    }
-
-    @Test
-    void generatePassword_ShouldContainLowerCaseLetters() {
-        String password = passwordGenerator.generatePassword();
-        assertThat(password).matches(".*[a-z].*");
-    }
-
-    @Test
-    void generatePassword_ShouldContainDigits() {
+    void generatePasswordShouldContainDigits() {
         String password = passwordGenerator.generatePassword();
         assertThat(password).matches(".*\\d.*");
     }
 
     @Test
-    void generatePassword_ShouldBeRandom() {
+    void generatePasswordShouldBeRandom() {
         String password1 = passwordGenerator.generatePassword();
         String password2 = passwordGenerator.generatePassword();
         assertThat(password1).isNotEqualTo(password2);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"upper", "lower"})
+    void generatePasswordShouldContainUpperCaseAndLowerCaseLetters(String caseType) {
+        String password = passwordGenerator.generatePassword();
+
+        switch (caseType) {
+            case "upper" -> assertThat(password).matches(".*[A-Z].*");
+            case "lower" -> assertThat(password).matches(".*[a-z].*");
+            default -> throw new IllegalArgumentException("Unexpected case type: " + caseType);
+        }
     }
 }

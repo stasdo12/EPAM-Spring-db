@@ -12,7 +12,7 @@ class UserMapperTest {
     private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     @Test
-    public void shouldMapUserToDTO() {
+    void shouldMapUserToDTO() {
         User user = new User();
         user.setUserId(1L);
         user.setUsername("testuser");
@@ -26,7 +26,7 @@ class UserMapperTest {
     }
 
     @Test
-    public void shouldMapUserDTOToUserAndIgnoreFields() {
+    void shouldMapUserDTOToUserAndIgnoreFields() {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("testuser");

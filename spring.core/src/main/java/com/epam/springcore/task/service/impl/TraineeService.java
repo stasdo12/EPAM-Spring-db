@@ -2,7 +2,6 @@ package com.epam.springcore.task.service.impl;
 
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
-import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -15,10 +14,7 @@ import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITraineeService;
-import com.epam.springcore.task.utils.NameGenerator;
-import com.epam.springcore.task.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,33 +27,22 @@ import java.util.stream.Collectors;
 @Service
 public class TraineeService implements ITraineeService {
 
-    private final NameGenerator nameGeneration;
-    private final PasswordGenerator passwordGenerator;
-    private final UserRepository userRepository;
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
-    private final PasswordEncoder passwordEncoder;
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
     private final UserService userService;
 
     @Autowired
-    public TraineeService(NameGenerator nameGeneration, PasswordGenerator passwordGenerator,
-                          UserRepository userRepository,
-                          TraineeRepository traineeRepository,
+    public TraineeService(TraineeRepository traineeRepository,
                           TrainingRepository trainingRepository,
-                          PasswordEncoder passwordEncoder,
                           TraineeMapper traineeMapper,
                           TrainerMapper trainerMapper,
                           TrainingMapper trainingMapper,
                           UserService userService) {
-        this.nameGeneration = nameGeneration;
-        this.passwordGenerator = passwordGenerator;
-        this.userRepository = userRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
-        this.passwordEncoder = passwordEncoder;
         this.traineeMapper = traineeMapper;
         this.trainerMapper = trainerMapper;
         this.trainingMapper = trainingMapper;

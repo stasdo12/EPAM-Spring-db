@@ -1,0 +1,15 @@
+
+m
+java:S1192o"KDefine a constant instead of duplicating this literal " not found" 3 times.(ĞÓşµûÿÿÿÿ8ÚÏ¨¢2
+y
+java:S1192o"WDefine a constant instead of duplicating this literal "Trainer with username " 3 times.(ĞÓşµûÿÿÿÿ8ÚÏ¨¢2
+p
+java:S6204°"RReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'(ª™¨¹8Ğ¨¢2
+O
+java:S1068!"2Remove this unused "nameGeneration" private field.(ÿãéó8Ğ¨¢2
+W
+java:S1068""5Remove this unused "passwordGenerator" private field.(ûÃıÿÿÿÿ8Ğ¨¢2
+O
+java:S1068#"2Remove this unused "userRepository" private field.(¼²Æ÷8Ğ¨¢2
+U
+java:S1068'"3Remove this unused "passwordEncoder" private field.(£›Õÿÿÿÿÿ8Ğ¨¢2

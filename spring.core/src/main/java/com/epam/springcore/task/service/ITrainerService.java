@@ -18,9 +18,9 @@ public interface ITrainerService {
 
     TrainerDTO updateTrainerProfile(String username, TrainerDTO updatedTrainer);
 
-   void activateDeactivateTrainer(String username, boolean isActive);
+    void activateDeactivateTrainer(String username, boolean isActive);
 
-    public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO);
+    boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO);
 
     Optional<TrainerDTO> findByUsername(String username);
 

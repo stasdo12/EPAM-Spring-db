@@ -30,6 +30,7 @@ class TrainingServiceTest {
     private TrainingRepository trainingRepository;
     @Mock
     private TrainingMapper trainingMapper;
+
     @InjectMocks
     private TrainingService trainingService;
     private TrainingDTO validTrainingDTO;

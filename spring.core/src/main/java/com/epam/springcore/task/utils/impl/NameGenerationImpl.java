@@ -35,12 +35,13 @@ public class NameGenerationImpl implements NameGenerator {
     public String generateUniqueUsername(User user) {
         String baseUsername = generateUsername(user);
 
-        List<String> takenUsernames = userRepository.findByUsernameStartingWith(baseUsername);
+        List<User> takenUsers = userRepository.findByUsernameStartingWith(baseUsername);
 
-        if (takenUsernames.isEmpty()) {
+        if (takenUsers.isEmpty()) {
             return baseUsername;
         }
-        OptionalInt maxIndex = takenUsernames.stream()
+        OptionalInt maxIndex = takenUsers.stream()
+                .map(User::getUsername)
                 .map(username -> {
                     Matcher matcher = NUMBER_PATTERN.matcher(username);
                     return matcher.find() ? matcher.group(1) : "";

@@ -25,13 +25,10 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private NameGenerator nameGenerator;
-
     @Mock
     private PasswordGenerator passwordGenerator;
-
     @Mock
     private PasswordEncoder passwordEncoder;
 

@@ -28,7 +28,7 @@ class NameGenerationImplTest {
     }
 
     @Test
-    public void testGenerateUsernameWithoutDuplicates() {
+     void testGenerateUsernameWithoutDuplicates() {
 
         User user = new User();
         user.setFirstName("John");
@@ -39,14 +39,18 @@ class NameGenerationImplTest {
     }
 
     @Test
-    public void testGenerateUsernameWithDuplicates() {
+    void testGenerateUsernameWithDuplicates() {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
 
-        List<String> takenUsernames = List.of("John.Doe1", "John.Doe2");
+        List<User> takenUsers = List.of(
+                new User(1L, "John", "Doe", "John.Doe1", "pass", true),
+                new User(2L, "John", "Doe", "John.Doe2", "pass", true)
+
+        );
         Mockito.when(userRepository.findByUsernameStartingWith("John.Doe"))
-                .thenReturn(takenUsernames);
+                .thenReturn(takenUsers);
 
         String newUsername = nameGenerator.generateUniqueUsername(user);
 

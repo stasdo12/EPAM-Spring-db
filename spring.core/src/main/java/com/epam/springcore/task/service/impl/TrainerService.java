@@ -3,7 +3,6 @@ package com.epam.springcore.task.service.impl;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
-import com.epam.springcore.task.repo.UserRepository;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -15,52 +14,37 @@ import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.service.ITrainerService;
-import com.epam.springcore.task.utils.NameGenerator;
-import com.epam.springcore.task.utils.PasswordGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TrainerService  implements ITrainerService {
-    private final NameGenerator nameGeneration;
-    private final PasswordGenerator passwordGenerator;
-    private final UserRepository userRepository;
     private final TrainerRepository trainerRepository;
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
-    private final PasswordEncoder passwordEncoder;
     private final TrainingMapper trainingMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingTypeMapper trainingTypeMapper;
     private final UserService userService;
 
     @Autowired
-    public TrainerService(NameGenerator nameGeneration,
-                          PasswordGenerator passwordGenerator,
-                          UserRepository userRepository,
-                          TrainerRepository trainerRepository,
+    public TrainerService(TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
                           TrainingRepository trainingRepository,
-                          PasswordEncoder passwordEncoder,
                           TrainingMapper trainingMapper,
                           TrainerMapper trainerMapper,
                           TrainingTypeMapper trainingTypeMapper,
-                          UserService userService) {
-        this.nameGeneration = nameGeneration;
-        this.passwordGenerator = passwordGenerator;
-        this.userRepository = userRepository;
+                          UserService userService
+                          ) {
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
-        this.passwordEncoder = passwordEncoder;
         this.trainingMapper = trainingMapper;
 
         this.trainerMapper = trainerMapper;
@@ -173,7 +157,7 @@ public class TrainerService  implements ITrainerService {
         List<Trainer> trainers = trainerRepository.findTrainersNotAssignedToTrainee(traineeUsername);
         return trainers.stream()
                 .map(trainerMapper::trainerToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
