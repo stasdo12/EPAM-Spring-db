@@ -40,6 +40,7 @@ public class TrainerService  implements ITrainerService {
     private final TrainingMapper trainingMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingTypeMapper trainingTypeMapper;
+    private final UserService userService;
 
     @Autowired
     public TrainerService(NameGenerator nameGeneration,
@@ -47,7 +48,12 @@ public class TrainerService  implements ITrainerService {
                           UserRepository userRepository,
                           TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
-                          TrainingRepository trainingRepository, PasswordEncoder passwordEncoder, TrainingMapper trainingMapper, TrainerMapper trainerMapper, TrainingTypeMapper trainingTypeMapper) {
+                          TrainingRepository trainingRepository,
+                          PasswordEncoder passwordEncoder,
+                          TrainingMapper trainingMapper,
+                          TrainerMapper trainerMapper,
+                          TrainingTypeMapper trainingTypeMapper,
+                          UserService userService) {
         this.nameGeneration = nameGeneration;
         this.passwordGenerator = passwordGenerator;
         this.userRepository = userRepository;
@@ -59,6 +65,7 @@ public class TrainerService  implements ITrainerService {
 
         this.trainerMapper = trainerMapper;
         this.trainingTypeMapper = trainingTypeMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -69,31 +76,18 @@ public class TrainerService  implements ITrainerService {
             throw new IllegalArgumentException("Trainer and associated User must not be null");
         }
 
-        Trainer trainer  = trainerMapper.trainerToEntity(trainerDTO);
+        Trainer trainer = trainerMapper.trainerToEntity(trainerDTO);
 
         User user = trainer.getUser();
-
-        String generatedUsername = nameGeneration.generateUniqueUsername(user);
-
-        String generatedPassword = passwordGenerator.generatePassword();
-        user.setUsername(generatedUsername);
-        String hashedPassword = passwordEncoder.encode(generatedPassword);
-        user.setPassword(hashedPassword);
-        user.setActive(true);
+        PassUsernameDTO passUsernameDTO = userService.generateAndSaveUser(user);
         trainer.setUser(user);
         trainerRepository.save(trainer);
-
-        return new PassUsernameDTO(generatedUsername, generatedPassword);
+        return passUsernameDTO;
     }
 
     @Override
     public boolean matchTrainerCredentials(PassUsernameDTO passUsernameDTO) {
-        Optional<User> optionalUser = userRepository.findByUsername(passUsernameDTO.getUsername());
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            return passwordEncoder.matches(passUsernameDTO.getPassword(), user.getPassword());
-        }
-        return false;
+        return userService.matchUserCredentials(passUsernameDTO);
     }
 
     @Override
@@ -110,6 +104,7 @@ public class TrainerService  implements ITrainerService {
     }
 
     @Override
+    @Transactional
     public PassUsernameDTO changeTrainerPassword(PassUsernameDTO passUsernameDTO) {
         Optional<Trainer> trainerOptional = trainerRepository.findTrainerByUserUsername(passUsernameDTO.getUsername());
         if (trainerOptional.isEmpty()){
@@ -120,10 +115,7 @@ public class TrainerService  implements ITrainerService {
         if (user == null){
             throw new IllegalArgumentException("User associated with trainer is null");
         }
-
-        String hashedPassword = passwordEncoder.encode(passUsernameDTO.getPassword());
-        user.setPassword(hashedPassword);
-        trainerRepository.save(trainer);
+        userService.changeUserPassword(user.getUsername(), passUsernameDTO.getPassword());
         return passUsernameDTO;
     }
 
@@ -154,8 +146,7 @@ public class TrainerService  implements ITrainerService {
         if (user == null){
             throw new IllegalArgumentException("User associated with trainer is null");
         }
-        user.setActive(isActive);
-        trainerRepository.save(trainer);
+        userService.activateDeactivateUser(user.getUsername(), isActive);
     }
 
     @Override
