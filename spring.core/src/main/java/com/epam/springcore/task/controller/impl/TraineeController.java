@@ -33,9 +33,9 @@ public class TraineeController implements ITraineeController {
 
     @Override
     public ResponseEntity<TraineeDTO> getTraineeProfileByUsername(String username) {
-        Optional<TraineeDTO> traineeDTOOptional = gymFacade.findTraineeByUsername(username);
-        return traineeDTOOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
+        //TODO problem here resolve
+        Optional<TraineeDTO> trainee = gymFacade.findTraineeByUsername(username);
+        return trainee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override

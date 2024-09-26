@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-
 @RequestMapping("/api/trainees")
 public interface ITraineeController {
 
@@ -39,7 +38,7 @@ public interface ITraineeController {
     ResponseEntity<TraineeDTO> getTraineeProfileByUsername(@PathVariable String username);
 
 
-    @Operation(summary = "Update trainee by ID")
+    @Operation(summary = "Update trainee by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee updated successfully"),
             @ApiResponse(responseCode = "404", description = "Trainee not found"),
