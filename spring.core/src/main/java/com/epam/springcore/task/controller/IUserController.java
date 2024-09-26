@@ -21,4 +21,11 @@ public interface IUserController {
     @GetMapping
     ResponseEntity<Void> login(@Valid @RequestParam PassUsernameDTO passUsernameDTO);
 
+    @Operation(summary = "Change user password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password changed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid password format")
+    })
+    @PutMapping("/update-password")
+    ResponseEntity<Void> changePassword(@Valid @RequestBody PassUsernameDTO passUsernameDTO );
 }
