@@ -39,5 +39,6 @@ public class RequestResponseLogger  implements HandlerInterceptor {
         int status = response.getStatus();
         String message = (ex != null) ? ex.getMessage() : "Response OK";
         log.info("Transaction ID: {}, Response Status: {}, Message: {}", transactionId, status, message);
+        MDC.clear();
     }
 }

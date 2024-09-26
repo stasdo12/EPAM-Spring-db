@@ -14,7 +14,7 @@ public class GymExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorDTO> handleIllegalArgumentException(IllegalArgumentException ex){
-        ErrorDTO errorResponse = new ErrorDTO("Invalid trainee data: " + ex.getMessage(),
+        ErrorDTO errorResponse = new ErrorDTO("Invalid input data: " + ex.getMessage(),
                 HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
