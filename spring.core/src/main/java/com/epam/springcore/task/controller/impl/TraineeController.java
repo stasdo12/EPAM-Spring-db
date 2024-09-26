@@ -3,7 +3,6 @@ package com.epam.springcore.task.controller.impl;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.facade.GymFacade;
-import exception.ErrorDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,6 @@ public class TraineeController {
     public ResponseEntity<Object> registerTrainee(@RequestBody TraineeDTO traineeDTO){
             PassUsernameDTO response = gymFacade.saveTrainee(traineeDTO);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-
     }
 
 }
