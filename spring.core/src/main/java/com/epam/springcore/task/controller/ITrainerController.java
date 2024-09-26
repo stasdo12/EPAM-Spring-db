@@ -5,8 +5,11 @@ import com.epam.springcore.task.dto.TrainerDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/trainers")
 public interface ITrainerController {
@@ -19,6 +22,33 @@ public interface ITrainerController {
     })
     @PostMapping("/register")
     ResponseEntity<Object> registerTrainer(@RequestBody TrainerDTO trainerDTO);
+
+
+
+
+    @Operation(summary = "Get trainer profile by username")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainer profile retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Trainer not found")
+    })
+    @GetMapping("/{username}")
+    ResponseEntity<TrainerDTO> getTrainerProfileByUsername(@PathVariable String username);
+
+
+
+    @Operation(summary = "Update trainer profile by username",
+            description = "Updates the details of an existing trainer based on the provided username.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainer updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Trainer not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid trainer data")
+    })
+    @PutMapping("/{username}")
+    ResponseEntity<TrainerDTO> updateTrainerProfile(
+            @PathVariable String username,
+            @Valid @RequestBody TrainerDTO updatedTrainerDTO);
+
+
 
 
 

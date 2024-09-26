@@ -2,7 +2,6 @@ package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.controller.IUserController;
 import com.epam.springcore.task.dto.PassUsernameDTO;
-import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
