@@ -8,6 +8,7 @@ import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.service.impl.TraineeService;
 import com.epam.springcore.task.service.impl.TrainerService;
 import com.epam.springcore.task.service.impl.TrainingService;
+import com.epam.springcore.task.service.impl.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class GymFacade {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
+
 
     @Autowired
     public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
