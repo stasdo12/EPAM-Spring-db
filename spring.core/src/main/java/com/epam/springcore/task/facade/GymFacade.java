@@ -97,7 +97,7 @@ public class GymFacade {
         return traineeService.updateTraineeProfile(username, traineeDTO);
     }
 
-    public void activateDeactivateProfile(String username, boolean isActive){
+    public void activateDeactivateTraineeProfile(String username, boolean isActive){
         traineeService.activateDeactivateTrainee(username, isActive);
     }
 

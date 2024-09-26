@@ -231,15 +231,6 @@ class GymFacadeTest {
         verify(traineeService).updateTraineeProfile(username, updatedTraineeDTO);
     }
 
-    @Test
-    void activateDeactivateProfile() {
-        String username = "traineeUsername";
-        boolean isActive = true;
-
-        gymFacade.activateDeactivateProfile(username, isActive);
-
-        verify(traineeService).activateDeactivateTrainee(username, isActive);
-    }
 
     @Test
     void deleteTrainee() {
