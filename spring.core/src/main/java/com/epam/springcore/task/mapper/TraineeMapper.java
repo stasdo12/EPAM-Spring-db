@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface TraineeMapper {
 
+    @Mapping(target = "trainers", ignore = true)
     TraineeDTO traineeToDTO(Trainee trainee);
 
     @Mapping(target = "traineeId", ignore = true)
