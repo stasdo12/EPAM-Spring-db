@@ -19,7 +19,7 @@ public interface IUserController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
-    ResponseEntity<Void> login(@Valid @RequestParam PassUsernameDTO passUsernameDTO);
+    ResponseEntity<Void> login(@Valid @RequestBody PassUsernameDTO passUsernameDTO);
 
     @Operation(summary = "Change user password")
     @ApiResponses(value = {
