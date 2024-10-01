@@ -7,6 +7,8 @@ import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.mapper.TraineeMapper;
+import com.epam.springcore.task.model.Trainee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,6 +41,8 @@ class TraineeControllerTest {
     @MockBean
     private GymFacade gymFacade;
 
+    @MockBean
+    private TraineeMapper traineeMapper;
     private TraineeDTO traineeDTO;
     private List<TrainerDTO> trainers;
     private PassUsernameDTO passUsernameDTO;
@@ -221,5 +223,27 @@ class TraineeControllerTest {
                 .andExpect(status().isOk());
 
         verify(gymFacade, times(1)).activateDeactivateTraineeProfile(username, isActive);
+    }
+
+    @Test
+    void updateTraineeTrainers_Success() throws Exception {
+        String username = "testUser";
+        Set<TrainerDTO> trainers = new HashSet<>();
+        TrainerDTO trainerDTO = new TrainerDTO();
+        trainers.add(trainerDTO);
+
+        Trainee updatedTrainee = new Trainee();
+        TraineeDTO updatedTraineeDTO = new TraineeDTO();
+
+        when(gymFacade.updateTraineeTrainers(username, trainers)).thenReturn(updatedTrainee);
+        when(traineeMapper.traineeToDTO(updatedTrainee)).thenReturn(updatedTraineeDTO);
+
+        mockMvc.perform(put("/api/trainees/{username}/trainers", username)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("[{\"field\": \"value\"}]"))
+                .andExpect(status().isOk());
+
+        verify(gymFacade).updateTraineeTrainers(username, trainers);
+        verify(traineeMapper).traineeToDTO(updatedTrainee);
     }
 }

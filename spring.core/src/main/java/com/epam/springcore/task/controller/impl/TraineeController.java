@@ -6,6 +6,8 @@ import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.mapper.TraineeMapper;
+import com.epam.springcore.task.model.Trainee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -23,6 +26,7 @@ public class TraineeController implements ITraineeController {
 
 
     private final GymFacade gymFacade;
+    private final TraineeMapper traineeMapper;
 
 
     @Override
@@ -70,6 +74,13 @@ public class TraineeController implements ITraineeController {
     public ResponseEntity<Void> activateDeactivateTrainee(String username, boolean isActive) {
         gymFacade.activateDeactivateTraineeProfile(username, isActive);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<TraineeDTO> updateTraineeTrainers(String username, Set<TrainerDTO> trainers) {
+        Trainee updatedTrainee = gymFacade.updateTraineeTrainers(username, trainers);
+        TraineeDTO updatedTraineeDTO = traineeMapper.traineeToDTO(updatedTrainee);
+        return ResponseEntity.ok(updatedTraineeDTO);
     }
 
 

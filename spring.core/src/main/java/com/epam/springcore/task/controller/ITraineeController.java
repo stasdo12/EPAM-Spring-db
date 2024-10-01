@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @RequestMapping("/api/trainees")
@@ -103,5 +104,17 @@ public interface ITraineeController {
     ResponseEntity<Void> activateDeactivateTrainee(
             @PathVariable("username") String username,
             @RequestParam("isActive") boolean isActive);
+
+    @Operation(summary = "Update trainee's trainers list",
+            description = "Updates the list of trainers for the trainee based on the provided username.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainers updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Trainee not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid request data")
+    })
+    @PutMapping("/{username}/trainers")
+    public ResponseEntity<TraineeDTO> updateTraineeTrainers(
+            @PathVariable String username,
+            @Valid @RequestBody Set<TrainerDTO> trainers);
 
 }
