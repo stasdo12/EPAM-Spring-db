@@ -6,12 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
-@RequestMapping("/api/trainings")
+
 public interface ITrainingController {
 
     @Operation(summary = "Add Training",
@@ -21,6 +19,5 @@ public interface ITrainingController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "404", description = "Trainee or Trainer not found")
     })
-    @PostMapping
     ResponseEntity<Void> addTraining(@RequestBody TrainingDTO trainingDTO);
 }

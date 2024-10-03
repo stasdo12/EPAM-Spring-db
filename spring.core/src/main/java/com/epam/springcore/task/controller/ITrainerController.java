@@ -8,20 +8,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-@RequestMapping("/api/trainers")
+
 public interface ITrainerController {
 
     @Operation(summary = "Register a new Trainer")
@@ -30,7 +25,7 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "400", description = "Invalid trainee data"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping("/register")
+
     ResponseEntity<Object> registerTrainer(@RequestBody TrainerDTO trainerDTO);
 
 
@@ -41,7 +36,6 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "200", description = "Trainer profile retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Trainer not found")
     })
-    @GetMapping("/{username}")
     ResponseEntity<TrainerDTO> getTrainerProfileByUsername(@PathVariable String username);
 
 
@@ -53,7 +47,6 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "404", description = "Trainer not found"),
             @ApiResponse(responseCode = "400", description = "Invalid trainer data")
     })
-    @PutMapping("/{username}")
     ResponseEntity<TrainerDTO> updateTrainerProfile(
             @PathVariable String username,
             @Valid @RequestBody TrainerDTO updatedTrainerDTO);
@@ -66,7 +59,6 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "404", description = "Trainer not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    @GetMapping("/{username}/trainings")
     ResponseEntity<List<TrainingDTO>> getTrainerTrainings(
             @PathVariable("username") String username,
             @RequestParam(value = "from", required = false) LocalDate from,
@@ -84,7 +76,6 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "200", description = "Successfully activated/deactivated trainer"),
             @ApiResponse(responseCode = "404", description = "Trainer not found")
     })
-    @PatchMapping("/{username}/activate")
     ResponseEntity<Void> activateDeactivateTrainee(
             @PathVariable("username") String username,
             @RequestParam("isActive") boolean isActive);
