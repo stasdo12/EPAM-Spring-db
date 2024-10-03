@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-
 public interface ITrainingTypeController {
 
     @Operation(summary = "Get all training types", description = "Retrieves a list of all training types.")
@@ -16,5 +15,4 @@ public interface ITrainingTypeController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved training types")
     })
     ResponseEntity<List<TrainingTypeDTO>> getTrainingTypes();
-
 }

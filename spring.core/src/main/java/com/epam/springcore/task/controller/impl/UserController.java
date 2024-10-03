@@ -17,7 +17,6 @@ public class UserController  implements IUserController {
 
     private final UserService userService;
 
-
     @GetMapping
     @Override
     public ResponseEntity<Void> login(PassUsernameDTO passUsernameDTO) {

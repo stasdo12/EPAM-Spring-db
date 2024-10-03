@@ -1,6 +1,5 @@
 package com.epam.springcore.task.controller;
 
-
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
-
 
 public interface ITraineeController {
 
@@ -38,7 +35,6 @@ public interface ITraineeController {
     })
     ResponseEntity<TraineeDTO> getTraineeProfileByUsername(@PathVariable String username);
 
-
     @Operation(summary = "Update trainee by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee updated successfully"),
@@ -48,14 +44,12 @@ public interface ITraineeController {
     ResponseEntity<TraineeDTO> updateTraineeProfile(@PathVariable String username,
                                                     @Valid @RequestBody TraineeDTO trainee);
 
-
     @Operation(summary = "delete Trainee profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Trainee not found"),
     })
     ResponseEntity<Void> deleteTrainee(@PathVariable String username);
-
 
     @Operation(summary = "Get not assigned active trainers for a trainee",
             description = "Retrieves a list of active trainers that are not assigned to the specified trainee.")
@@ -65,8 +59,6 @@ public interface ITraineeController {
             @ApiResponse(responseCode = "400", description = "Invalid username")
     })
     ResponseEntity<List<TrainerDTO>> getNotAssignedActiveTrainers(@PathVariable String username);
-
-
 
     @Operation(summary = "Get Trainee Trainings List",
             description = "Retrieves a list of trainings for a specific trainee based on provided criteria.")
@@ -102,5 +94,4 @@ public interface ITraineeController {
     ResponseEntity<TraineeDTO> updateTraineeTrainers(
             @PathVariable String username,
             @Valid @RequestBody Set<TrainerDTO> trainers);
-
 }

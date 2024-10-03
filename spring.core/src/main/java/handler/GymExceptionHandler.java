@@ -1,6 +1,5 @@
 package handler;
 
-
 import exception.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ public class GymExceptionHandler {
 
     }
 
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorDTO> handleGeneralException(Exception ex){
@@ -29,5 +27,4 @@ public class GymExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
-
 }

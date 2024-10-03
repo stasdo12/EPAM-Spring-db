@@ -28,7 +28,6 @@ public class TrainerController implements ITrainerController {
 
     private final GymFacade gymFacade;
 
-
     @PostMapping("/register")
     @Override
     public ResponseEntity<Object> registerTrainer(@RequestBody TrainerDTO trainerDTO){
@@ -69,5 +68,4 @@ public class TrainerController implements ITrainerController {
         gymFacade.activateDeactivateTrainer(username, isActive);
         return ResponseEntity.ok().build();
     }
-
 }

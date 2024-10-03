@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.List;
 
-
-
 public interface ITrainerController {
 
     @Operation(summary = "Register a new Trainer")
@@ -28,17 +26,12 @@ public interface ITrainerController {
 
     ResponseEntity<Object> registerTrainer(@RequestBody TrainerDTO trainerDTO);
 
-
-
-
     @Operation(summary = "Get trainer profile by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainer profile retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Trainer not found")
     })
     ResponseEntity<TrainerDTO> getTrainerProfileByUsername(@PathVariable String username);
-
-
 
     @Operation(summary = "Update trainer profile by username",
             description = "Updates the details of an existing trainer based on the provided username.")
@@ -50,7 +43,6 @@ public interface ITrainerController {
     ResponseEntity<TrainerDTO> updateTrainerProfile(
             @PathVariable String username,
             @Valid @RequestBody TrainerDTO updatedTrainerDTO);
-
 
     @Operation(summary = "Get Trainer Trainings List",
             description = "Retrieves a list of trainings for a specific trainer based on provided criteria.")
@@ -66,10 +58,6 @@ public interface ITrainerController {
             @RequestParam(value = "trainee", required = false) String traineeUsername,
             @RequestParam(value = "trainingType", required = false) String trainingName);
 
-
-
-
-
     @Operation(summary = "Activate/Deactivate Trainer",
               description = "Activates or deactivates a trainer based on the provided username.")
     @ApiResponses(value = {
@@ -79,6 +67,4 @@ public interface ITrainerController {
     ResponseEntity<Void> activateDeactivateTrainee(
             @PathVariable("username") String username,
             @RequestParam("isActive") boolean isActive);
-
-
 }
