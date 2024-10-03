@@ -235,15 +235,14 @@ class TraineeControllerTest {
         Trainee updatedTrainee = new Trainee();
         TraineeDTO updatedTraineeDTO = new TraineeDTO();
 
-        when(gymFacade.updateTraineeTrainers(username, trainers)).thenReturn(updatedTrainee);
-        when(traineeMapper.traineeToDTO(updatedTrainee)).thenReturn(updatedTraineeDTO);
+        when(gymFacade.updateTraineeTrainers(username, trainers)).thenReturn(updatedTraineeDTO);
 
         mockMvc.perform(put("/api/trainees/{username}/trainers", username)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[{\"field\": \"value\"}]"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         verify(gymFacade).updateTraineeTrainers(username, trainers);
-        verify(traineeMapper).traineeToDTO(updatedTrainee);
     }
 }

@@ -94,8 +94,7 @@ public class TraineeController implements ITraineeController {
     @PutMapping("/{username}/trainers")
     @Override
     public ResponseEntity<TraineeDTO> updateTraineeTrainers(@PathVariable String username, Set<TrainerDTO> trainers) {
-        Trainee updatedTrainee = gymFacade.updateTraineeTrainers(username, trainers);
-        TraineeDTO updatedTraineeDTO = traineeMapper.traineeToDTO(updatedTrainee);
+        TraineeDTO updatedTraineeDTO = gymFacade.updateTraineeTrainers(username, trainers);
         return ResponseEntity.ok(updatedTraineeDTO);
     }
 
