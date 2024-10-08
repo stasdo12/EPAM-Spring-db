@@ -26,7 +26,7 @@ import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/trainees")
+@RequestMapping("/trainees")
 public class TraineeController implements ITraineeController {
 
     private final GymFacade gymFacade;

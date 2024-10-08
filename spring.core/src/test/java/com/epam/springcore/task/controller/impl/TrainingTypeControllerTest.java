@@ -39,7 +39,7 @@ class TrainingTypeControllerTest {
     void testGetTrainingTypes_Success() throws Exception {
         when(trainingTypeService.getAll()).thenReturn(trainingTypeList);
 
-        mockMvc.perform(get("/api/training-types")
+        mockMvc.perform(get("/training-types")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

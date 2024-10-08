@@ -1,7 +1,6 @@
 package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.controller.ITrainerController;
-import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.facade.GymFacade;
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/trainers")
+@RequestMapping("/trainers")
 public class TrainerController implements ITrainerController {
 
     private final GymFacade gymFacade;

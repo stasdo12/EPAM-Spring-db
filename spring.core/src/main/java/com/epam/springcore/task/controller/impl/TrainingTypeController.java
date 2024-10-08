@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/training-types")
+@RequestMapping("/training-types")
 public class TrainingTypeController  implements ITrainingTypeController {
 
     private final TrainingTypeService trainingTypeService;

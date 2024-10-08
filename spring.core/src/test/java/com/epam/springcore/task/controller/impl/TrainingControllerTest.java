@@ -35,7 +35,7 @@ class TrainingControllerTest {
 
     @Test
     void testAddTraining_Success() throws Exception {
-        mockMvc.perform(post("/api/trainings")
+        mockMvc.perform(post("/trainings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(trainingJson))
                 .andExpect(status().isOk());

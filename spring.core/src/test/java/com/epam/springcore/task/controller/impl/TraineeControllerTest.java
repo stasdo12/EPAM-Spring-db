@@ -115,7 +115,7 @@ class TraineeControllerTest {
     void registerTraineeShouldReturnCreatedWhenTraineeIsSuccessfullyRegistered() throws Exception {
         when(gymFacade.saveTrainee(any(TraineeDTO.class))).thenReturn(passUsernameDTO);
 
-        mockMvc.perform(post("/api/trainees/register")
+        mockMvc.perform(post("/trainees/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(traineeDTO)))
                 .andExpect(status().isCreated());
@@ -127,7 +127,7 @@ class TraineeControllerTest {
     void getTraineeProfileByUsernameShouldReturnOkWhenTraineeExists() throws Exception {
         when(gymFacade.findTraineeByUsername(traineeDTO.getUser().getUsername())).thenReturn(Optional.of(traineeDTO));
 
-        mockMvc.perform(get("/api/trainees/{username}", traineeDTO.getUser().getUsername()))
+        mockMvc.perform(get("/trainees/{username}", traineeDTO.getUser().getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(traineeDTO)));
@@ -146,7 +146,7 @@ class TraineeControllerTest {
 
         when(gymFacade.updateTraineeProfile(username, traineeDTO)).thenReturn(updatedTraineeDTO);
 
-        mockMvc.perform(put("/api/trainees/{username}", username)
+        mockMvc.perform(put("/trainees/{username}", username)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(traineeDTO)))
                 .andExpect(status().isOk())
@@ -162,7 +162,7 @@ class TraineeControllerTest {
 
         doNothing().when(gymFacade).deleteTrainee(username);
 
-        mockMvc.perform(delete("/api/trainees/{username}", username))
+        mockMvc.perform(delete("/trainees/{username}", username))
                 .andExpect(status().isNoContent());
 
         verify(gymFacade, times(1)).deleteTrainee(username);
@@ -172,7 +172,7 @@ class TraineeControllerTest {
     void getNotAssignedActiveTrainersShouldReturnOkWhenTraineeExists() throws Exception {
         when(gymFacade.getTrainersNotAssignedToTrainee(traineeDTO.getUser().getUsername())).thenReturn(trainers);
 
-        mockMvc.perform(get("/api/trainees/{username}/not-assigned-trainers",
+        mockMvc.perform(get("/trainees/{username}/not-assigned-trainers",
                         traineeDTO.getUser().getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -189,7 +189,7 @@ class TraineeControllerTest {
         when(gymFacade.getTraineeTrainingsByCriteria(traineeDTO.getUser().getUsername(), from, to, trainerUsername,
                 trainingType)).thenReturn(trainings);
 
-        mockMvc.perform(get("/api/trainees/{username}/trainings", traineeDTO.getUser().getUsername())
+        mockMvc.perform(get("/trainees/{username}/trainings", traineeDTO.getUser().getUsername())
                         .param("from", from.toString())
                         .param("to", to.toString())
                         .param("trainer", trainerUsername)
@@ -218,7 +218,7 @@ class TraineeControllerTest {
 
         doNothing().when(gymFacade).activateDeactivateTraineeProfile(username, isActive);
 
-        mockMvc.perform(patch("/api/trainees/{username}/activate", username)
+        mockMvc.perform(patch("/trainees/{username}/activate", username)
                         .param("isActive", String.valueOf(isActive)))
                 .andExpect(status().isOk());
 
@@ -237,7 +237,7 @@ class TraineeControllerTest {
 
         when(gymFacade.updateTraineeTrainers(username, trainers)).thenReturn(updatedTraineeDTO);
 
-        mockMvc.perform(put("/api/trainees/{username}/trainers", username)
+        mockMvc.perform(put("/trainees/{username}/trainers", username)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[{\"field\": \"value\"}]"))
                 .andExpect(status().isOk())

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/trainings")
+@RequestMapping("/trainings")
 public class TrainingController implements ITrainingController {
 
     private final GymFacade gymFacade;

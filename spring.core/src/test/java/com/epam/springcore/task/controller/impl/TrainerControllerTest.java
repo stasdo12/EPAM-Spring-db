@@ -1,6 +1,9 @@
 package com.epam.springcore.task.controller.impl;
 
-import com.epam.springcore.task.dto.*;
+import com.epam.springcore.task.dto.TrainerDTO;
+import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.dto.TrainingTypeDTO;
+import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.facade.GymFacade;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +75,7 @@ class TrainerControllerTest {
 
         when(gymFacade.saveTrainer(any(TrainerDTO.class))).thenReturn(null);
 
-        mockMvc.perform(post("/api/trainers/register")
+        mockMvc.perform(post("/trainers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(trainerDTO)))
                 .andExpect(status().isCreated());
@@ -86,7 +89,7 @@ class TrainerControllerTest {
         when(gymFacade.findTrainerByUsername(trainerDTO.getUser().getUsername()))
                 .thenReturn(Optional.of(trainerDTO));
 
-        mockMvc.perform(get("/api/trainers/{username}", trainerDTO.getUser().getUsername()))
+        mockMvc.perform(get("/trainers/{username}", trainerDTO.getUser().getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(trainerDTO)));
@@ -111,7 +114,7 @@ class TrainerControllerTest {
 
         when(gymFacade.updateTrainerProfile(anyString(), any(TrainerDTO.class))).thenReturn(updatedTrainerDTO);
 
-        mockMvc.perform(put("/api/trainers/{username}", updatedTrainerDTO.getUser().getUsername())
+        mockMvc.perform(put("/trainers/{username}", updatedTrainerDTO.getUser().getUsername())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(updatedTrainerDTO)))
                 .andExpect(status().isOk())
@@ -126,7 +129,7 @@ class TrainerControllerTest {
         when(gymFacade.getTrainerTrainingsByCriteria(trainerDTO.getUser().getUsername(), from, to, traineeUsername,
                 trainingType)).thenReturn(trainings);
 
-        mockMvc.perform(get("/api/trainers/{username}/trainings", trainerDTO.getUser().getUsername())
+        mockMvc.perform(get("/trainers/{username}/trainings", trainerDTO.getUser().getUsername())
                         .param("from", from.toString())
                         .param("to", to.toString())
                         .param("trainee", traineeUsername)
@@ -148,7 +151,7 @@ class TrainerControllerTest {
 
         doNothing().when(gymFacade).activateDeactivateTrainer(username, isActive);
 
-        mockMvc.perform(patch("/api/trainers/{username}/activate", username)
+        mockMvc.perform(patch("/trainers/{username}/activate", username)
                         .param("isActive", String.valueOf(isActive)))
                 .andExpect(status().isOk());
 
