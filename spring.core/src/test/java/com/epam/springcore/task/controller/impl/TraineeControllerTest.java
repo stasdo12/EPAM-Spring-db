@@ -7,8 +7,6 @@ import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.facade.GymFacade;
-import com.epam.springcore.task.mapper.TraineeMapper;
-import com.epam.springcore.task.model.Trainee;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +39,6 @@ class TraineeControllerTest {
     @MockBean
     private GymFacade gymFacade;
 
-    @MockBean
-    private TraineeMapper traineeMapper;
     private TraineeDTO traineeDTO;
     private List<TrainerDTO> trainers;
     private PassUsernameDTO passUsernameDTO;
@@ -54,61 +50,14 @@ class TraineeControllerTest {
 
     @BeforeEach
     void setUp() {
-        traineeDTO = new TraineeDTO();
-        UserDTO user = new UserDTO();
-        user.setUsername("john.doe");
-        user.setFirstName("john");
-        user.setLastName("doe");
-        traineeDTO.setUser(user);
-
-        trainers = new ArrayList<>();
-        TrainerDTO trainer1 = new TrainerDTO();
-        UserDTO trainerUser1 = new UserDTO();
-        trainerUser1.setUsername("trainer1");
-        trainerUser1.setFirstName("Trainer");
-        trainerUser1.setLastName("One");
-        trainer1.setUser(trainerUser1);
-        trainers.add(trainer1);
-
-        TrainerDTO trainer2 = new TrainerDTO();
-        UserDTO trainerUser2 = new UserDTO();
-        trainerUser2.setUsername("trainer2");
-        trainerUser2.setFirstName("Trainer");
-        trainerUser2.setLastName("Two");
-        trainer2.setUser(trainerUser2);
-        trainers.add(trainer2);
-
-        passUsernameDTO = new PassUsernameDTO();
-        passUsernameDTO.setUsername("johndoe");
-        passUsernameDTO.setPassword("Password");
-
+        traineeDTO = createTraineeDTO();
+        trainers = createTrainers();
+        passUsernameDTO = createPassUsernameDTO();
         from = LocalDate.of(2024, 1, 1);
         to = LocalDate.of(2024, 12, 31);
         trainerUsername = "trainer1";
         trainingType = "Yoga";
-        trainings = new ArrayList<>();
-
-        TrainingDTO training1 = new TrainingDTO();
-        training1.setTrainingName("Morning Yoga");
-        training1.setDurationMinutes(60);
-        training1.setDate(LocalDate.of(2024, 1, 10));
-        training1.setTrainer(trainer1);
-
-        TrainingTypeDTO trainingTypeDTO1 = new TrainingTypeDTO();
-        trainingTypeDTO1.setName(trainingType);
-        training1.setTrainingType(trainingTypeDTO1);
-        trainings.add(training1);
-
-        TrainingDTO training2 = new TrainingDTO();
-        training2.setTrainingName("Evening Yoga");
-        training2.setDurationMinutes(45);
-        training2.setDate(LocalDate.of(2024, 1, 20));
-        training2.setTrainer(trainer2);
-
-        TrainingTypeDTO trainingTypeDTO2 = new TrainingTypeDTO();
-        trainingTypeDTO2.setName(trainingType);
-        training2.setTrainingType(trainingTypeDTO2);
-        trainings.add(training2);
+        trainings = createTrainings();
     }
 
     @Test
@@ -232,7 +181,6 @@ class TraineeControllerTest {
         TrainerDTO trainerDTO = new TrainerDTO();
         trainers.add(trainerDTO);
 
-        Trainee updatedTrainee = new Trainee();
         TraineeDTO updatedTraineeDTO = new TraineeDTO();
 
         when(gymFacade.updateTraineeTrainers(username, trainers)).thenReturn(updatedTraineeDTO);
@@ -244,5 +192,65 @@ class TraineeControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         verify(gymFacade).updateTraineeTrainers(username, trainers);
+    }
+
+    private TraineeDTO createTraineeDTO() {
+        TraineeDTO dto = new TraineeDTO();
+        UserDTO user = new UserDTO();
+        user.setUsername("john.doe");
+        user.setFirstName("john");
+        user.setLastName("doe");
+        dto.setUser(user);
+        return dto;
+    }
+
+    private List<TrainerDTO> createTrainers() {
+        List<TrainerDTO> trainers = new ArrayList<>();
+        trainers.add(createTrainerDTO("trainer1", "One"));
+        trainers.add(createTrainerDTO("trainer2", "Two"));
+        return trainers;
+    }
+
+    private TrainerDTO createTrainerDTO(String username, String lastName) {
+        TrainerDTO trainerDTO = new TrainerDTO();
+        UserDTO user = new UserDTO();
+        user.setUsername(username);
+        user.setFirstName("Trainer");
+        user.setLastName(lastName);
+        trainerDTO.setUser(user);
+        return trainerDTO;
+    }
+
+    private PassUsernameDTO createPassUsernameDTO() {
+        PassUsernameDTO dto = new PassUsernameDTO();
+        dto.setUsername("johndoe");
+        dto.setPassword("Password");
+        return dto;
+    }
+
+    private List<TrainingDTO> createTrainings() {
+        List<TrainingDTO> trainings = new ArrayList<>();
+        trainings.add(createTrainingDTO("Morning Yoga", 60, LocalDate.of(2024, 1,
+                10), "trainer1"));
+        trainings.add(createTrainingDTO("Evening Yoga", 45, LocalDate.of(2024, 1,
+                20), "trainer2"));
+        return trainings;
+    }
+
+    private TrainingDTO createTrainingDTO(String name, int duration, LocalDate date,
+                                          String trainerUsername) {
+        TrainingDTO trainingDTO = new TrainingDTO();
+        trainingDTO.setTrainingName(name);
+        trainingDTO.setDurationMinutes(duration);
+        trainingDTO.setDate(date);
+
+        TrainerDTO trainerDTO = createTrainerDTO(trainerUsername, "One");
+        trainingDTO.setTrainer(trainerDTO);
+
+        TrainingTypeDTO trainingTypeDTO = new TrainingTypeDTO();
+        trainingTypeDTO.setName("Yoga");
+        trainingDTO.setTrainingType(trainingTypeDTO);
+
+        return trainingDTO;
     }
 }
