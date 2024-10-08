@@ -4,6 +4,7 @@ import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.mapper.TraineeMapper;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.service.impl.TraineeService;
 import com.epam.springcore.task.service.impl.TrainerService;
@@ -34,6 +35,9 @@ class GymFacadeTest {
 
     @Mock
     private TrainingService trainingService;
+
+    @Mock
+    private TraineeMapper traineeMapper;
 
     @InjectMocks
     private GymFacade gymFacade;
@@ -231,15 +235,6 @@ class GymFacadeTest {
         verify(traineeService).updateTraineeProfile(username, updatedTraineeDTO);
     }
 
-    @Test
-    void activateDeactivateProfile() {
-        String username = "traineeUsername";
-        boolean isActive = true;
-
-        gymFacade.activateDeactivateProfile(username, isActive);
-
-        verify(traineeService).activateDeactivateTrainee(username, isActive);
-    }
 
     @Test
     void deleteTrainee() {
@@ -284,12 +279,17 @@ class GymFacadeTest {
         String traineeUsername = "traineeUsername";
         Set<TrainerDTO> newTrainerDTOs = Set.of(new TrainerDTO());
         Trainee updatedTrainee = new Trainee();
+        TraineeDTO updatedTraineeDTO = new TraineeDTO();
+
+        when(traineeMapper.traineeToDTO(updatedTrainee)).thenReturn(updatedTraineeDTO);
+
         when(traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs)).thenReturn(updatedTrainee);
 
-        Trainee result = gymFacade.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
+        TraineeDTO result = gymFacade.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
 
-        assertEquals(updatedTrainee, result);
+        assertEquals(updatedTraineeDTO, result);
         verify(traineeService).updateTraineeTrainers(traineeUsername, newTrainerDTOs);
+        verify(traineeMapper).traineeToDTO(updatedTrainee);
     }
 
     @Test

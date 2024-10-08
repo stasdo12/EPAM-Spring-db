@@ -4,6 +4,7 @@ import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.mapper.TraineeMapper;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.service.impl.TraineeService;
 import com.epam.springcore.task.service.impl.TrainerService;
@@ -11,26 +12,28 @@ import com.epam.springcore.task.service.impl.TrainingService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Component
+@Service
 @Slf4j
 public class GymFacade {
 
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
+    private final TraineeMapper traineeMapper;
 
     @Autowired
-    public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
+    public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService, TraineeMapper traineeMapper) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.trainingService = trainingService;
+        this.traineeMapper = traineeMapper;
     }
 
     public PassUsernameDTO saveTrainer(TrainerDTO trainerDTO){
@@ -95,7 +98,7 @@ public class GymFacade {
         return traineeService.updateTraineeProfile(username, traineeDTO);
     }
 
-    public void activateDeactivateProfile(String username, boolean isActive){
+    public void activateDeactivateTraineeProfile(String username, boolean isActive){
         traineeService.activateDeactivateTrainee(username, isActive);
     }
 
@@ -118,8 +121,9 @@ public class GymFacade {
                 trainerUsername, trainingName);
     }
 
-    public Trainee updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainerDTOs){
-        return traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
+    public TraineeDTO updateTraineeTrainers(String traineeUsername, Set<TrainerDTO> newTrainerDTOs) {
+        Trainee updatedTrainee = traineeService.updateTraineeTrainers(traineeUsername, newTrainerDTOs);
+        return traineeMapper.traineeToDTO(updatedTrainee);
     }
 
     public TrainingDTO addTraining (TrainingDTO trainingDTO){
