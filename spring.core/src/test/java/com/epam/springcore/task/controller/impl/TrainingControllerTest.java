@@ -25,12 +25,28 @@ class TrainingControllerTest {
 
     @BeforeEach
     void setUp() {
-        trainingJson = "{ \"trainee\": { \"firstName\": \"Ivan\", \"lastName\": \"Ivanov\", \"username\": \"ivan123.secret\" },"
-                + "\"trainer\": { \"firstName\": \"Stan\", \"lastName\": \"Stanislav\", \"username\": \"Stan.secret\" },"
-                + "\"trainingName\": \"Yoga Session\","
-                + "\"trainingType\": { \"id\": 1, \"name\": \"Yoga\" },"
-                + "\"date\": \"2024-09-30\","
-                + "\"durationMinutes\": 60 }";
+
+        trainingJson = """
+            {
+                "trainee": {
+                    "firstName": "Ivan",
+                    "lastName": "Ivanov",
+                    "username": "ivan123.secret"
+                },
+                "trainer": {
+                    "firstName": "Stan",
+                    "lastName": "Stanislav",
+                    "username": "Stan.secret"
+                },
+                "trainingName": "Yoga Session",
+                "trainingType": {
+                    "id": 1,
+                    "name": "Yoga"
+                },
+                "date": "2024-09-30",
+                "durationMinutes": 60
+            }
+            """;
     }
 
     @Test
