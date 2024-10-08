@@ -16,5 +16,5 @@ public interface ITrainingController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "404", description = "Trainee or Trainer not found")
     })
-    ResponseEntity<Void> addTraining(@RequestBody TrainingDTO trainingDTO);
+    void addTraining(@RequestBody TrainingDTO trainingDTO);
 }

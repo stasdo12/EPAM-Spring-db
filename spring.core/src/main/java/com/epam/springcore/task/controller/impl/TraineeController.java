@@ -1,7 +1,6 @@
 package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.controller.ITraineeController;
-import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -32,10 +32,10 @@ public class TraineeController implements ITraineeController {
     private final GymFacade gymFacade;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public ResponseEntity<Object> registerTrainee(@RequestBody TraineeDTO traineeDTO){
-            PassUsernameDTO response = gymFacade.saveTrainee(traineeDTO);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public void registerTrainee(@RequestBody TraineeDTO traineeDTO){
+            gymFacade.saveTrainee(traineeDTO);
     }
 
     @GetMapping("/{username}")
@@ -53,10 +53,10 @@ public class TraineeController implements ITraineeController {
     }
 
     @DeleteMapping("/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public ResponseEntity<Void> deleteTrainee(@PathVariable String username) {
+    public void deleteTrainee(@PathVariable String username) {
         gymFacade.deleteTrainee(username);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{username}/not-assigned-trainers")
@@ -78,10 +78,10 @@ public class TraineeController implements ITraineeController {
     }
 
     @PatchMapping("/{username}/activate")
+    @ResponseStatus(HttpStatus.OK)
     @Override
-    public ResponseEntity<Void> activateDeactivateTrainee(@PathVariable String username, boolean isActive) {
+    public void activateDeactivateTrainee(@PathVariable String username, boolean isActive) {
         gymFacade.activateDeactivateTraineeProfile(username, isActive);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{username}/trainers")

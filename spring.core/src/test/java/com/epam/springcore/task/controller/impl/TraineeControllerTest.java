@@ -163,7 +163,7 @@ class TraineeControllerTest {
         doNothing().when(gymFacade).deleteTrainee(username);
 
         mockMvc.perform(delete("/api/trainees/{username}", username))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(gymFacade, times(1)).deleteTrainee(username);
     }

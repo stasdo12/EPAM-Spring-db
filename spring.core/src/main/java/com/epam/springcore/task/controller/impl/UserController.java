@@ -4,10 +4,11 @@ import com.epam.springcore.task.controller.IUserController;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,17 +19,16 @@ public class UserController  implements IUserController {
     private final UserService userService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @Override
-    public ResponseEntity<Void> login(PassUsernameDTO passUsernameDTO) {
+    public void login(PassUsernameDTO passUsernameDTO) {
         userService.matchUserCredentials(passUsernameDTO);
-        return ResponseEntity.ok().build();
-
     }
 
     @PutMapping("/update-password")
+    @ResponseStatus(HttpStatus.OK)
     @Override
-    public ResponseEntity<Void> changePassword(PassUsernameDTO passUsernameDTO) {
+    public void changePassword(PassUsernameDTO passUsernameDTO) {
         userService.changeUserPassword(passUsernameDTO.getUsername(), passUsernameDTO.getPassword());
-        return ResponseEntity.ok().build();
     }
 }

@@ -24,7 +24,7 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
 
-    ResponseEntity<Object> registerTrainer(@RequestBody TrainerDTO trainerDTO);
+    void registerTrainer(@RequestBody TrainerDTO trainerDTO);
 
     @Operation(summary = "Get trainer profile by username")
     @ApiResponses(value = {
@@ -64,7 +64,7 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "200", description = "Successfully activated/deactivated trainer"),
             @ApiResponse(responseCode = "404", description = "Trainer not found")
     })
-    ResponseEntity<Void> activateDeactivateTrainee(
+    void activateDeactivateTrainee(
             @PathVariable("username") String username,
             @RequestParam("isActive") boolean isActive);
 }

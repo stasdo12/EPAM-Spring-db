@@ -8,14 +8,7 @@ import com.epam.springcore.task.facade.GymFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,10 +22,10 @@ public class TrainerController implements ITrainerController {
     private final GymFacade gymFacade;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public ResponseEntity<Object> registerTrainer(@RequestBody TrainerDTO trainerDTO){
-        PassUsernameDTO response = gymFacade.saveTrainer(trainerDTO);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public void registerTrainer(@RequestBody TrainerDTO trainerDTO){
+      gymFacade.saveTrainer(trainerDTO);
     }
 
     @GetMapping("/{username}")
@@ -63,9 +56,9 @@ public class TrainerController implements ITrainerController {
     }
 
     @PatchMapping("/{username}/activate")
+    @ResponseStatus(HttpStatus.OK)
     @Override
-    public ResponseEntity<Void> activateDeactivateTrainee(@PathVariable String username, boolean isActive) {
+    public void activateDeactivateTrainee(@PathVariable String username, boolean isActive) {
         gymFacade.activateDeactivateTrainer(username, isActive);
-        return ResponseEntity.ok().build();
     }
 }

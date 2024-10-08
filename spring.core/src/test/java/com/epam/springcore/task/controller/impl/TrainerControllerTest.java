@@ -68,20 +68,18 @@ class TrainerControllerTest {
 
     @Test
     void registerTrainerShouldReturnCreatedWhenTrainerIsSuccessfullyRegistered() throws Exception {
-        PassUsernameDTO response = new PassUsernameDTO();
-        response.setUsername("trainer1");
-        response.setPassword("password123");
+        TrainerDTO trainerDTO = new TrainerDTO();
 
-        when(gymFacade.saveTrainer(any(TrainerDTO.class))).thenReturn(response);
+        when(gymFacade.saveTrainer(any(TrainerDTO.class))).thenReturn(null);
 
         mockMvc.perform(post("/api/trainers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(trainerDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(response)));
+                .andExpect(status().isCreated());
 
         verify(gymFacade, times(1)).saveTrainer(any(TrainerDTO.class));
     }
+
 
     @Test
     void getTrainerProfileByUsernameShouldReturnOkWhenTrainerExists() throws Exception {

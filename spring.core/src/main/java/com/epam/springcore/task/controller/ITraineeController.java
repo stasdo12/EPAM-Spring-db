@@ -24,7 +24,7 @@ public interface ITraineeController {
             @ApiResponse(responseCode = "400", description = "Invalid trainee data"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    ResponseEntity<Object> registerTrainee(@RequestBody TraineeDTO traineeDTO);
+    void registerTrainee(@RequestBody TraineeDTO traineeDTO);
 
     @Operation(summary = "Get trainee profile by Username")
     @ApiResponses(value = {
@@ -49,7 +49,7 @@ public interface ITraineeController {
             @ApiResponse(responseCode = "200", description = "Trainee deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Trainee not found"),
     })
-    ResponseEntity<Void> deleteTrainee(@PathVariable String username);
+    void deleteTrainee(@PathVariable String username);
 
     @Operation(summary = "Get not assigned active trainers for a trainee",
             description = "Retrieves a list of active trainers that are not assigned to the specified trainee.")
@@ -80,7 +80,7 @@ public interface ITraineeController {
             @ApiResponse(responseCode = "200", description = "Successfully activated/deactivated trainee"),
             @ApiResponse(responseCode = "404", description = "Trainee not found")
     })
-    ResponseEntity<Void> activateDeactivateTrainee(
+    void activateDeactivateTrainee(
             @PathVariable("username") String username,
             @RequestParam("isActive") boolean isActive);
 
