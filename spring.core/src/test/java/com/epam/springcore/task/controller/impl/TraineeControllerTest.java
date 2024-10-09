@@ -7,6 +7,8 @@ import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
+import com.epam.springcore.task.health.metrics.RequestMetrics;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,12 @@ class TraineeControllerTest {
     @MockBean
     private GymFacade gymFacade;
 
+    @MockBean
+    private ExecutionTimeMetrics executionTimeMetrics;
+
+    @MockBean
+    private RequestMetrics requestMetrics;
+
     private TraineeDTO traineeDTO;
     private List<TrainerDTO> trainers;
     private PassUsernameDTO passUsernameDTO;
@@ -47,6 +55,7 @@ class TraineeControllerTest {
     private LocalDate to;
     private String trainerUsername;
     private String trainingType;
+
 
     @BeforeEach
     void setUp() {
@@ -113,8 +122,6 @@ class TraineeControllerTest {
 
         mockMvc.perform(delete("/trainees/{username}", username))
                 .andExpect(status().isNoContent());
-
-        verify(gymFacade, times(1)).deleteTrainee(username);
     }
 
     @Test

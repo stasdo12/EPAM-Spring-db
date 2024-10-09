@@ -5,6 +5,8 @@ import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
+import com.epam.springcore.task.health.metrics.RequestMetrics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import java.util.Set;
 public class TraineeController implements ITraineeController {
 
     private final GymFacade gymFacade;
+    private final RequestMetrics requestMetrics;
+    private final ExecutionTimeMetrics executionTimeMetrics;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,6 +45,7 @@ public class TraineeController implements ITraineeController {
     @GetMapping("/{username}")
     @Override
     public ResponseEntity<TraineeDTO> getTraineeProfileByUsername(@PathVariable String username) {
+        requestMetrics.incrementRequestCount();
         Optional<TraineeDTO> trainee = gymFacade.findTraineeByUsername(username);
         return trainee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -56,7 +61,7 @@ public class TraineeController implements ITraineeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
     public void deleteTrainee(@PathVariable String username) {
-        gymFacade.deleteTrainee(username);
+        executionTimeMetrics.recordExecutionTime(() -> gymFacade.deleteTrainee(username));
     }
 
     @GetMapping("/{username}/not-assigned-trainers")
