@@ -12,5 +12,8 @@ public interface TraineeMapper {
     TraineeDTO traineeToDTO(Trainee trainee);
 
     @Mapping(target = "traineeId", ignore = true)
+    @Mapping(source = "user.firstName", target = "user.firstName")
+    @Mapping(source = "user.lastName", target = "user.lastName")
+    @Mapping(target = "user", source = "user")
     Trainee traineeToEntity(TraineeDTO traineeDTO);
 }

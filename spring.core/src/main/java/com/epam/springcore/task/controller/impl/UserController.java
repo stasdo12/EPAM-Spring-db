@@ -5,11 +5,7 @@ import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +14,7 @@ public class UserController  implements IUserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @Override
     public void login(PassUsernameDTO passUsernameDTO) {
