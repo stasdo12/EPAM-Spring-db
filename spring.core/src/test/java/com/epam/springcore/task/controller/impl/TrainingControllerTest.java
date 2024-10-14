@@ -2,6 +2,8 @@ package com.epam.springcore.task.controller.impl;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.epam.springcore.task.config.TestSecurityConfig;
 import com.epam.springcore.task.facade.GymFacade;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(TrainingController.class)
+@Import(TestSecurityConfig.class)
 class TrainingControllerTest {
 
     @MockBean
