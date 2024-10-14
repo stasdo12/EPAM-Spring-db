@@ -22,6 +22,13 @@ public class RequestResponseLogger  implements HandlerInterceptor {
                              @NonNull HttpServletResponse response,
                              @NonNull Object handler) {
         String transactionId = MDC.get(TRANSACTION_ID);
+        String userId = (String) request.getSession().getAttribute("id");
+        if (userId == null) {
+            userId = request.getHeader("userId");
+        }
+        log.info("Extracted User ID: {}", userId);
+        MDC.put("userId", userId != null ? userId : "NO USER ID");
+
         String method = request.getMethod();
         String uri = request.getRequestURI();
         String queryString = request.getQueryString() != null ? "?" + request.getQueryString() : "";
