@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS training_type (
-                                             id BIGINT PRIMARY KEY,
+                                             id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                              training_type_name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS users (
-                                     id BIGINT PRIMARY KEY,
+                                     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                      first_name VARCHAR(255) NOT NULL,
                                      last_name VARCHAR(255) NOT NULL,
                                      username VARCHAR(255) UNIQUE NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS trainee (
-                                       id BIGINT PRIMARY KEY,
+                                       id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                        date_of_birth DATE,
                                        address VARCHAR(255),
                                        user_id BIGINT,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS trainee (
 );
 
 CREATE TABLE IF NOT EXISTS trainer (
-                                       id BIGINT PRIMARY KEY,
+                                       id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                        user_id BIGINT,
                                        training_type_id BIGINT,
                                        FOREIGN KEY (user_id) REFERENCES users(id),
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS trainee_has_trainer (
 );
 
 CREATE TABLE IF NOT EXISTS training (
-                                        id BIGINT PRIMARY KEY,
+                                        id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                         trainee_id BIGINT,
                                         trainer_id BIGINT,
                                         training_name VARCHAR(255) NOT NULL,
