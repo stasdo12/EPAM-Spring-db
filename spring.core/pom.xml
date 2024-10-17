@@ -46,6 +46,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- security-test -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+		</dependency>
+
 		<!-- h2 -->
 		<dependency>
 			<groupId>com.h2database</groupId>
