@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/login")
@@ -26,5 +28,10 @@ public class UserController  implements IUserController {
     @Override
     public void changePassword(PassUsernameDTO passUsernameDTO) {
         userService.changeUserPassword(passUsernameDTO.getUsername(), passUsernameDTO.getPassword());
+    }
+
+    @GetMapping("/info")
+    public String userData (Principal principal){
+        return principal.getName();
     }
 }

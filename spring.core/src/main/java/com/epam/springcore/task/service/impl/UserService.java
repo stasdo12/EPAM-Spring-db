@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserService implements IUserService {
+public class UserService implements IUserService{
 
     private final UserRepository userRepository;
     private final NameGenerator nameGenerator;
@@ -74,4 +74,5 @@ public class UserService implements IUserService {
             userRepository.save(user);
         }
     }
+
 }
