@@ -1,5 +1,6 @@
 package com.epam.springcore.task.security;
 
+import com.epam.springcore.task.filter.JwtRequestFilter;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 
@@ -25,6 +27,8 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userService;
+
+    private final JwtRequestFilter jwtRequestFilter;
 
     private static final String LOGIN_URI = "/login/";
     private static final String TRAINEE_CREATE_URI = "/trainees/register";
@@ -53,11 +57,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, TRAINER_CREATE_URI).permitAll()
                         .requestMatchers(ACTUATOR_URI).permitAll()
                         .requestMatchers(SWAGGER).permitAll()
+                        .requestMatchers("/auth").permitAll()
                         .anyRequest().authenticated()
 
                 ).exceptionHandling(exception -> exception.
                         authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                );
+                ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -4,7 +4,6 @@ package com.epam.springcore.task.controller.impl;
 import com.epam.springcore.task.dto.JwtRequest;
 import com.epam.springcore.task.dto.JwtResponse;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
-import com.epam.springcore.task.service.impl.UserService;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import exception.AppError;
 import lombok.AllArgsConstructor;
