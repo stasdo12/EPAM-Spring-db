@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.springcore.task.config.TestSecurityConfig;
 import com.epam.springcore.task.facade.GymFacade;
 
+import com.epam.springcore.task.filter.JwtRequestFilter;
+import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(TrainingController.class)
-@Import(TestSecurityConfig.class)
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
 class TrainingControllerTest {
 
     @MockBean

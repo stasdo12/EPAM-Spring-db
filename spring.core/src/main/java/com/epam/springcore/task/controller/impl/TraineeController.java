@@ -1,15 +1,16 @@
 package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.controller.ITraineeController;
-import com.epam.springcore.task.dto.TraineeDTO;
-import com.epam.springcore.task.dto.TrainerDTO;
-import com.epam.springcore.task.dto.TrainingDTO;
+import com.epam.springcore.task.dto.*;
 import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
 import com.epam.springcore.task.health.metrics.RequestMetrics;
+import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
+import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,12 +35,18 @@ public class TraineeController implements ITraineeController {
     private final GymFacade gymFacade;
     private final RequestMetrics requestMetrics;
     private final ExecutionTimeMetrics executionTimeMetrics;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenUtils jwtTokenUtils;
+
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public void registerTrainee(@RequestBody TraineeDTO traineeDTO){
-            gymFacade.saveTrainee(traineeDTO);
+    public ResponseEntity<JwtResponse> registerTrainee(@RequestBody TraineeDTO traineeDTO){
+        PassUsernameDTO passUsernameDTO = gymFacade.saveTrainee(traineeDTO);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(passUsernameDTO.getUsername());
+        String token = jwtTokenUtils.generateToken(userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
     }
 
     @GetMapping("/{username}")

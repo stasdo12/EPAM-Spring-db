@@ -1,6 +1,7 @@
 package com.epam.springcore.task.controller;
 
 
+import com.epam.springcore.task.dto.JwtResponse;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +25,7 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
 
-    void registerTrainer(@RequestBody TrainerDTO trainerDTO);
+    ResponseEntity<JwtResponse> registerTrainer(@RequestBody TrainerDTO trainerDTO);
 
     @Operation(summary = "Get trainer profile by username")
     @ApiResponses(value = {

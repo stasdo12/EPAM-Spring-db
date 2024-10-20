@@ -1,11 +1,13 @@
 package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.config.TestSecurityConfig;
-import com.epam.springcore.task.dto.TrainerDTO;
-import com.epam.springcore.task.dto.TrainingDTO;
-import com.epam.springcore.task.dto.TrainingTypeDTO;
-import com.epam.springcore.task.dto.UserDTO;
+import com.epam.springcore.task.dto.*;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.filter.JwtRequestFilter;
+import com.epam.springcore.task.model.User;
+import com.epam.springcore.task.security.UserGymDetails;
+import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
+import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -28,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TrainerController.class)
-@Import(TestSecurityConfig.class)
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
 class TrainerControllerTest {
 
     @Autowired
@@ -36,6 +39,12 @@ class TrainerControllerTest {
 
     @MockBean
     private GymFacade gymFacade;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
+    private JwtTokenUtils jwtTokenUtils;
 
     private TrainerDTO trainerDTO;
     private List<TrainingDTO> trainings;
@@ -74,18 +83,26 @@ class TrainerControllerTest {
 
     @Test
     void registerTrainerShouldReturnCreatedWhenTrainerIsSuccessfullyRegistered() throws Exception {
+        String username = "trainerUser";
+        String password = "trainerPassword";
+        String token = "trainerToken";
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO(username, password);
         TrainerDTO trainerDTO = new TrainerDTO();
 
-        when(gymFacade.saveTrainer(any(TrainerDTO.class))).thenReturn(null);
+        when(gymFacade.saveTrainer(any(TrainerDTO.class))).thenReturn(passUsernameDTO);
+        when(userDetailsService.loadUserByUsername(username)).thenReturn(new UserGymDetails(new User()));
+        when(jwtTokenUtils.generateToken(any(UserDetails.class))).thenReturn(token);
 
         mockMvc.perform(post("/trainers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(trainerDTO)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.token").value(token));
 
         verify(gymFacade, times(1)).saveTrainer(any(TrainerDTO.class));
+        verify(userDetailsService, times(1)).loadUserByUsername(username);
+        verify(jwtTokenUtils, times(1)).generateToken(any(UserDetails.class));
     }
-
 
     @Test
     void getTrainerProfileByUsernameShouldReturnOkWhenTrainerExists() throws Exception {
@@ -148,7 +165,7 @@ class TrainerControllerTest {
     }
 
     @Test
-    void activateDeactivateTrainerShouldReturnOkWhenTrainerExists() throws Exception {
+    void activateDeactivateTraineeShouldReturnOkWhenTrainerExists() throws Exception {
         String username = "trainer1";
         boolean isActive = true;
 

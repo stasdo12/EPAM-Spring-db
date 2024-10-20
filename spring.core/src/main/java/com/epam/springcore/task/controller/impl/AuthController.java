@@ -3,6 +3,7 @@ package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.dto.JwtRequest;
 import com.epam.springcore.task.dto.JwtResponse;
+import com.epam.springcore.task.service.impl.AuthService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import exception.AppError;
@@ -21,22 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class AuthController {
 
-    private final UserDetailsServiceImpl userService;
-    private final JwtTokenUtils jwtTokenUtils;
-    private final AuthenticationManager authenticationManager;
+  private final AuthService authService;
 
 
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest){
-        try{
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
-                authRequest.getPassword()));
-        }catch (BadCredentialsException ex){
-            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED, "Incorrect login or password"), HttpStatus.UNAUTHORIZED);
-        }
-        UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return authService.createAuthToken(authRequest);
     }
 
 }

@@ -2,7 +2,9 @@ package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.config.TestSecurityConfig;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
+import com.epam.springcore.task.filter.JwtRequestFilter;
 import com.epam.springcore.task.service.impl.TrainingTypeService;
+import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TrainingTypeController.class)
-@Import(TestSecurityConfig.class)
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
 class TrainingTypeControllerTest {
 
     @Autowired

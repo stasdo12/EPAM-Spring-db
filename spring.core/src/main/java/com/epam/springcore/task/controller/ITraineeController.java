@@ -1,5 +1,6 @@
 package com.epam.springcore.task.controller;
 
+import com.epam.springcore.task.dto.JwtResponse;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
@@ -24,7 +25,7 @@ public interface ITraineeController {
             @ApiResponse(responseCode = "400", description = "Invalid trainee data"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    void registerTrainee(@RequestBody TraineeDTO traineeDTO);
+    ResponseEntity<JwtResponse> registerTrainee(@RequestBody TraineeDTO traineeDTO);
 
     @Operation(summary = "Get trainee profile by Username")
     @ApiResponses(value = {
