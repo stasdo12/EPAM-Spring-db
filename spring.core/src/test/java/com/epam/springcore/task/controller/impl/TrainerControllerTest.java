@@ -6,6 +6,7 @@ import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.filter.JwtRequestFilter;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.security.UserGymDetails;
+import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,7 @@ class TrainerControllerTest {
     private UserDetailsServiceImpl userDetailsService;
 
     @MockBean
-    private JwtTokenUtils jwtTokenUtils;
+    private JwtService jwtTokenUtils;
 
     private TrainerDTO trainerDTO;
     private List<TrainingDTO> trainings;

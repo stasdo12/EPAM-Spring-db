@@ -6,6 +6,7 @@ import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class TrainerController implements ITrainerController {
 
     private final GymFacade gymFacade;
     private final UserDetailsServiceImpl userDetailsService;
-    private final JwtTokenUtils jwtTokenUtils;
+    private final JwtService jwtTokenUtils;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)

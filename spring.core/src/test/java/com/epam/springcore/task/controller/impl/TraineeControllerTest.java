@@ -13,6 +13,7 @@ import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
 import com.epam.springcore.task.health.metrics.RequestMetrics;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.security.UserGymDetails;
+import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,7 +65,7 @@ class TraineeControllerTest {
     private RequestMetrics requestMetrics;
 
     @MockBean
-    private JwtTokenUtils jwtTokenUtils;
+    private JwtService jwtTokenUtils;
 
     @MockBean
     private UserDetailsServiceImpl userDetailsService;

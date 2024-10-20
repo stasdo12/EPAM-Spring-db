@@ -5,6 +5,7 @@ import com.epam.springcore.task.dto.*;
 import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
 import com.epam.springcore.task.health.metrics.RequestMetrics;
+import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ public class TraineeController implements ITraineeController {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtTokenUtils jwtTokenUtils;
 
+    private final JwtService jwtService;
+
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,7 +48,7 @@ public class TraineeController implements ITraineeController {
     public ResponseEntity<JwtResponse> registerTrainee(@RequestBody TraineeDTO traineeDTO){
         PassUsernameDTO passUsernameDTO = gymFacade.saveTrainee(traineeDTO);
         UserDetails userDetails = userDetailsService.loadUserByUsername(passUsernameDTO.getUsername());
-        String token = jwtTokenUtils.generateToken(userDetails);
+        String token = jwtService.generateToken(userDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
     }
 
