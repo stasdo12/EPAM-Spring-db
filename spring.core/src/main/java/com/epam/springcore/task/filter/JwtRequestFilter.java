@@ -51,6 +51,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
 
+        if (username != null && blackListService.isTokenBlacklisted(username)){
+            log.debug("User is temporarily blocked due to multiple failed login attempts.");
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             List<GrantedAuthority> authorities = new ArrayList<>();
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

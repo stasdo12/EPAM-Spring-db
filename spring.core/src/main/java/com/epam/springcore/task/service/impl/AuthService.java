@@ -20,25 +20,35 @@ public class AuthService implements IAuthService {
     private final UserDetailsServiceImpl userService;
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
-
     private final BlackListService blackListService;
+    private final LoginAttemptService loginAttemptService;
 
 
 
-    public AuthService(UserDetailsServiceImpl userService, JwtTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager,
-                       BlackListService blackListService) {
+    public AuthService(UserDetailsServiceImpl userService, JwtTokenUtils jwtTokenUtils,
+                       AuthenticationManager authenticationManager,
+                       BlackListService blackListService, LoginAttemptService loginAttemptService) {
         this.userService = userService;
         this.jwtTokenUtils = jwtTokenUtils;
         this.authenticationManager = authenticationManager;
         this.blackListService = blackListService;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
     public ResponseEntity<Object> createAuthToken(@RequestBody JwtRequest authRequest){
+        String username = authRequest.getUsername();
+        if (loginAttemptService.isBlocked(username)){
+            return new ResponseEntity<>(new AppError(HttpStatus.LOCKED,
+                    "User is temporarily blocked due to multiple failed login attempts. " +
+                            "Please try again later."), HttpStatus.LOCKED);
+        }
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
                     authRequest.getPassword()));
+            loginAttemptService.loginSucceeded(username);
         }catch (BadCredentialsException ex){
+            loginAttemptService.loginFailed(username);
             return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED, "Incorrect login or password"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
