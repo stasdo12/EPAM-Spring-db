@@ -1,6 +1,5 @@
 package com.epam.springcore.task.utils.impl;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -21,7 +20,6 @@ import java.util.Map;
 public class JwtTokenUtils {
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private Duration jwtLifeTime;
 
@@ -63,4 +61,5 @@ public class JwtTokenUtils {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 }

@@ -8,13 +8,21 @@ import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
-import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -75,7 +83,6 @@ public class TrainerController implements ITrainerController {
     @ResponseStatus(HttpStatus.OK)
     @Override
     public void activateDeactivateTrainee(@PathVariable String username, @RequestParam("isActive") boolean isActive) {
-        System.out.println("Activating/Deactivating Trainer: " + username + ", isActive: " + isActive);
         gymFacade.activateDeactivateTrainer(username, isActive);
     }
 }

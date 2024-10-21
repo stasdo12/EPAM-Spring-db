@@ -6,8 +6,6 @@ import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.model.Trainee;
 
-
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;

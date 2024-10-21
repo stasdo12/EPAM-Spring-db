@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserGymDetails implements UserDetails {
-
     private final String username;
     private final String password;
     private final boolean active;
@@ -38,4 +37,5 @@ public class UserGymDetails implements UserDetails {
     public boolean isEnabled(){
         return active;
     }
+
 }

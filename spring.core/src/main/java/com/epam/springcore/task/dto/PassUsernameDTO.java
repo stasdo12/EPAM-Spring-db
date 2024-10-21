@@ -1,6 +1,5 @@
 package com.epam.springcore.task.dto;
 
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,4 +17,5 @@ public class PassUsernameDTO {
 
     @NotNull(message = "Password is required")
     private String password;
+
 }

@@ -16,14 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class AuthService implements IAuthService {
-
     private final UserDetailsServiceImpl userService;
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
     private final BlackListService blackListService;
     private final LoginAttemptService loginAttemptService;
-
-
 
     public AuthService(UserDetailsServiceImpl userService, JwtTokenUtils jwtTokenUtils,
                        AuthenticationManager authenticationManager,
@@ -61,4 +58,5 @@ public class AuthService implements IAuthService {
         blackListService.addToBlacklist(token);
         return true;
     }
+
 }

@@ -1,15 +1,11 @@
 package com.epam.springcore.task.service.impl;
 
-
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 @Service
 public class LoginAttemptService {
-
     private final int MAX_ATTEMPTS = 3;
     private final long LOCK_TIME_DURATION = 5 * 60 * 1000;
     private final Map<String, Integer> attemptsCache = new ConcurrentHashMap<>();

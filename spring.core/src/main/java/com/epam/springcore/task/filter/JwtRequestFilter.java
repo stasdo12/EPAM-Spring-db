@@ -1,6 +1,5 @@
 package com.epam.springcore.task.filter;
 
-
 import com.epam.springcore.task.service.impl.BlackListService;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
-
     private final JwtTokenUtils jwtTokenUtils;
     private final BlackListService blackListService;
 

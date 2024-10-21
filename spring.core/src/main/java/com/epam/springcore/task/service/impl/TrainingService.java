@@ -19,13 +19,9 @@ public class TrainingService implements ITrainingService {
 
     public final TrainingRepository trainingRepository;
     public final TrainingMapper trainingMapper;
-
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingTypeRepository trainingTypeRepository;
-
-
-
 
     @Autowired
     public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper, TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository) {
@@ -56,4 +52,5 @@ public class TrainingService implements ITrainingService {
         Training savedTraining = trainingRepository.save(training);
         return trainingMapper.trainingToDTO(savedTraining);
     }
+
 }

@@ -20,16 +20,12 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
-
     private final UserDetailsServiceImpl userService;
-
     private final JwtRequestFilter jwtRequestFilter;
-
     private static final String LOGIN_URI = "/login/";
     private static final String TRAINEE_CREATE_URI = "/trainees/register";
     private static final String TRAINER_CREATE_URI = "/trainers/register";
@@ -66,7 +62,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){

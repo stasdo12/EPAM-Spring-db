@@ -1,9 +1,9 @@
 package com.epam.springcore.task.controller.impl;
 
-
 import com.epam.springcore.task.controller.IAuthController;
 import com.epam.springcore.task.dto.JwtRequest;
 import com.epam.springcore.task.service.impl.AuthService;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,4 +34,5 @@ public class AuthController implements IAuthController {
       return ResponseEntity.badRequest().body("Invalid logout request");
     }
   }
+
 }

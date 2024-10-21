@@ -22,4 +22,5 @@ public class TrainerDTO {
     private List<TrainingDTO> trainings;
 
     private Set<TraineeDTO> trainees;
+
 }

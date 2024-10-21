@@ -14,12 +14,10 @@ import java.util.Optional;
 
 @Service
 public class UserService implements IUserService{
-
     private final UserRepository userRepository;
     private final NameGenerator nameGenerator;
     private final PasswordGenerator passwordGenerator;
     private final PasswordEncoder passwordEncoder;
-
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -31,7 +29,6 @@ public class UserService implements IUserService{
         this.passwordGenerator = passwordGenerator;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public PassUsernameDTO generateAndSaveUser(User user) {

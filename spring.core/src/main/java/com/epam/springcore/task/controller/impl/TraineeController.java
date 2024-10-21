@@ -1,13 +1,16 @@
 package com.epam.springcore.task.controller.impl;
 
 import com.epam.springcore.task.controller.ITraineeController;
-import com.epam.springcore.task.dto.*;
+import com.epam.springcore.task.dto.JwtResponse;
+import com.epam.springcore.task.dto.PassUsernameDTO;
+import com.epam.springcore.task.dto.TraineeDTO;
+import com.epam.springcore.task.dto.TrainerDTO;
+import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
 import com.epam.springcore.task.health.metrics.RequestMetrics;
 import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
-import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +40,7 @@ public class TraineeController implements ITraineeController {
     private final RequestMetrics requestMetrics;
     private final ExecutionTimeMetrics executionTimeMetrics;
     private final UserDetailsServiceImpl userDetailsService;
-    private final JwtTokenUtils jwtTokenUtils;
-
     private final JwtService jwtService;
-
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)

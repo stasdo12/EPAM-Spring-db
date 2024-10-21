@@ -172,4 +172,5 @@ public class TrainerService  implements ITrainerService {
         Optional<Trainer> trainerOptional = trainerRepository.findById(trainerId);
         return trainerOptional.map(trainerMapper::trainerToDTO);
     }
+
 }
