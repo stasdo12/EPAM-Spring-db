@@ -8,4 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface IAuthService {
 
     ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest);
+
+    boolean logout(String token);
 }

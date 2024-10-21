@@ -3,6 +3,7 @@ package com.epam.springcore.task.controller.impl;
 import com.epam.springcore.task.config.TestSecurityConfig;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.filter.JwtRequestFilter;
+import com.epam.springcore.task.service.impl.BlackListService;
 import com.epam.springcore.task.service.impl.UserService;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(UserController.class)
-@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class, BlackListService.class})
 class UserControllerTest {
 
     @Autowired

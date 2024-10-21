@@ -1,6 +1,7 @@
 package com.epam.springcore.task.filter;
 
 
+import com.epam.springcore.task.service.impl.BlackListService;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -26,6 +27,7 @@ import java.util.List;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
+    private final BlackListService blackListService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
@@ -34,15 +36,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")){
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
+                if (blackListService.isTokenBlacklisted(jwt)) {
+                    log.debug("JWT token is blacklisted");
+                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
                 username = jwtTokenUtils.getUsername(jwt);
-            }catch (ExpiredJwtException e){
-                log.debug("jwt token doesn't available create new");
+            } catch (ExpiredJwtException e) {
+                log.debug("JWT token is expired, create new one if needed");
             }
         }
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             List<GrantedAuthority> authorities = new ArrayList<>();
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
@@ -50,8 +59,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     authorities
             );
             SecurityContextHolder.getContext().setAuthentication(token);
-
         }
+
         filterChain.doFilter(req, res);
     }
 }

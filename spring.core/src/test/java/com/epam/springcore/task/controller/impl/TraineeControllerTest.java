@@ -13,6 +13,7 @@ import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
 import com.epam.springcore.task.health.metrics.RequestMetrics;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.security.UserGymDetails;
+import com.epam.springcore.task.service.impl.BlackListService;
 import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
@@ -49,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TraineeController.class)
-@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class, BlackListService.class})
 class TraineeControllerTest {
 
     @Autowired

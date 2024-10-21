@@ -7,6 +7,7 @@ import com.epam.springcore.task.config.TestSecurityConfig;
 import com.epam.springcore.task.facade.GymFacade;
 
 import com.epam.springcore.task.filter.JwtRequestFilter;
+import com.epam.springcore.task.service.impl.BlackListService;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(TrainingController.class)
-@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class, BlackListService.class})
 class TrainingControllerTest {
 
     @MockBean

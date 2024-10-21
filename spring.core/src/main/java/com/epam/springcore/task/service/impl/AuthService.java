@@ -21,14 +21,20 @@ public class AuthService implements IAuthService {
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserDetailsServiceImpl userService, JwtTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager) {
+    private final BlackListService blackListService;
+
+
+
+    public AuthService(UserDetailsServiceImpl userService, JwtTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager,
+                       BlackListService blackListService) {
         this.userService = userService;
         this.jwtTokenUtils = jwtTokenUtils;
         this.authenticationManager = authenticationManager;
+        this.blackListService = blackListService;
     }
 
     @Override
-    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest){
+    public ResponseEntity<Object> createAuthToken(@RequestBody JwtRequest authRequest){
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
                     authRequest.getPassword()));
@@ -38,5 +44,11 @@ public class AuthService implements IAuthService {
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @Override
+    public boolean logout(String token) {
+        blackListService.addToBlacklist(token);
+        return true;
     }
 }

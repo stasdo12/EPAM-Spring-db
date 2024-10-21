@@ -6,6 +6,7 @@ import com.epam.springcore.task.facade.GymFacade;
 import com.epam.springcore.task.filter.JwtRequestFilter;
 import com.epam.springcore.task.model.User;
 import com.epam.springcore.task.security.UserGymDetails;
+import com.epam.springcore.task.service.impl.BlackListService;
 import com.epam.springcore.task.service.impl.JwtService;
 import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TrainerController.class)
-@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class})
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class, BlackListService.class})
 class TrainerControllerTest {
 
     @Autowired
