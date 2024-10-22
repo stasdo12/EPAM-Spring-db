@@ -4,7 +4,6 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class MemoryHealthIndicator implements HealthIndicator {
     private static final long MEMORY_THRESHOLD = 20 * 1024 * 1024;
@@ -34,4 +33,5 @@ public class MemoryHealthIndicator implements HealthIndicator {
                     .build();
         }
     }
+
 }

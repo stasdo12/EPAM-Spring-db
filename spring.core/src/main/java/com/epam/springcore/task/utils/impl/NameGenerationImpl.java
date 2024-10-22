@@ -15,11 +15,8 @@ import java.util.regex.Pattern;
 
 @Component
 public class NameGenerationImpl implements NameGenerator {
-
     private final UserRepository userRepository;
-
     private static final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+)$");
-
 
     @Autowired
     public NameGenerationImpl(UserRepository userRepository) {
@@ -54,4 +51,5 @@ public class NameGenerationImpl implements NameGenerator {
 
         return baseUsername + nextIndex;
     }
+
 }

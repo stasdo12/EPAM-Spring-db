@@ -1,6 +1,7 @@
 package com.epam.springcore.task.repo;
 
 import com.epam.springcore.task.model.Training;
+import com.epam.springcore.task.model.TrainingType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

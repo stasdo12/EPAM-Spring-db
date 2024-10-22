@@ -1,5 +1,6 @@
 package com.epam.springcore.task.controller.impl;
 
+import com.epam.springcore.task.config.TestSecurityConfig;
 import com.epam.springcore.task.dto.PassUsernameDTO;
 import com.epam.springcore.task.dto.TraineeDTO;
 import com.epam.springcore.task.dto.TrainerDTO;
@@ -7,15 +8,24 @@ import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.dto.TrainingTypeDTO;
 import com.epam.springcore.task.dto.UserDTO;
 import com.epam.springcore.task.facade.GymFacade;
+import com.epam.springcore.task.filter.JwtRequestFilter;
 import com.epam.springcore.task.health.metrics.ExecutionTimeMetrics;
 import com.epam.springcore.task.health.metrics.RequestMetrics;
+import com.epam.springcore.task.model.User;
+import com.epam.springcore.task.security.UserGymDetails;
+import com.epam.springcore.task.service.impl.BlackListService;
+import com.epam.springcore.task.service.impl.JwtService;
+import com.epam.springcore.task.service.impl.UserDetailsServiceImpl;
+import com.epam.springcore.task.utils.impl.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,6 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TraineeController.class)
+@Import({JwtTokenUtils.class, JwtRequestFilter.class, TestSecurityConfig.class, BlackListService.class})
 class TraineeControllerTest {
 
     @Autowired
@@ -53,6 +64,12 @@ class TraineeControllerTest {
 
     @MockBean
     private RequestMetrics requestMetrics;
+
+    @MockBean
+    private JwtService jwtTokenUtils;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     private TraineeDTO traineeDTO;
     private List<TrainerDTO> trainers;
@@ -78,14 +95,24 @@ class TraineeControllerTest {
 
     @Test
     void registerTraineeShouldReturnCreatedWhenTraineeIsSuccessfullyRegistered() throws Exception {
+        String username = "testUser";
+        String password = "testPassword";
+        String token = "testToken";
+        PassUsernameDTO passUsernameDTO = new PassUsernameDTO(username, password);
+
         when(gymFacade.saveTrainee(any(TraineeDTO.class))).thenReturn(passUsernameDTO);
+        when(userDetailsService.loadUserByUsername(username)).thenReturn(new UserGymDetails(new User()));
+        when(jwtTokenUtils.generateToken(any(UserDetails.class))).thenReturn(token);
 
         mockMvc.perform(post("/trainees/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(traineeDTO)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.token").value(token));
 
         verify(gymFacade, times(1)).saveTrainee(any(TraineeDTO.class));
+        verify(userDetailsService, times(1)).loadUserByUsername(username);
+        verify(jwtTokenUtils, times(1)).generateToken(any(UserDetails.class));
     }
 
     @Test

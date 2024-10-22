@@ -2,16 +2,31 @@ package com.epam.springcore.task.mapper;
 
 import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.model.Training;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TrainingMapperTest {
 
-    private final TrainingMapper mapper = Mappers.getMapper(TrainingMapper.class);
+    @Mock
+    private TraineeMapper traineeMapper;
 
+    @Mock
+    private TrainerMapper trainerMapper;
+
+    @InjectMocks
+    private TrainingMapperImpl mapper;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void trainingToDTO() {

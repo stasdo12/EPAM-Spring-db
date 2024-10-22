@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrainingTypeRepository extends JpaRepository<TrainingType, Long> {
-
+    TrainingType findByName(String name);
 }

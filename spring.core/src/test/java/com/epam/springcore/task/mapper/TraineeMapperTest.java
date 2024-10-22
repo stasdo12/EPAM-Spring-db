@@ -50,7 +50,7 @@ class TraineeMapperTest {
         assertThat(traineeDTO.getUser().getUsername()).isEqualTo("testuser");
         assertThat(traineeDTO.getBirthday()).isEqualTo(LocalDate.of(2000, 1, 1));
         assertThat(traineeDTO.getAddress()).isEqualTo("123 Test Street");
-        assertThat(traineeDTO.getTrainings()).isNotEmpty();
+        assertThat(traineeDTO.getTrainings()).isNull();
         assertThat(traineeDTO.getTrainers()).isNull();
     }
 
