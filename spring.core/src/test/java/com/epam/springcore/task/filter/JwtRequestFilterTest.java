@@ -19,24 +19,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class JwtRequestFilterTest {
 
     private JwtRequestFilter jwtRequestFilter;
-
     @Mock
     private JwtTokenUtils jwtTokenUtils;
-
     @Mock
     private BlackListService blackListService;
-
     @Mock
     private HttpServletRequest request;
-
     @Mock
     private HttpServletResponse response;
-
     @Mock
     private FilterChain filterChain;
 
@@ -51,24 +49,21 @@ class JwtRequestFilterTest {
         String token = "Bearer valid_token";
         String username = "testUser";
 
-        // Mock the necessary behaviors
         when(request.getHeader("Authorization")).thenReturn(token);
         when(jwtTokenUtils.getUsername("valid_token")).thenReturn(username);
         when(blackListService.isTokenBlacklisted("valid_token")).thenReturn(false);
 
-        // Create a mock SecurityContext
         SecurityContext mockSecurityContext = mock(SecurityContext.class);
-        SecurityContextHolder.setContext(mockSecurityContext); // Set the mock context
+        SecurityContextHolder.setContext(mockSecurityContext);
 
-        // Execute the filter
         jwtRequestFilter.doFilterInternal(request, response, filterChain);
 
         ArgumentCaptor<UsernamePasswordAuthenticationToken> authenticationCaptor = ArgumentCaptor.forClass(UsernamePasswordAuthenticationToken.class);
-        verify(filterChain).doFilter(request, response); // Verify that the filter chain was called
-        verify(mockSecurityContext).setAuthentication(authenticationCaptor.capture()); // Verify setAuthentication was called on the mock context
+        verify(filterChain).doFilter(request, response);
+        verify(mockSecurityContext).setAuthentication(authenticationCaptor.capture());
 
         UsernamePasswordAuthenticationToken authenticationToken = authenticationCaptor.getValue();
-        assert authenticationToken.getName().equals(username); // Assert the authentication token's name
+        assert authenticationToken.getName().equals(username);
     }
 
     @Test
@@ -87,7 +82,6 @@ class JwtRequestFilterTest {
     @Test
     void shouldNotAuthenticateUserWhenTokenIsExpired() throws ServletException, IOException {
         String token = "Bearer expired_token";
-        String username = "testUser";
 
         when(request.getHeader("Authorization")).thenReturn(token);
         when(jwtTokenUtils.getUsername("expired_token")).thenThrow(new io.jsonwebtoken.ExpiredJwtException(null, null, "Expired token", null));
@@ -104,7 +98,7 @@ class JwtRequestFilterTest {
 
         jwtRequestFilter.doFilterInternal(request, response, filterChain);
 
-        verify(filterChain).doFilter(request, response); // Should proceed with the filter chain
-        assert SecurityContextHolder.getContext().getAuthentication() == null; // Should not set authentication
+        verify(filterChain).doFilter(request, response);
+        assert SecurityContextHolder.getContext().getAuthentication() == null;
     }
 }
