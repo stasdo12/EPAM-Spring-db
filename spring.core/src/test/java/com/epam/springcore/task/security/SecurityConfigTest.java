@@ -90,7 +90,7 @@ class SecurityConfigTest {
 
     @Test
     void shouldDenyAccessToProtectedEndpointWithoutAuthentication() throws Exception {
-        mockMvc.perform(post("/some/protected/endpoint")
+        mockMvc.perform(get("/trainees/stan")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf()))
                 .andExpect(status().isUnauthorized());
