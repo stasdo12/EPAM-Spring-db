@@ -25,7 +25,7 @@ public interface ITraineeController {
             @ApiResponse(responseCode = "400", description = "Invalid trainee data"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    ResponseEntity<JwtResponse> registerTrainee(@RequestBody TraineeDTO traineeDTO);
+    JwtResponse registerTrainee(@RequestBody TraineeDTO traineeDTO);
 
     @Operation(summary = "Get trainee profile by Username")
     @ApiResponses(value = {

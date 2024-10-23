@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,23 +41,19 @@ public class TrainerController implements ITrainerController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public ResponseEntity<JwtResponse> registerTrainer(@RequestBody TrainerDTO trainerDTO){
+    public JwtResponse registerTrainer(@RequestBody TrainerDTO trainerDTO){
         PassUsernameDTO passUsernameDTO = gymFacade.saveTrainer(trainerDTO);
         UserDetails userDetails = userDetailsService.loadUserByUsername(passUsernameDTO.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
+        return new JwtResponse(token);
 
     }
 
     @GetMapping("/{username}")
     @Override
-    public ResponseEntity<TrainerDTO> getTrainerProfileByUsername(@PathVariable String username) {
-        Optional<TrainerDTO> trainerDTOOptional = gymFacade.findTrainerByUsername(username);
-        return trainerDTOOptional
-                .map(trainerDTO -> ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(trainerDTO))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public TrainerDTO getTrainerProfileByUsername(@PathVariable String username) {
+        return gymFacade.findTrainerByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainer not found"));
     }
 
     @PutMapping("/{username}")

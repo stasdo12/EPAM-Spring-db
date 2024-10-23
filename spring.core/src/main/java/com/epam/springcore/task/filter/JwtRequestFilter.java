@@ -9,11 +9,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,20 +41,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 if (blackListService.isTokenBlacklisted(jwt)) {
                     log.debug("JWT token is blacklisted");
-                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT token is blacklisted");
                 }
 
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e) {
                 log.debug("JWT token is expired, create new one if needed");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT token is expired");
             }
         }
 
         if (username != null && blackListService.isTokenBlacklisted(username)){
             log.debug("User is temporarily blocked due to multiple failed login attempts.");
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is temporarily blocked");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

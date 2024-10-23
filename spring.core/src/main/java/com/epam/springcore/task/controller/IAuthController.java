@@ -15,7 +15,7 @@ public interface IAuthController {
             @ApiResponse(responseCode = "400", description = "Invalid username or password"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    ResponseEntity<Object> createAuthToken(@RequestBody JwtRequest authRequest);
+    Object createAuthToken(@RequestBody JwtRequest authRequest);
 
     @Operation(summary = "Logout",
             description = "Logs out the user and invalidates the JWT token.")
@@ -23,6 +23,6 @@ public interface IAuthController {
             @ApiResponse(responseCode = "200", description = "Logout successful"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    ResponseEntity<Object> logout(String authorization);
+    Object logout(String authorization);
 
 }

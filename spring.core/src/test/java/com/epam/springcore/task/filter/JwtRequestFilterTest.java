@@ -1,5 +1,6 @@
 package com.epam.springcore.task.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.Test;
 
 import com.epam.springcore.task.service.impl.BlackListService;
@@ -13,12 +14,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -58,7 +62,8 @@ class JwtRequestFilterTest {
 
         jwtRequestFilter.doFilterInternal(request, response, filterChain);
 
-        ArgumentCaptor<UsernamePasswordAuthenticationToken> authenticationCaptor = ArgumentCaptor.forClass(UsernamePasswordAuthenticationToken.class);
+        ArgumentCaptor<UsernamePasswordAuthenticationToken> authenticationCaptor =
+                ArgumentCaptor.forClass(UsernamePasswordAuthenticationToken.class);
         verify(filterChain).doFilter(request, response);
         verify(mockSecurityContext).setAuthentication(authenticationCaptor.capture());
 
@@ -73,9 +78,13 @@ class JwtRequestFilterTest {
         when(request.getHeader("Authorization")).thenReturn(token);
         when(blackListService.isTokenBlacklisted("blacklisted_token")).thenReturn(true);
 
-        jwtRequestFilter.doFilterInternal(request, response, filterChain);
+        ResponseStatusException thrown = assertThrows(ResponseStatusException.class, () -> {
+            jwtRequestFilter.doFilterInternal(request, response, filterChain);
+        });
 
-        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatusCode());
+        assertEquals("JWT token is blacklisted", thrown.getReason());
         verify(filterChain, never()).doFilter(request, response);
     }
 
@@ -84,12 +93,16 @@ class JwtRequestFilterTest {
         String token = "Bearer expired_token";
 
         when(request.getHeader("Authorization")).thenReturn(token);
-        when(jwtTokenUtils.getUsername("expired_token")).thenThrow(new io.jsonwebtoken.ExpiredJwtException(null, null, "Expired token", null));
+        when(jwtTokenUtils.getUsername("expired_token")).
+                thenThrow(new ExpiredJwtException(null, null, "Expired token", null));
 
-        jwtRequestFilter.doFilterInternal(request, response, filterChain);
+        ResponseStatusException thrown = assertThrows(ResponseStatusException.class, () -> {
+            jwtRequestFilter.doFilterInternal(request, response, filterChain);
+        });
 
-        verify(filterChain).doFilter(request, response);
-        assert SecurityContextHolder.getContext().getAuthentication() == null;
+        assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatusCode());
+        assertEquals("JWT token is expired", thrown.getReason());
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
     @Test

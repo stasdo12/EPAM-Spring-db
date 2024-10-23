@@ -4,15 +4,14 @@ import com.epam.springcore.task.dto.JwtRequest;
 import com.epam.springcore.task.dto.JwtResponse;
 import com.epam.springcore.task.service.IAuthService;
 import com.epam.springcore.task.utils.impl.JwtTokenUtils;
-import exception.AppError;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService implements IAuthService {
@@ -33,24 +32,24 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public ResponseEntity<Object> createAuthToken(@RequestBody JwtRequest authRequest){
+    public JwtResponse createAuthToken(@RequestBody JwtRequest authRequest){
         String username = authRequest.getUsername();
-        if (loginAttemptService.isBlocked(username)){
-            return new ResponseEntity<>(new AppError(HttpStatus.LOCKED,
-                    "User is temporarily blocked due to multiple failed login attempts. " +
-                            "Please try again later."), HttpStatus.LOCKED);
+        if (loginAttemptService.isBlocked(username)) {
+            throw new ResponseStatusException(HttpStatus.LOCKED,
+                    "User is temporarily blocked due to multiple failed login attempts. Please try again later.");
         }
-        try{
+        try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
                     authRequest.getPassword()));
             loginAttemptService.loginSucceeded(username);
-        }catch (BadCredentialsException ex){
+        } catch (BadCredentialsException ex) {
             loginAttemptService.loginFailed(username);
-            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED, "Incorrect login or password"), HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect login or password");
         }
+
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return new JwtResponse(token);
     }
 
     @Override

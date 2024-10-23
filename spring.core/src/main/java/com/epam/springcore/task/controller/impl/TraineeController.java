@@ -45,11 +45,11 @@ public class TraineeController implements ITraineeController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Override
-    public ResponseEntity<JwtResponse> registerTrainee(@RequestBody TraineeDTO traineeDTO){
+    public JwtResponse registerTrainee(@RequestBody TraineeDTO traineeDTO){
         PassUsernameDTO passUsernameDTO = gymFacade.saveTrainee(traineeDTO);
         UserDetails userDetails = userDetailsService.loadUserByUsername(passUsernameDTO.getUsername());
         String token = jwtService.generateToken(userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
+        return new JwtResponse(token);
     }
 
     @GetMapping("/{username}")
