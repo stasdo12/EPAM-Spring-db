@@ -29,4 +29,5 @@ public class TrainingDTO {
 
     @Min(value = 1, message = "Duration must be at least 1 minute")
     private int durationMinutes;
+
 }

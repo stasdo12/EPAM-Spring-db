@@ -1,5 +1,6 @@
 package com.epam.springcore.task.service.impl;
 
+import com.epam.springcore.task.model.*;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
@@ -9,10 +10,7 @@ import com.epam.springcore.task.dto.TrainingDTO;
 import com.epam.springcore.task.mapper.TrainerMapper;
 import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.mapper.TrainingTypeMapper;
-import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.Trainer;
-import com.epam.springcore.task.model.Training;
-import com.epam.springcore.task.model.User;
+import com.epam.springcore.task.repo.TrainingTypeRepository;
 import com.epam.springcore.task.service.ITrainerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,7 @@ public class TrainerService  implements ITrainerService {
     private final TrainerRepository trainerRepository;
     private final TraineeRepository traineeRepository;
     private final TrainingRepository trainingRepository;
+    private final TrainingTypeRepository trainingTypeRepository;
     private final TrainingMapper trainingMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingTypeMapper trainingTypeMapper;
@@ -37,7 +36,7 @@ public class TrainerService  implements ITrainerService {
     public TrainerService(TrainerRepository trainerRepository,
                           TraineeRepository traineeRepository,
                           TrainingRepository trainingRepository,
-                          TrainingMapper trainingMapper,
+                          TrainingTypeRepository trainingTypeRepository, TrainingMapper trainingMapper,
                           TrainerMapper trainerMapper,
                           TrainingTypeMapper trainingTypeMapper,
                           UserService userService
@@ -45,6 +44,7 @@ public class TrainerService  implements ITrainerService {
         this.trainerRepository = trainerRepository;
         this.traineeRepository = traineeRepository;
         this.trainingRepository = trainingRepository;
+        this.trainingTypeRepository = trainingTypeRepository;
         this.trainingMapper = trainingMapper;
 
         this.trainerMapper = trainerMapper;
@@ -62,9 +62,16 @@ public class TrainerService  implements ITrainerService {
 
         Trainer trainer = trainerMapper.trainerToEntity(trainerDTO);
 
+        TrainingType specialization = trainingTypeRepository.findByName(trainerDTO.getSpecialization().getName());
+        if (specialization == null) {
+            throw new IllegalArgumentException("Specialization not found");
+        }
+        trainer.setSpecialization(specialization);
+
         User user = trainer.getUser();
         PassUsernameDTO passUsernameDTO = userService.generateAndSaveUser(user);
         trainer.setUser(user);
+
         trainerRepository.save(trainer);
         return passUsernameDTO;
     }
@@ -165,4 +172,5 @@ public class TrainerService  implements ITrainerService {
         Optional<Trainer> trainerOptional = trainerRepository.findById(trainerId);
         return trainerOptional.map(trainerMapper::trainerToDTO);
     }
+
 }

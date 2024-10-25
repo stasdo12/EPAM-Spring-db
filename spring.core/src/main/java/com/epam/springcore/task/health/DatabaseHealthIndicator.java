@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseHealthIndicator implements HealthIndicator {
-
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired

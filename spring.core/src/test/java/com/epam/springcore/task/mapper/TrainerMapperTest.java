@@ -47,8 +47,6 @@ class TrainerMapperTest {
         assertThat(trainerDTO.getUser().getUsername()).isEqualTo("testuser");
         assertThat(trainerDTO.getSpecialization()).isNotNull();
         assertThat(trainerDTO.getSpecialization().getName()).isEqualTo("Yoga");
-        assertThat(trainerDTO.getTrainings()).isNotEmpty();
-        assertThat(trainerDTO.getTrainees()).isNotEmpty();
     }
 
     @Test

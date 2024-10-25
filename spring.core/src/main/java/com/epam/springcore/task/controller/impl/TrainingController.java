@@ -23,4 +23,5 @@ public class TrainingController implements ITrainingController {
     public void addTraining(TrainingDTO trainingDTO) {
         gymFacade.addTraining(trainingDTO);
     }
+
 }

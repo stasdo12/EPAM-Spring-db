@@ -24,4 +24,5 @@ public class TrainingTypeController  implements ITrainingTypeController {
         List<TrainingTypeDTO> trainingTypes = trainingTypeService.getAll();
         return ResponseEntity.ok(trainingTypes);
     }
+
 }

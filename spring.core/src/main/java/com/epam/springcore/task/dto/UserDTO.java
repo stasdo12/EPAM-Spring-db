@@ -22,4 +22,5 @@ public class UserDTO {
     @NotBlank(message = "Last name cannot be blank")
     @Pattern(regexp = "^[a-zA-Z]{3,30}$", message = "LastName must be between 3 and 30 characters and contain only letters")
     private String lastName;
+
 }

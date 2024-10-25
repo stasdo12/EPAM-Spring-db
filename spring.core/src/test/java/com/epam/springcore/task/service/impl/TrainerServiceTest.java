@@ -17,6 +17,7 @@ import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.model.TrainingType;
 import com.epam.springcore.task.model.User;
+import com.epam.springcore.task.repo.TrainingTypeRepository;
 import com.epam.springcore.task.utils.NameGenerator;
 import com.epam.springcore.task.utils.PasswordGenerator;
 
@@ -65,6 +66,9 @@ class TrainerServiceTest {
     private TrainingMapper trainingMapper;
 
     @Mock
+    TrainingTypeRepository trainingTypeRepository;
+
+    @Mock
     private UserService userService;
 
     @InjectMocks
@@ -96,18 +100,24 @@ class TrainerServiceTest {
 
         passUsernameDTO = new PassUsernameDTO("testUser", "newPassword");
 
+        TrainingTypeDTO trainingTypeDTO = new TrainingTypeDTO();
+        trainingTypeDTO.setName("PowerLifting");
+        trainerDTO.setSpecialization(trainingTypeDTO);
+        TrainingType trainingType = new TrainingType();
+        trainingType.setId(1L);
+        trainingType.setName("PowerLifting");
+
         when(nameGenerator.generateUniqueUsername(any(User.class))).thenReturn("generatedTrainerUsername");
         when(passwordGenerator.generatePassword()).thenReturn("generatedTrainerPassword");
         when(passwordEncoder.encode("generatedTrainerPassword")).thenReturn("encodedPassword");
         when(trainerMapper.trainerToEntity(any(TrainerDTO.class))).thenReturn(trainer);
         when(trainerMapper.trainerToDTO(any(Trainer.class))).thenReturn(trainerDTO);
+        when(trainingTypeRepository.findByName("PowerLifting")).thenReturn(trainingType);
+
     }
 
     @Test
     void testSaveTrainer() {
-        UserDTO userDTO = new UserDTO();
-        trainerDTO.setUser(userDTO);
-
         user.setPassword("encodedPassword");
         user.setUsername("generatedUsername");
 

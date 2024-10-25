@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.naming.AuthenticationException;
+import java.nio.file.AccessDeniedException;
+
 @ControllerAdvice
 public class GymExceptionHandler {
 
@@ -26,5 +29,21 @@ public class GymExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorDTO> handleAuthenticationException(AuthenticationException ex) {
+        ErrorDTO errorResponse = new ErrorDTO("Authentication failed: " + ex.getMessage(),
+                HttpStatus.UNAUTHORIZED.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorDTO> handleAccessDeniedException(AccessDeniedException ex) {
+        ErrorDTO errorResponse = new ErrorDTO("Access denied: " + ex.getMessage(),
+                HttpStatus.FORBIDDEN.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 }

@@ -7,9 +7,7 @@ import com.epam.springcore.task.repo.TrainingTypeRepository;
 import com.epam.springcore.task.service.ITrainingTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,4 +23,5 @@ public class TrainingTypeService implements ITrainingTypeService {
                 .map(trainingTypeMapper::trainingTypeToDTO)
                 .toList();
     }
+
 }

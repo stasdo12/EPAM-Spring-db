@@ -1,6 +1,7 @@
 package com.epam.springcore.task.controller;
 
 
+import com.epam.springcore.task.dto.JwtResponse;
 import com.epam.springcore.task.dto.TrainerDTO;
 import com.epam.springcore.task.dto.TrainingDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,14 +25,14 @@ public interface ITrainerController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
 
-    void registerTrainer(@RequestBody TrainerDTO trainerDTO);
+    JwtResponse registerTrainer(@RequestBody TrainerDTO trainerDTO);
 
     @Operation(summary = "Get trainer profile by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainer profile retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Trainer not found")
     })
-    ResponseEntity<TrainerDTO> getTrainerProfileByUsername(@PathVariable String username);
+    TrainerDTO getTrainerProfileByUsername(@PathVariable String username);
 
     @Operation(summary = "Update trainer profile by username",
             description = "Updates the details of an existing trainer based on the provided username.")
