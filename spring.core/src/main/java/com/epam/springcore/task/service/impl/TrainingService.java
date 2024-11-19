@@ -26,15 +26,17 @@ public class TrainingService implements ITrainingService {
     private final TrainerRepository trainerRepository;
     private final TrainingTypeRepository trainingTypeRepository;
     private final MicroserviceClient microserviceClient;
+    private final AuthService authService;
 
     @Autowired
-    public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper, TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository, MicroserviceClient microserviceClient) {
+    public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper, TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository, MicroserviceClient microserviceClient, AuthService authService) {
         this.trainingRepository = trainingRepository;
         this.trainingMapper = trainingMapper;
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
         this.trainingTypeRepository = trainingTypeRepository;
         this.microserviceClient = microserviceClient;
+        this.authService = authService;
     }
 
     @Override
@@ -65,9 +67,12 @@ public class TrainingService implements ITrainingService {
                 .action("ADD")
                 .build();
 
-        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), MDC.get("Authorization"));
+        String jwtToken = authService.getJwtToken();
+        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
         return trainingMapper.trainingToDTO(savedTraining);
 
     }
+
+
 
 }

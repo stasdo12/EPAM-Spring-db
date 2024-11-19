@@ -8,10 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 @Service
 public class AuthService implements IAuthService {
@@ -32,15 +35,18 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public JwtResponse createAuthToken(@RequestBody JwtRequest authRequest){
+    public JwtResponse createAuthToken(@RequestBody JwtRequest authRequest) {
         String username = authRequest.getUsername();
         if (loginAttemptService.isBlocked(username)) {
             throw new ResponseStatusException(HttpStatus.LOCKED,
                     "User is temporarily blocked due to multiple failed login attempts. Please try again later.");
         }
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
                     authRequest.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             loginAttemptService.loginSucceeded(username);
         } catch (BadCredentialsException ex) {
             loginAttemptService.loginFailed(username);
@@ -49,6 +55,7 @@ public class AuthService implements IAuthService {
 
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
+
         return new JwtResponse(token);
     }
 
@@ -58,4 +65,13 @@ public class AuthService implements IAuthService {
         return true;
     }
 
+    public String getJwtToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getCredentials() != null) {
+            return (String) authentication.getCredentials();
+        } else {
+            throw new IllegalStateException("JWT token is missing in the SecurityContext.");
+        }
+    }
 }
