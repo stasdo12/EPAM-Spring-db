@@ -13,6 +13,9 @@ import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.model.Training;
 import com.epam.springcore.task.repo.TrainingTypeRepository;
 import com.epam.springcore.task.service.ITrainingService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrainingService implements ITrainingService {
 
+    private static final Logger log = LoggerFactory.getLogger(TrainingService.class);
     public final TrainingRepository trainingRepository;
     public final TrainingMapper trainingMapper;
     private final TraineeRepository traineeRepository;
@@ -40,6 +44,7 @@ public class TrainingService implements ITrainingService {
     }
 
     @Override
+    @CircuitBreaker(name = "trainingService", fallbackMethod = "fallbackActionTraining" )
     public TrainingDTO addTraining(TrainingDTO trainingDTO) {
         if(trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null){
             throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
@@ -71,6 +76,11 @@ public class TrainingService implements ITrainingService {
         microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
         return trainingMapper.trainingToDTO(savedTraining);
 
+    }
+
+    public TrainingDTO fallbackActionTraining(TrainingDTO trainingDTO, Throwable throwable) {
+        log.error("Error calling training workload service: {}", throwable.getMessage());
+        return new TrainingDTO();
     }
 
 
