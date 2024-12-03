@@ -44,9 +44,9 @@ public class TrainingService implements ITrainingService {
     }
 
     @Override
-    @CircuitBreaker(name = "trainingService", fallbackMethod = "fallbackActionTraining" )
+    @CircuitBreaker(name = "trainingService", fallbackMethod = "fallbackActionTraining")
     public TrainingDTO addTraining(TrainingDTO trainingDTO) {
-        if(trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null){
+        if (trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null) {
             throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
         }
 
@@ -62,20 +62,10 @@ public class TrainingService implements ITrainingService {
         training.setTrainer(trainer);
         training.setTrainingType(trainingType);
         Training savedTraining = trainingRepository.save(training);
-        TrainingRequest trainingRequest = TrainingRequest.builder()
-                .username(trainer.getUser().getUsername())
-                .firstName(trainer.getUser().getFirstName())
-                .lastName(trainer.getUser().getLastName())
-                .isActive(trainer.getUser().isActive())
-                .date(training.getDate())
-                .duration(training.getDurationMinutes())
-                .action("ADD")
-                .build();
-
+        TrainingRequest trainingRequest = createTrainingRequest(trainingDTO, trainer, "ADD");
         String jwtToken = authService.getJwtToken();
         microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
         return trainingMapper.trainingToDTO(savedTraining);
-
     }
 
     public TrainingDTO fallbackActionTraining(TrainingDTO trainingDTO, Throwable throwable) {
@@ -83,6 +73,38 @@ public class TrainingService implements ITrainingService {
         return new TrainingDTO();
     }
 
+    public void deleteTraining(TrainingDTO trainingDTO) {
+        if (trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null) {
+            throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
+        }
+
+        traineeRepository.findTraineeByUserUsername(trainingDTO.getTrainee().getUser().getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Trainee not found"));
+        Trainer trainer = trainerRepository.findTrainerByUserUsername(trainingDTO.getTrainer().getUser().getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Trainer not found"));
+
+        TrainingRequest trainingRequest = createTrainingRequest(trainingDTO, trainer, "DELETE");
+
+        String jwtToken = authService.getJwtToken();
+        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
+
+        Training training = trainingMapper.trainingToEntity(trainingDTO);
+        trainingRepository.delete(training);
+        log.info("Deleted training work for username: {} with Transaction ID: {}", trainingRequest.getUsername(),
+                MDC.get("transactionId"));
+    }
+
+    private TrainingRequest createTrainingRequest(TrainingDTO trainingDTO, Trainer trainer, String action) {
+        return TrainingRequest.builder()
+                .username(trainer.getUser().getUsername())
+                .firstName(trainer.getUser().getFirstName())
+                .lastName(trainer.getUser().getLastName())
+                .isActive(trainer.getUser().isActive())
+                .date(trainingDTO.getDate())
+                .duration(trainingDTO.getDurationMinutes())
+                .action(action)
+                .build();
+    }
 
 
 }
