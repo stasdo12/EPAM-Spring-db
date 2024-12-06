@@ -10,6 +10,8 @@ public interface TraineeMapper {
 
     @Mapping(target = "trainers", ignore = true)
     @Mapping(target = "trainings", ignore = true)
+    @Mapping(target = "address", source = "address")
+    @Mapping(target = "birthday", source = "birthday")
     TraineeDTO traineeToDTO(Trainee trainee);
 
     @Mapping(target = "traineeId", ignore = true)

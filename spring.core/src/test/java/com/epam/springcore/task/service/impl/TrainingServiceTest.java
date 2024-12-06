@@ -1,18 +1,12 @@
 package com.epam.springcore.task.service.impl;
 
-import com.epam.springcore.task.dto.TraineeDTO;
-import com.epam.springcore.task.dto.TrainerDTO;
-import com.epam.springcore.task.dto.TrainingDTO;
-import com.epam.springcore.task.dto.TrainingTypeDTO;
-import com.epam.springcore.task.dto.UserDTO;
+import com.epam.springcore.task.client.MicroserviceClient;
+import com.epam.springcore.task.dto.*;
 import com.epam.springcore.task.mapper.TrainingMapper;
+import com.epam.springcore.task.model.*;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
-import com.epam.springcore.task.model.Trainee;
-import com.epam.springcore.task.model.Trainer;
-import com.epam.springcore.task.model.Training;
-import com.epam.springcore.task.model.TrainingType;
 import com.epam.springcore.task.repo.TrainingTypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class TrainingServiceTest {
@@ -47,6 +42,7 @@ class TrainingServiceTest {
     private TrainingService trainingService;
     private TrainingDTO validTrainingDTO;
     private Training training;
+    private MicroserviceClient microserviceClient;
 
     @BeforeEach
     void setUp() {
@@ -83,13 +79,22 @@ class TrainingServiceTest {
 
     @Test
     void addTraining_ShouldSaveTraining_WhenValidData() {
-
-        when(traineeRepository.findTraineeByUserUsername(anyString())).thenReturn(Optional.of(new Trainee()));
-        when(trainerRepository.findTrainerByUserUsername(anyString())).thenReturn(Optional.of(new Trainer()));
+        Trainee trainee = new Trainee();
+        Trainer trainer = new Trainer();
+        User trainerUser = new User();
+        trainer.setUser(trainerUser);
+        trainerUser.setUsername("trainerUsername");
+        when(traineeRepository.findTraineeByUserUsername(anyString())).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findTrainerByUserUsername(anyString())).thenReturn(Optional.of(trainer));
         when(trainingTypeRepository.findByName(anyString())).thenReturn(new TrainingType());
-        when(trainingMapper.trainingToEntity(any(TrainingDTO.class))).thenReturn(training);
-        when(trainingRepository.save(any(Training.class))).thenReturn(training);
+        when(trainingMapper.trainingToEntity(any(TrainingDTO.class))).thenReturn(new Training());
+        when(trainingRepository.save(any(Training.class))).thenReturn(new Training());
         when(trainingMapper.trainingToDTO(any(Training.class))).thenReturn(validTrainingDTO);
+        AuthService authServiceMock = mock(AuthService.class);
+        when(authServiceMock.getJwtToken()).thenReturn("mock-jwt-token");
+        MicroserviceClient microserviceClientMock = mock(MicroserviceClient.class);
+        trainingService = new TrainingService(trainingRepository, trainingMapper, traineeRepository, trainerRepository,
+                trainingTypeRepository, microserviceClientMock, authServiceMock);
 
         TrainingDTO result = trainingService.addTraining(validTrainingDTO);
 
@@ -108,4 +113,6 @@ class TrainingServiceTest {
         validTrainingDTO.setTrainee(null);
         assertThrows(IllegalArgumentException.class, () -> trainingService.addTraining(validTrainingDTO));
     }
+
+
 }
