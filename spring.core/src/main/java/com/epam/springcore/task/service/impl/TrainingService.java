@@ -5,6 +5,7 @@ import com.epam.springcore.task.dto.TrainingRequest;
 import com.epam.springcore.task.model.Trainee;
 import com.epam.springcore.task.model.Trainer;
 import com.epam.springcore.task.model.TrainingType;
+import com.epam.springcore.task.producer.RabbitMQSender;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
@@ -32,8 +33,14 @@ public class TrainingService implements ITrainingService {
     private final MicroserviceClient microserviceClient;
     private final AuthService authService;
 
+    private final RabbitMQSender rabbitMQSender;
+
     @Autowired
-    public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper, TraineeRepository traineeRepository, TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository, MicroserviceClient microserviceClient, AuthService authService) {
+    public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper,
+                           TraineeRepository traineeRepository, TrainerRepository trainerRepository,
+                           TrainingTypeRepository trainingTypeRepository,
+                           MicroserviceClient microserviceClient, AuthService authService,
+                           RabbitMQSender rabbitMQSender) {
         this.trainingRepository = trainingRepository;
         this.trainingMapper = trainingMapper;
         this.traineeRepository = traineeRepository;
@@ -41,6 +48,7 @@ public class TrainingService implements ITrainingService {
         this.trainingTypeRepository = trainingTypeRepository;
         this.microserviceClient = microserviceClient;
         this.authService = authService;
+        this.rabbitMQSender = rabbitMQSender;
     }
 
     @Override
@@ -64,7 +72,8 @@ public class TrainingService implements ITrainingService {
         Training savedTraining = trainingRepository.save(training);
         TrainingRequest trainingRequest = createTrainingRequest(trainingDTO, trainer, "ADD");
         String jwtToken = authService.getJwtToken();
-        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
+//        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
+        rabbitMQSender.sendTrainingRequest(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
         return trainingMapper.trainingToDTO(savedTraining);
     }
 
@@ -86,7 +95,8 @@ public class TrainingService implements ITrainingService {
         TrainingRequest trainingRequest = createTrainingRequest(trainingDTO, trainer, "DELETE");
 
         String jwtToken = authService.getJwtToken();
-        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
+        rabbitMQSender.sendTrainingRequest(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
+//        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
 
         Training training = trainingMapper.trainingToEntity(trainingDTO);
         trainingRepository.delete(training);
