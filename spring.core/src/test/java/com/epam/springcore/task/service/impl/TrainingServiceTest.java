@@ -4,6 +4,7 @@ import com.epam.springcore.task.client.MicroserviceClient;
 import com.epam.springcore.task.dto.*;
 import com.epam.springcore.task.mapper.TrainingMapper;
 import com.epam.springcore.task.model.*;
+import com.epam.springcore.task.producer.RabbitMQSender;
 import com.epam.springcore.task.repo.TraineeRepository;
 import com.epam.springcore.task.repo.TrainerRepository;
 import com.epam.springcore.task.repo.TrainingRepository;
@@ -37,6 +38,9 @@ class TrainingServiceTest {
     private TraineeRepository traineeRepository;
     @Mock
     private TrainerRepository trainerRepository;
+
+    @Mock
+    RabbitMQSender rabbitMQSender;
 
     @InjectMocks
     private TrainingService trainingService;
@@ -94,7 +98,7 @@ class TrainingServiceTest {
         when(authServiceMock.getJwtToken()).thenReturn("mock-jwt-token");
         MicroserviceClient microserviceClientMock = mock(MicroserviceClient.class);
         trainingService = new TrainingService(trainingRepository, trainingMapper, traineeRepository, trainerRepository,
-                trainingTypeRepository, microserviceClientMock, authServiceMock);
+                trainingTypeRepository, microserviceClientMock, authServiceMock, rabbitMQSender);
 
         TrainingDTO result = trainingService.addTraining(validTrainingDTO);
 

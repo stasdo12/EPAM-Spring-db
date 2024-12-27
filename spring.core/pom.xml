@@ -52,6 +52,13 @@
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+
 		<!-- jjwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
