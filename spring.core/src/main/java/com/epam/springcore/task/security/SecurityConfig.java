@@ -27,8 +27,8 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userService;
     private final JwtRequestFilter jwtRequestFilter;
     private static final String LOGIN_URI = "/login/";
-    private static final String TRAINEE_CREATE_URI = "/trainees/register";
-    private static final String TRAINER_CREATE_URI = "/trainers/register";
+    private static final String TRAINEE_CREATE_URI = "/api/trainees/register";
+    private static final String TRAINER_CREATE_URI = "/api/trainers/register";
     private static final String ACTUATOR_URI = "/actuator/**";
     private static final String SWAGGER = "/swagger-ui/**";
     private static final String AVAILABLE = "*";
@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, TRAINER_CREATE_URI).permitAll()
                         .requestMatchers(ACTUATOR_URI).permitAll()
                         .requestMatchers(SWAGGER).permitAll()
-                        .requestMatchers("/auth").permitAll()
+                        .requestMatchers("/api/auth").permitAll()
                         .anyRequest().authenticated()
 
                 ).exceptionHandling(exception -> exception.
