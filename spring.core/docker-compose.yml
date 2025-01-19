@@ -54,7 +54,7 @@ services:
 
   main-service:
     build:
-      context: .
+      context: "D:/EPAM Spring DB/SpringCoreTaskV2/spring.core"
       dockerfile: Dockerfile
     container_name: main-service
     ports:
@@ -79,7 +79,7 @@ services:
 
   microservice:
     build:
-      context: .
+      context: "C:/Users/sante/Desktop/microservice/EPAMT1Microservice"
       dockerfile: Dockerfile
     container_name: microservice
     ports:
