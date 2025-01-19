@@ -1,0 +1,120 @@
+version: "3.8"
+
+services:
+  eurica-server:
+    image: springcloud/eureka
+    container_name: eurica-server
+    ports:
+      - "8761:8761"
+    networks:
+      - gym-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    restart: unless-stopped
+
+  postgres-db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: epam_spring_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - gym-network
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5762:5762"
+      - "15672:15672"
+    networks:
+      - gym-network
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: unless-stopped
+
+  mongo-db:
+    image: mongo:latest
+    container_name: mongo-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dbUser
+      MONGO_INITDB_ROOT_PASSWORD: dbUser
+    ports:
+      - "27017:27017"
+    networks:
+      - gym-network
+    restart: unless-stopped
+
+  main-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: main-service
+    ports:
+      - "8080:8080"
+    networks:
+      - gym-network
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/epam_spring_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5762
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    depends_on:
+      - eurica-server
+      - postgres-db
+      - rabbitmq
+      - mongo-db
+    restart: unless-stopped
+
+  microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: microservice
+    ports:
+      - "8081:8081"
+    networks:
+      - gym-network
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      SPRING_DATA_MONGODB_URI: mongodb://dbUser:dbUser@mongo-db:27017/GymDB
+    depends_on:
+      - eurica-server
+      - rabbitmq
+      - mongo-db
+    restart: unless-stopped
+
+networks:
+  gym-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+
+
+
+
+
+
+
+
+
+
+
+
+
