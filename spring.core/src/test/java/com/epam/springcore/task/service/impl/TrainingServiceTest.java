@@ -97,8 +97,9 @@ class TrainingServiceTest {
         AuthService authServiceMock = mock(AuthService.class);
         when(authServiceMock.getJwtToken()).thenReturn("mock-jwt-token");
         MicroserviceClient microserviceClientMock = mock(MicroserviceClient.class);
-        trainingService = new TrainingService(trainingRepository, trainingMapper, traineeRepository, trainerRepository,
-                trainingTypeRepository, microserviceClientMock, authServiceMock, rabbitMQSender);
+//        RabbitMQSender  rabbitMQSender1 = new RabbitMQSender();
+//        trainingService = new TrainingService(trainingRepository, trainingMapper, traineeRepository, trainerRepository,
+//                trainingTypeRepository, microserviceClientMock, authServiceMock, rabbitMQSender);
 
         TrainingDTO result = trainingService.addTraining(validTrainingDTO);
 

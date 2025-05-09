@@ -30,7 +30,7 @@ public class TrainingService implements ITrainingService {
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingTypeRepository trainingTypeRepository;
-    private final MicroserviceClient microserviceClient;
+
     private final AuthService authService;
 
     private final RabbitMQSender rabbitMQSender;
@@ -38,44 +38,41 @@ public class TrainingService implements ITrainingService {
     @Autowired
     public TrainingService(TrainingRepository trainingRepository, TrainingMapper trainingMapper,
                            TraineeRepository traineeRepository, TrainerRepository trainerRepository,
-                           TrainingTypeRepository trainingTypeRepository,
-                           MicroserviceClient microserviceClient, AuthService authService,
+                           TrainingTypeRepository trainingTypeRepository, AuthService authService,
                            RabbitMQSender rabbitMQSender) {
         this.trainingRepository = trainingRepository;
         this.trainingMapper = trainingMapper;
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
         this.trainingTypeRepository = trainingTypeRepository;
-        this.microserviceClient = microserviceClient;
         this.authService = authService;
         this.rabbitMQSender = rabbitMQSender;
     }
 
-    @Override
-    @CircuitBreaker(name = "trainingService", fallbackMethod = "fallbackActionTraining")
-    public TrainingDTO addTraining(TrainingDTO trainingDTO) {
-        if (trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null) {
-            throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
+        @Override
+        @CircuitBreaker(name = "trainingService", fallbackMethod = "fallbackActionTraining")
+        public TrainingDTO addTraining(TrainingDTO trainingDTO) {
+            if (trainingDTO == null || trainingDTO.getTrainee() == null || trainingDTO.getTrainer() == null) {
+                throw new IllegalArgumentException("Training and associated Trainee/Trainer must not be null");
+            }
+
+            TrainingType trainingType = trainingTypeRepository.findByName(trainingDTO.getTrainingType().getName());
+            Trainee trainee = traineeRepository.findTraineeByUserUsername(trainingDTO.getTrainee().getUser().getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("Trainee not found"));
+
+            Trainer trainer = trainerRepository.findTrainerByUserUsername(trainingDTO.getTrainer().getUser().getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("Trainer not found"));
+
+            Training training = trainingMapper.trainingToEntity(trainingDTO);
+            training.setTrainee(trainee);
+            training.setTrainer(trainer);
+            training.setTrainingType(trainingType);
+            Training savedTraining = trainingRepository.save(training);
+            TrainingRequest trainingRequest = createTrainingRequest(trainingDTO, trainer, "ADD");
+            String jwtToken = authService.getJwtToken();
+            rabbitMQSender.sendTrainingRequest(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
+            return trainingMapper.trainingToDTO(savedTraining);
         }
-
-        TrainingType trainingType = trainingTypeRepository.findByName(trainingDTO.getTrainingType().getName());
-        Trainee trainee = traineeRepository.findTraineeByUserUsername(trainingDTO.getTrainee().getUser().getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Trainee not found"));
-
-        Trainer trainer = trainerRepository.findTrainerByUserUsername(trainingDTO.getTrainer().getUser().getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Trainer not found"));
-
-        Training training = trainingMapper.trainingToEntity(trainingDTO);
-        training.setTrainee(trainee);
-        training.setTrainer(trainer);
-        training.setTrainingType(trainingType);
-        Training savedTraining = trainingRepository.save(training);
-        TrainingRequest trainingRequest = createTrainingRequest(trainingDTO, trainer, "ADD");
-        String jwtToken = authService.getJwtToken();
-//        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
-        rabbitMQSender.sendTrainingRequest(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
-        return trainingMapper.trainingToDTO(savedTraining);
-    }
 
     public TrainingDTO fallbackActionTraining(TrainingDTO trainingDTO, Throwable throwable) {
         log.error("Error calling training workload service: {}", throwable.getMessage());
@@ -96,7 +93,6 @@ public class TrainingService implements ITrainingService {
 
         String jwtToken = authService.getJwtToken();
         rabbitMQSender.sendTrainingRequest(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
-//        microserviceClient.actionTraining(trainingRequest, MDC.get("transactionId"), "Bearer " + jwtToken);
 
         Training training = trainingMapper.trainingToEntity(trainingDTO);
         trainingRepository.delete(training);
